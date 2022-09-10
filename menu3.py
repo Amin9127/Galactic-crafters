@@ -703,8 +703,13 @@ while run:
         elif event.type==pygame.MOUSEMOTION:
             co=pygame.mouse.get_pos()
             if slider_drag:
-                mouse_y=co[1]
-                slider_button.y=mouse_y+offset_y 
+                if offset_y+mouse_y<150:
+                        slider_button.rect.top=150
+                elif offset_y+mouse_y>800:
+                    slider_button.rect.top=800
+                else:
+                    mouse_y=co[1]
+                    slider_button.rect.y=mouse_y+offset_y
     if game_state =='main menu':
         screen.blit(main_menu_bg,(0,0))
         play_button.draw()
@@ -766,11 +771,14 @@ while run:
 
 
     elif game_state=='blueprints':
+ 
+        
         screen.blit(play_bg,(0,0))
         screen.blit(shop_surface,(100,150))
         transparent_popup.draw()
         scrollbar_button.draw()
         slider_button.draw()
+
 
     elif game_state=='shop confirm':
         screen.blit(grid_surface_copy,(0,100))
