@@ -14,7 +14,6 @@ def draw_text(text,font,text_colour,x,y):
     img=font.render(text,True,text_colour)
     screen.blit(img,(x,y))
 
-
 class Producer(pygame.sprite.Sprite):
     def __init__(self,x,y):
         super().__init__()
@@ -289,10 +288,22 @@ shop_surface=pygame.transform.scale(blank_popup_img,(650,700))
 transparent_popup = pygame.transform.scale(blank_popup_img,(650,700))
 transparent_popup.set_alpha(0)
 
-producer_popup_img= pygame.image.load('images/gui_flat.png').convert_alpha()
-producer_popup_surface= pygame.transform.scale(producer_popup_img,(250,300))
-transparent_producer_popup=pygame.transform.scale(producer_popup_img,(250,300))
-transparent_settings_surface.set_alpha(0)
+#producer popup images:
+producer_popup_img=pygame.image.load('images/gui_flat.png').convert_alpha()
+producer_popup_surface=pygame.transform.scale(producer_popup_img,(250,300))
+transparent_producer_popup_surface=pygame.transform.scale(producer_popup_img,(250,300))
+transparent_producer_popup_surface.set_alpha(50)
+
+copper_img=pygame.image.load('images/copper.png').convert_alpha()
+iron_img=pygame.image.load('images/iron.png').convert_alpha()
+gold_img=pygame.image.load('images/gold.png').convert_alpha()
+alumium_img=pygame.image.load('images/aluminium.png').convert_alpha()
+coal_img=pygame.image.load('images/coal.png').convert_alpha()
+lead_img=pygame.image.load('images/lead.png').convert_alpha()
+
+#producer popup button instantiation
+
+
 
 #sprite images:
 producer_img=pygame.image.load('images/producer.png').convert_alpha()
@@ -345,6 +356,7 @@ transparent_popup=Buttons(100,150,transparent_popup,3.25,7)
 producer_button=Buttons(130,310,producer_img,0.5,0.5)
 crafter_button=Buttons(230,310,crafter_img,0.5,0.5)
 conveyor_button=Buttons(330,310,conveyor_img,0.5,0.5)
+
 
 #shop confirm button images:
 confirm_img=pygame.image.load('images/confirm.png').convert_alpha()
@@ -435,6 +447,13 @@ while run:
                         y*=40
                         decimal_co=str(x)+'.'+str(y)
                         if decimal_co in producer_cos:
+                            transparent_producer_popup=Buttons(co[0],co[1],transparent_producer_popup_surface,1.25,3)
+                            copper_button=Buttons((co[0]+30),co[1]+30,copper_img,0.5,0.5)
+                            iron_button=Buttons(co[0],co[1],iron_img,0.5,0.5)
+                            gold_button=Buttons(co[0],co[1],gold_img,0.5,0.5)
+                            alumium_button=Buttons(co[0],co[1],alumium_img,0.5,0.5)
+                            coal_button=Buttons(co[0],co[1],coal_img,0.5,0.5)
+                            lead_button=Buttons(co[0],co[1],lead_img,0.5,0.5)
                             game_state='producer_popup'
                             #screen.blit(producer_popup,(0,0))
                         elif decimal_co in crafter_cos:
@@ -449,6 +468,7 @@ while run:
                     print(producer_co,'co')
                     game_state='play'
                     producer_co=co
+                #elif
                     
 
             elif game_state=='ingame_settings':
@@ -687,8 +707,14 @@ while run:
     elif game_state=='producer_popup':
         screen.blit(grid_surface_copy,(0,100))
         screen.blit(producer_popup_surface,co)
-        screen.blit(transparent_producer_popup,co)
-
+        transparent_producer_popup.draw()
+        copper_button=Buttons(co[0],co[1],copper_img,1,1)
+        iron_button.draw()
+        gold_button.draw()
+        alumium_button.draw()
+        coal_button.draw()
+        lead_button.draw()
+    
     elif game_state=='shop':
         screen.blit(play_bg,(0,0))
         screen.blit(shop_surface,(100,150))
