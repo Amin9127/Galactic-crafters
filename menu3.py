@@ -81,13 +81,13 @@ class Material(pygame.sprite.Sprite):
         
         self.image=pygame.transform.scale(self.image,(20,20))
 
+        self.amount= producer_info[self.decimal_co][2]
         self.rect=self.image.get_rect(center=(co[0]+20,co[1]+20))
         self.count=0
         self.producer_thrust=True
         self.conveyor_thrust=False
-        self.previous_conveyor_pos=''
-        
-        self.amount=1
+        self.previous_conveyor_pos=''  
+   
 
     def update(self):
         
@@ -103,7 +103,6 @@ class Material(pygame.sprite.Sprite):
                 self.decimal_co=str(self.x)+'.'+str(self.y)
                 if self.decimal_co!=self.previous_conveyor_pos:
                     self.conveyor_direction=conveyor_info.get(self.decimal_co)
-                    print(conveyor_info)
                     self.conveyor_thrust=True
                     self.producer_thrust=False
                     self.count=0
@@ -567,7 +566,7 @@ while run:
                             print(selected_conveyors)
 
                 elif rotate_button.rect.collidepoint(co):
-                    print(producer_info)
+                    print(producer_info,'h')
                     for co in selected_producers:
                         decimal_co=str(co[0])+'.'+str(co[1])
                         print(decimal_co,'producer co')
