@@ -335,12 +335,13 @@ back_button=Buttons(0,0,back_img,1,1)
 #play button images:
 settings_mini_img=pygame.image.load('images/settings_mini.png').convert_alpha()
 blank_popup_img=pygame.image.load('images/button4.png').convert_alpha()
-edit_img=pygame.image.load('images/button4.png').convert_alpha()
-blueprints_img=pygame.image.load('images/button4.png').convert_alpha()
+shop_img=pygame.image.load('images/shop.png').convert_alpha()
+edit_img=pygame.image.load('images/edit.png').convert_alpha()
+blueprints_img=pygame.image.load('images/blueprints.png').convert_alpha()
 map_img=pygame.image.load('images/button4.png').convert_alpha()
 #play screen button instantiation
 settings_mini_button=Buttons(0,0,settings_mini_img,0.5,0.5)
-shop_button = Buttons(800,250,blank_popup_img,0.5,0.5)
+shop_button = Buttons(800,250,shop_img,0.5,0.5)
 edit_button = Buttons(800,300,edit_img,0.5,0.5)
 blueprints_button = Buttons(800,350,blueprints_img,0.5,0.5)
 map_button = Buttons(800,400,map_img,0.5,0.5)
@@ -466,7 +467,10 @@ while run:
                             game_state='producer_popup'
                             #screen.blit(producer_popup,(0,0))
                         elif decimal_co in crafter_cos:
-                            pass
+                            co = [x+40,y+100]
+                            selected_co=co
+                            transparent_crafter_popup=Buttons(co[0],co[1],transparent_producer_popup_surface,1,2.25)
+                            game_state='crafter_popup'
                         elif decimal_co in conveyor_cos:
                             pass
                 else:
@@ -518,6 +522,11 @@ while run:
                     selected_machine='conveyor'
                 elif transparent_popup.rect.collidepoint(co) == False:
                     game_state ='play'
+                elif slider_button.rect.collidepoint(co):
+                    if event.button == 1: 
+                        slider_drag=True
+                        mouse_y=co[1]
+                        offset_y=slider_button.rect.y-mouse_y    
 
             elif game_state=='blueprints':
                 if transparent_popup.rect.collidepoint(co) == False:
@@ -697,9 +706,11 @@ while run:
                     print(selected_producers)
                     selected_crafters=[]
                     selected_conveyors=[]
+
         elif event.type==pygame.MOUSEBUTTONUP:
             if event.button == 1: 
                 slider_drag=False
+
         elif event.type==pygame.MOUSEMOTION:
             co=pygame.mouse.get_pos()
             if slider_drag:
@@ -710,6 +721,7 @@ while run:
                 else:
                     mouse_y=co[1]
                     slider_button.rect.y=mouse_y+offset_y
+
     if game_state =='main menu':
         screen.blit(main_menu_bg,(0,0))
         play_button.draw()
@@ -759,6 +771,13 @@ while run:
         coal_button.draw()
         lead_button.draw()
     
+    elif game_state=='crafter_popup':
+        screen.blit(grid_surface_copy,(0,100))
+        screen.blit(producer_popup_surface,selected_co)
+        transparent_crafter_popup.draw()
+
+    
+
     elif game_state=='shop':
         screen.blit(play_bg,(0,0))
         screen.blit(shop_surface,(100,150))
@@ -771,8 +790,6 @@ while run:
 
 
     elif game_state=='blueprints':
- 
-        
         screen.blit(play_bg,(0,0))
         screen.blit(shop_surface,(100,150))
         transparent_popup.draw()
@@ -809,4 +826,4 @@ while run:
         back_button.draw()
  
     pygame.display.update()
-    clock.tick(120)
+    clock.tick(60)
