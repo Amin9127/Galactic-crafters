@@ -1,8 +1,10 @@
 from curses.textpad import rectangle
+from re import L
 import pygame 
 from sys import exit
 import time
 pygame.init()
+pygame.font.init()
 class Buttons():
     def __init__(self,x,y,image,scale_x,scale_y):
         self.image=pygame.transform.scale(image, (200*scale_x, 100*scale_y))
@@ -230,6 +232,8 @@ class Conveyor(pygame.sprite.Sprite):
             elif conveyor_info[self.decimal_co][0]=='w':
                 self.image=self.image_W
     
+
+font = pygame.font.Font('Pixeltype.ttf',16)
 
 factory_layout=[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
 selected_pos=[]
@@ -494,6 +498,13 @@ while run:
                             crafter_inv_item4='empty'
                             crafter_inv_item5='empty'
                             crafter_inv_item6='empty'
+                            text1msg=0
+                            text2msg=0
+                            text3msg=0                                                                                                                    
+                            text4msg=0
+                            text5msg=0
+                            text6msg=0
+
 
                             if item_types==0:
                                 pass
@@ -524,6 +535,46 @@ while run:
                                 crafter_inv_item4=item_types_list[3]
                                 crafter_inv_item5=item_types_list[4]
                                 crafter_inv_item6=item_types_list[5]
+
+                            if crafter_inv_item1=='empty':
+                                text1msg=0
+                            else:
+                                text1msg=crafter_info[decimal_co][2][crafter_inv_item1]
+
+                            if crafter_inv_item2=='empty':
+                                text2msg=0
+                            else:
+                                text2msg=crafter_info[decimal_co][2][crafter_inv_item2]
+
+                            if crafter_inv_item3=='empty':
+                                text3msg=0
+                            else:
+                                text3msg=crafter_info[decimal_co][2][crafter_inv_item3]
+
+                            if crafter_inv_item4=='empty':
+                                text4msg=0
+                            else:
+                                text4msg=crafter_info[decimal_co][2][crafter_inv_item4]
+
+                            if crafter_inv_item5=='empty':
+                                text5msg=0
+                            else:
+                                text5msg=crafter_info[decimal_co][2][crafter_inv_item5]
+
+                            if crafter_inv_item6=='empty':
+                                text6msg=0
+                            else:
+                                text6msg=crafter_info[decimal_co][2][crafter_inv_item6]
+                            
+                            text1=font.render(str(text1msg),False,(0,0,0))
+                            text2=font.render(str(text2msg),False,(0,0,0))
+                            text3=font.render(str(text3msg),False,(0,0,0))
+                            text4=font.render(str(text4msg),False,(0,0,0))
+                            text5=font.render(str(text5msg),False,(0,0,0))
+                            text6=font.render(str(text6msg),False,(0,0,0))
+
+                            
+                            
                                 
                             inv_button1=Buttons(co[0],co[1],item_imgs[crafter_inv_item1],0.25,0.25)
                             inv_button2=Buttons(co[0]+40,co[1],item_imgs[crafter_inv_item2],0.25,0.25)
@@ -540,7 +591,7 @@ while run:
                         elif decimal_co in conveyor_cos:
                             pass
                 else:
-                    pass
+                    pass 
             
             elif game_state=='producer_popup':
                 if transparent_producer_popup.rect.collidepoint(co) == False:
@@ -829,7 +880,6 @@ while run:
         material_group.draw(grid_surface_copy)
         
         screen.blit(grid_surface_copy,(0,100))
-
         #copy screen
         play_bg=screen.copy()
 
@@ -848,6 +898,13 @@ while run:
         screen.blit(grid_surface_copy,(0,100))
         screen.blit(producer_popup_surface,selected_co)
         transparent_crafter_popup.draw()
+        screen.blit(text1,(selected_co[0]+40,selected_co[1]+20))
+        screen.blit(text2,(selected_co[0]+80,selected_co[1]+20))
+        screen.blit(text3,(selected_co[0]+120,selected_co[1]+20))
+        screen.blit(text4,(selected_co[0]+40,selected_co[1]+60))
+        screen.blit(text5,(selected_co[0]+80,selected_co[1]+60))
+        screen.blit(text6,(selected_co[0]+120,selected_co[1]+60))
+        
         inv_button1.draw()
         inv_button2.draw()
         inv_button3.draw()
