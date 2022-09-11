@@ -65,16 +65,22 @@ class Material(pygame.sprite.Sprite):
         self.decimal_co=str(co[0])+'.'+str(co[1])
 
         if producer_info[self.decimal_co][1]=='copper':
+            self.type='copper'
             self.image=self.image_copper
         elif producer_info[self.decimal_co][1]=='iron':
+            self.type='iron'
             self.image=self.image_iron
         elif producer_info[self.decimal_co][1]=='gold':
+            self.type='gold'
             self.image=self.image_gold
         elif producer_info[self.decimal_co][1]=='aluminium':
+            self.type='aluminium'
             self.image=self.image_aluminium
         elif producer_info[self.decimal_co][1]=='lead':
+            self.type='lead'
             self.image=self.image_lead
         elif producer_info[self.decimal_co][1]=='coal':
+            self.type='coal'
             self.image=self.image_coal
         
         self.image=pygame.transform.scale(self.image,(20,20))
@@ -141,9 +147,12 @@ class Material(pygame.sprite.Sprite):
             self.decimal_co=str(self.x)+'.'+str(self.y)
             print(self.decimal_co,'dec co')
             self.kill()
-            crafter_info[self.decimal_co][2].update={'copper':self.amount}
+            if self.type in crafter_info[self.decimal_co][2]:
+                self.stored_amount=crafter_info[self.decimal_co][2][self.type]
+                crafter_info[self.decimal_co][2].update({self.type:self.stored_amount+self.amount})
+            else:
+                crafter_info[self.decimal_co][2].update({self.type:self.amount})
             print(crafter_info)
-
             print('collision')
 
         if self.rect.x>1000:
@@ -224,7 +233,6 @@ class Conveyor(pygame.sprite.Sprite):
 
 factory_layout=[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
 selected_pos=[]
-producer_co=[]
 
 #producer_info={'0.0':['n','copper',1],}
 producer_info={}
@@ -304,9 +312,13 @@ transparent_producer_popup_surface.set_alpha(0)
 copper_img=pygame.image.load('images/copper.png').convert_alpha()
 iron_img=pygame.image.load('images/iron.png').convert_alpha()
 gold_img=pygame.image.load('images/gold.png').convert_alpha()
-alumium_img=pygame.image.load('images/aluminium.png').convert_alpha()
+aluminium_img=pygame.image.load('images/aluminium.png').convert_alpha()
 coal_img=pygame.image.load('images/coal.png').convert_alpha()
 lead_img=pygame.image.load('images/lead.png').convert_alpha()
+empty_slot_img=pygame.image.load('images/cross.png').convert_alpha()
+
+crafter_inv_images={1:empty_slot_img,2:empty_slot_img,3:empty_slot_img,4:empty_slot_img,5:empty_slot_img,6:empty_slot_img,}
+item_imgs={'empty':empty_slot_img,'copper':copper_img,'iron':iron_img,'gold':gold_img,'aluminium':aluminium_img,'lead':lead_img,'coal':coal_img}
 
 #producer popup button instantiation
 
@@ -461,15 +473,69 @@ while run:
                             copper_button=Buttons(co[0],co[1],copper_img,0.5,0.5)
                             iron_button=Buttons(co[0]+90,co[1],iron_img,0.5,0.5)
                             gold_button=Buttons(co[0],co[1]+40,gold_img,0.5,0.5)
-                            aluminium_button=Buttons(co[0]+90,co[1]+40,alumium_img,0.5,0.5)
+                            aluminium_button=Buttons(co[0]+90,co[1]+40,aluminium_img,0.5,0.5)
                             coal_button=Buttons(co[0],co[1]+80,coal_img,0.5,0.5)
                             lead_button=Buttons(co[0]+90,co[1]+80,lead_img,0.5,0.5)
                             game_state='producer_popup'
-                            #screen.blit(producer_popup,(0,0))
+
                         elif decimal_co in crafter_cos:
+                            co=[x+40,y+100]
+                            for item in crafter_info[decimal_co][2]:
+                                quantity = crafter_info[decimal_co][2][item]
+                                print(item,quantity)
+                            
+                            item_types=len(crafter_info[decimal_co][2].keys())
+                            item_types_list=list(crafter_info[decimal_co][2].keys())
+                            print(item_types)
+
+                            crafter_inv_item1='empty'
+                            crafter_inv_item2='empty'
+                            crafter_inv_item3='empty'
+                            crafter_inv_item4='empty'
+                            crafter_inv_item5='empty'
+                            crafter_inv_item6='empty'
+
+                            if item_types==0:
+                                pass
+                            elif item_types==1:
+                                crafter_inv_item1=item_types_list[0]
+                            elif item_types==2:
+                                crafter_inv_item1=item_types_list[0]
+                                crafter_inv_item2=item_types_list[1] 
+                            elif item_types==3:
+                                crafter_inv_item1=item_types_list[0]
+                                crafter_inv_item2=item_types_list[1]
+                                crafter_inv_item3=item_types_list[2]
+                            elif item_types==4:
+                                crafter_inv_item1=item_types_list[0]
+                                crafter_inv_item2=item_types_list[1]
+                                crafter_inv_item3=item_types_list[2]
+                                crafter_inv_item4=item_types_list[3]
+                            elif item_types==5:
+                                crafter_inv_item1=item_types_list[0]
+                                crafter_inv_item2=item_types_list[1]
+                                crafter_inv_item3=item_types_list[2]
+                                crafter_inv_item4=item_types_list[3]
+                                crafter_inv_item5=item_types_list[4]
+                            elif item_types==6:
+                                crafter_inv_item1=item_types_list[0]
+                                crafter_inv_item2=item_types_list[1]
+                                crafter_inv_item3=item_types_list[2]
+                                crafter_inv_item4=item_types_list[3]
+                                crafter_inv_item5=item_types_list[4]
+                                crafter_inv_item6=item_types_list[5]
+                                
+                            inv_button1=Buttons(co[0],co[1],item_imgs[crafter_inv_item1],0.25,0.25)
+                            inv_button2=Buttons(co[0]+40,co[1],item_imgs[crafter_inv_item2],0.25,0.25)
+                            inv_button3=Buttons(co[0]+80,co[1],item_imgs[crafter_inv_item3],0.25,0.25)
+                            inv_button4=Buttons(co[0],co[1]+40,item_imgs[crafter_inv_item4],0.25,0.25)
+                            inv_button5=Buttons(co[0]+40,co[1]+40,item_imgs[crafter_inv_item5],0.25,0.25)
+                            inv_button6=Buttons(co[0]+80,co[1]+40,item_imgs[crafter_inv_item6],0.25,0.25)
+
                             co = [x+40,y+100]
                             selected_co=co
                             transparent_crafter_popup=Buttons(co[0],co[1],transparent_producer_popup_surface,1,2.25)
+                            
                             game_state='crafter_popup'
                         elif decimal_co in conveyor_cos:
                             pass
@@ -478,21 +544,29 @@ while run:
             
             elif game_state=='producer_popup':
                 if transparent_producer_popup.rect.collidepoint(co) == False:
-                    print(producer_co,'co')
                     game_state='play'
-                    producer_co=co
                 elif copper_button.rect.collidepoint(co):
                     producer_info[decimal_co][1]='copper'
+                    game_state='play'
                 elif iron_button.rect.collidepoint(co):
                     producer_info[decimal_co][1]='iron'
+                    game_state='play'
                 elif gold_button.rect.collidepoint(co):
                     producer_info[decimal_co][1]='gold'
+                    game_state='play'
                 elif aluminium_button.rect.collidepoint(co):
                     producer_info[decimal_co][1]='aluminium'
+                    game_state='play'
                 elif coal_button.rect.collidepoint(co):
                     producer_info[decimal_co][1]='coal'
+                    game_state='play'
                 elif lead_button.rect.collidepoint(co):
                     producer_info[decimal_co][1]='lead'
+                    game_state='play'
+            
+            elif game_state=='crafter_popup':
+                if transparent_crafter_popup.rect.collidepoint(co) == False:
+                    game_state='play'            
                 
             elif game_state=='ingame_settings':
                 if menu_button.rect.collidepoint(co):
@@ -555,7 +629,7 @@ while run:
                             factory_layout[co[0]][co[1]]=1
                             have_producer=True
                         elif selected_machine=='crafter':
-                            crafter_info[decimal_co]=['n','nothing',{'nothing':0}]
+                            crafter_info[decimal_co]=['n','nothing',{}]
                             new_crafter=Crafter(x,y)
                             crafter_group.add(new_crafter)
                             factory_layout[co[0]][co[1]]=1
@@ -747,7 +821,6 @@ while run:
 
         grid_surface_copy= grid_surface.copy()
 
-
         #machine stuff
         producer_group.draw(grid_surface_copy)
         crafter_group.draw(grid_surface_copy)
@@ -775,8 +848,12 @@ while run:
         screen.blit(grid_surface_copy,(0,100))
         screen.blit(producer_popup_surface,selected_co)
         transparent_crafter_popup.draw()
-
-    
+        inv_button1.draw()
+        inv_button2.draw()
+        inv_button3.draw()
+        inv_button4.draw()
+        inv_button5.draw()
+        inv_button6.draw()
 
     elif game_state=='shop':
         screen.blit(play_bg,(0,0))
@@ -788,14 +865,12 @@ while run:
         scrollbar_button.draw()
         slider_button.draw()
 
-
     elif game_state=='blueprints':
         screen.blit(play_bg,(0,0))
         screen.blit(shop_surface,(100,150))
         transparent_popup.draw()
         scrollbar_button.draw()
         slider_button.draw()
-
 
     elif game_state=='shop confirm':
         screen.blit(grid_surface_copy,(0,100))
@@ -827,3 +902,4 @@ while run:
  
     pygame.display.update()
     clock.tick(60)
+
