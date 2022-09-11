@@ -97,7 +97,7 @@ class Material(pygame.sprite.Sprite):
 
     def update(self):
         
-        #self.decimal_co=str(co[0])+'.'+str(co[1])
+        #self.  =str(co[0])+'.'+str(co[1])
         #print(co,'go')
         self.this_producer_info=producer_info.get(self.decimal_co)
         conveyor_cos=list(conveyor_info.keys())
@@ -166,16 +166,98 @@ class Material(pygame.sprite.Sprite):
         elif self.rect.y<0:
             self.kill()
         
+    
+class Items(pygame.sprite.Sprite):
+    def __init__(self,co):
+        super().__inti__()
+        self.image_circuit==pygame.image.load('images/circuit.png').convert_alpha()
 
+        self.image=pygame.transform.scale(self.image,(20,20))
+        self.amount= 1
+        self.producer_thrust=True
+        self.conveyor_thrust=False
+        self.previous_conveyor_pos=''
+        self.decimal_co=str(co[0])+'.'+str(co[1])
+
+    def update(self):
+        
+        #self.decimal_co=str(co[0])+'.'+str(co[1])
+        #print(co,'go')
+        self.this_producer_info=producer_info.get(self.decimal_co)
+        conveyor_cos=list(conveyor_info.keys())
+        if self.conveyor_thrust==False and self.producer_thrust==False:
+
+            if pygame.sprite.spritecollideany(self,conveyor_group,pygame.sprite.collide_rect_ratio(1)):
+                self.x= ((self.rect.x)//40)*40
+                self.y= (((self.rect.y))//40)*40
+                self.decimal_co=str(self.x)+'.'+str(self.y)
+                if self.decimal_co!=self.previous_conveyor_pos:
+                    self.conveyor_direction=conveyor_info.get(self.decimal_co)
+                    self.conveyor_thrust=True
+                    self.producer_thrust=False
+                    self.count=0
+                    self.previous_conveyor_pos=self.decimal_co
+        self.count+=1
+        
+
+        if self.count<8 and self.producer_thrust==True:
+            if self.this_producer_info is None:
+                pass
+            elif self.this_producer_info[0]=='n':
+                self.rect.y-=5#*dt
+            elif self.this_producer_info[0]=='e':
+                self.rect.x+=5#*dt
+            elif self.this_producer_info[0]=='s':
+                self.rect.y+=5#*dt
+            elif self.this_producer_info[0]=='w':
+                self.rect.x-=5#*dt
+        else:
+            self.producer_thrust=False
+
+        if self.count<16 and self.conveyor_thrust==True:
+            if self.conveyor_direction=='n':
+                self.rect.y-=5
+            elif self.conveyor_direction=='e':
+                self.rect.x+=5
+            elif self.conveyor_direction=='s':
+                self.rect.y+=5
+            elif self.conveyor_direction=='w':
+                self.rect.x-=5
+            self.count+=1
+        else:
+            self.conveyor_thrust=False
+
+        if pygame.sprite.spritecollideany(self,crafter_group,pygame.sprite.collide_rect_ratio(1)):
+            self.x= ((self.rect.x)//40)*40
+            self.y= (((self.rect.y))//40)*40
+            self.decimal_co=str(self.x)+'.'+str(self.y)
+            print(self.decimal_co,'dec co')
+            self.kill()
+            if self.type in crafter_info[self.decimal_co][2]:
+                self.stored_amount=crafter_info[self.decimal_co][2][self.type]
+                crafter_info[self.decimal_co][2].update({self.type:self.stored_amount+self.amount})
+            else:
+                crafter_info[self.decimal_co][2].update({self.type:self.amount})
+            print(crafter_info)
+            print('collision')
+
+        if self.rect.x>1000:
+            self.kill()
+        elif self.rect.x<0:
+            self.kill()
+        elif self.rect.y>1000:
+            self.kill()
+        elif self.rect.y<0:
+            self.kill()
 class Crafter(pygame.sprite.Sprite):
     def __init__(self,x,y):
         super().__init__()
         self.image=pygame.image.load('images/crafter.png').convert_alpha()
         self.image=pygame.transform.scale(self.image, (40, 40))
         self.image_N=self.image
-        self.image_E=pygame.transform.rotate(self.image,270)
+        self.image_E=pygame.transform.rotate(self.image,90)
         self.image_S=pygame.transform.rotate(self.image,180)
-        self.image_W=pygame.transform.rotate(self.image,90)
+        self.image_W=pygame.transform.rotate(self.image,270)
 
         self.rect=self.image.get_rect(topleft=(x,y))
 
@@ -183,9 +265,19 @@ class Crafter(pygame.sprite.Sprite):
 
     def update(self):
         self.current_co=self.rect.topleft
-        x= self.current_co[0]
-        y= self.current_co[1]
-        self.decimal_co=str(x)+'.'+str(y)
+        self.decimal_co=str(self.current_co[0])+'.'+str(self.current_co[1])
+
+        self.item=crafter_info[self.decimal_co][1]
+        self.item_bp=list(blueprints[self.item].keys())
+        for x in self.item_bp:
+            if crafter_info[self.decimal_co][2].get(x)is not None:
+                if crafter_info[self.decimal_co][2].get(x)>=blueprints[self.item][x]:
+                    self.components_fulfilled =True
+            else:
+                self.components_fulfilled=False
+
+        if self.components_fulfilled==True:
+            print('craft')
 
         if self.decimal_co not in crafter_info.keys():
             self.kill()
@@ -261,6 +353,8 @@ material_group=pygame.sprite.Group()
 have_producer=False
 have_crafter=False
 have_conveyor=False
+
+blueprints={'circuit':{'copper':3,'gold':1},'cell':{}}
 
 #output factory layout
 '''
@@ -486,11 +580,9 @@ while run:
                             co=[x+40,y+100]
                             for item in crafter_info[decimal_co][2]:
                                 quantity = crafter_info[decimal_co][2][item]
-                                print(item,quantity)
                             
                             item_types=len(crafter_info[decimal_co][2].keys())
                             item_types_list=list(crafter_info[decimal_co][2].keys())
-                            print(item_types)
 
                             crafter_inv_item1='empty'
                             crafter_inv_item2='empty'
@@ -680,7 +772,7 @@ while run:
                             factory_layout[co[0]][co[1]]=1
                             have_producer=True
                         elif selected_machine=='crafter':
-                            crafter_info[decimal_co]=['n','nothing',{}]
+                            crafter_info[decimal_co]=['n','circuit',{}]
                             new_crafter=Crafter(x,y)
                             crafter_group.add(new_crafter)
                             factory_layout[co[0]][co[1]]=1
@@ -743,7 +835,7 @@ while run:
                             print(selected_crafters,'selected crafters')
                         elif decimal_co in conveyor_cos:
                             selected_conveyors.append((x,y))
-                            print(selected_conveyors)
+                            print(selected_conveyors,'selected connveyors')
                     else:
                         pass
 
