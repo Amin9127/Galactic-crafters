@@ -42,11 +42,11 @@ class Producer(pygame.sprite.Sprite):
         else:
             if producer_info[self.decimal_co][0]=='n':
                 self.image=self.image_N
-            elif producer_info[decimal_co][0]=='e':
+            elif producer_info[self.decimal_co][0]=='e':
                 self.image=self.image_E
-            elif producer_info[decimal_co][0]=='s':
+            elif producer_info[self.decimal_co][0]=='s':
                 self.image=self.image_S
-            elif producer_info[decimal_co][0]=='w':
+            elif producer_info[self.decimal_co][0]=='w':
                 self.image=self.image_W
 
     def create_material(self,co):
@@ -361,8 +361,7 @@ producer_info={}
 crafter_info={}
 #conveyor_info={'0.0':'n'}
 conveyor_info={}
-#material_info={'0.0':'copper',1}
-material_info={}
+
 
 selected_producers=[]
 selected_crafters=[]
