@@ -1,4 +1,3 @@
-
 import pygame 
 from sys import exit
 import time
@@ -18,6 +17,21 @@ def draw_text(text,font,text_colour,x,y):
     img=font.render(text,True,text_colour)
     screen.blit(img,(x,y))
 
+class GreenSquare(pygame.sprite.Sprite):
+    def __init__(self,x,y):
+        super().__init__()
+        self.image=pygame.image.load('images/green_square.png').convert_alpha()
+        self.image=pygame.transform.scale(self.image, (40, 40))
+        self.rect=self.image.get_rect(topleft=(x,y))
+    
+    def update(self):
+        self.current_co=self.rect.topleft
+        if [self.current_co[0]/40,self.current_co[1]/40] in selected_pos:
+            pass
+        else:
+
+            print(self.current_co)
+            self.kill()
 class Producer(pygame.sprite.Sprite):
     def __init__(self,x,y):
         super().__init__()
@@ -373,7 +387,7 @@ crafter_group=pygame.sprite.Group()
 conveyor_group=pygame.sprite.Group()
 material_group=pygame.sprite.Group()
 items_group=pygame.sprite.Group()
-
+green_square_group=pygame.sprite.Group()
 
 have_producer=False
 have_crafter=False
@@ -789,16 +803,16 @@ while run:
                         if [x,y] in selected_pos:
                             selected_pos.remove([x,y])
                             selection='delete'
+                            green_square_group.update()
+
                         else:
                             selected_pos.append([x,y])
+                            new_GreenSquare=GreenSquare(x*40,y*40)
+                            green_square_group.add(new_GreenSquare)
                             selection='place'
 
-                    for co in selected_pos:
-                        x= co[0]*40
-                        y= co[1]*40
-                        #draw green squares
-                        pygame.draw.rect(grid_surface_copy, (0,255,0), pygame.Rect(x,y, 40, 40))
-                        screen.blit(grid_surface_copy,(0,100))
+                    
+                    green_square_group.draw(grid_surface_copy)
                     print('selected pos',selected_pos)
 
                 elif confirm_button.rect.collidepoint(co):
@@ -978,17 +992,19 @@ while run:
                             if [x,y] not in selected_pos:
                                 if selection=='place':
                                     selected_pos.append([x,y])
+                                    new_GreenSquare=GreenSquare(x*40,y*40)
+                                    green_square_group.add(new_GreenSquare)
                         
                             else:
                                 if selection=='delete':
-                                    selected_pos.remove([x,y])
+                                    selected_pos.remove([x,y])  
+                                    green_square_group.update()
                         
-                        for co in selected_pos:
-                            x= co[0]*40
-                            y= co[1]*40
-                            #draw green squares
-                            pygame.draw.rect(grid_surface_copy, (0,255,0), pygame.Rect(x,y, 40, 40))
-                            screen.blit(grid_surface_copy,(0,100))
+
+                        screen.blit(grid_surface_copy,(0,100))
+                        green_square_group.update()
+                        green_square_group.draw(grid_surface_copy)
+                            
 
 
     if game_state =='main menu':
@@ -1080,10 +1096,13 @@ while run:
         slider_button.draw()
 
     elif game_state=='shop confirm':
-        screen.blit(grid_surface_copy,(0,100))
+        
         transparent_grid_button.draw()
         confirm_button.draw()
         cancel_button.draw()
+        green_square_group.update()
+        green_square_group.draw(grid_surface_copy)
+        screen.blit(grid_surface_copy,(0,100))
 
     elif game_state=='edit':
         screen.blit(grid_surface_copy,(0,100))
