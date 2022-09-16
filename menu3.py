@@ -366,7 +366,7 @@ conveyor_info={}
 selected_producers=[]
 selected_crafters=[]
 selected_conveyors=[]
-
+selection=''
 
 producer_group=pygame.sprite.Group()
 crafter_group=pygame.sprite.Group()
@@ -780,7 +780,28 @@ while run:
                         offset_y=slider_button.rect.y-mouse_y
 
             elif game_state=='shop confirm':
-                if confirm_button.rect.collidepoint(co):
+                if transparent_grid_button.rect.collidepoint(co):
+                    slider_drag=True
+                    y=(y-100)//40
+                    x=(x//40)
+
+                    if factory_layout[x][y]==0:
+                        if [x,y] in selected_pos:
+                            selected_pos.remove([x,y])
+                            selection='delete'
+                        else:
+                            selected_pos.append([x,y])
+                            selection='place'
+
+                    for co in selected_pos:
+                        x= co[0]*40
+                        y= co[1]*40
+                        #draw green squares
+                        pygame.draw.rect(grid_surface_copy, (0,255,0), pygame.Rect(x,y, 40, 40))
+                        screen.blit(grid_surface_copy,(0,100))
+                    print('selected pos',selected_pos)
+
+                elif confirm_button.rect.collidepoint(co):
                     game_state='play'
                     screen.blit(grid_surface,(0,100))
                     for co in selected_pos:
@@ -811,28 +832,12 @@ while run:
                             print(conveyor_info)
                     selected_pos=[]
 
-
                 elif cancel_button.rect.collidepoint(co):
                     game_state='play'
-                elif transparent_grid_button.rect.collidepoint(co):
-                    y=(y-100)//40
-                    x=(x//40)
-                    if [x,y] in selected_pos:
-                        selected_pos.remove([x,y])
-                    elif factory_layout[x][y]==1:
-                        pass
-                    else:
-                        selected_pos.append([x,y])
-                    for co in selected_pos:
-                        x= co[0]*40
-                        y= co[1]*40
-                        #draw green squares
-                        pygame.draw.rect(grid_surface_copy, (0,255,0), pygame.Rect(x,y, 40, 40))
-                        screen.blit(grid_surface_copy,(0,100))
-                    print('selected pos',selected_pos)
 
             elif game_state=='edit':
                 if transparent_grid_button.rect.collidepoint(co):
+                    slider_drag=True
                     x= co[0]
                     y= co[1]
                     layout_y=(y-100)//40
@@ -849,7 +854,6 @@ while run:
 
                     if factory_layout[layout_x][layout_y]==1:
                         if decimal_co in producer_cos:
-                            
                             if co in selected_producers:
                                 co =[x,y]
                                 selected_producers.pop(co)
@@ -912,7 +916,6 @@ while run:
                     material_group.draw(grid_surface_copy)
                     print(producer_info)
                 
-
                 elif delete_button.rect.collidepoint(co):
                     print(selected_producers,'to delete')
                     for pos in selected_producers:
@@ -956,13 +959,39 @@ while run:
         elif event.type==pygame.MOUSEMOTION:
             co=pygame.mouse.get_pos()
             if slider_drag:
-                if offset_y+mouse_y<150:
-                        slider_button.rect.top=150
-                elif offset_y+mouse_y>800:
-                    slider_button.rect.top=800
-                else:
-                    mouse_y=co[1]
-                    slider_button.rect.y=mouse_y+offset_y
+                if game_state=='blueprints':
+                
+                    if offset_y+mouse_y<150:
+                            slider_button.rect.top=150
+                    elif offset_y+mouse_y>800:
+                        slider_button.rect.top=800
+                    else:
+                        mouse_y=co[1]
+                        slider_button.rect.y=mouse_y+offset_y
+
+                elif game_state=='shop confirm':
+                    x=(co[0]//40)
+                    y=(co[1]-100)//40
+                    if factory_layout[x][y]==0:
+                        if selection=='place':
+                            if [x,y] not in selected_pos:
+                                selected_pos.append([x,y])
+                    elif factory_layout[x][y]==1:
+                        print('1')
+                        if selection=='delete':
+                            print('2')
+                            selected_pos.remove([x,y])
+                            print('3')
+                    
+                    for co in selected_pos:
+                        x= co[0]*40
+                        y= co[1]*40
+                        #draw green squares
+                        pygame.draw.rect(grid_surface_copy, (0,255,0), pygame.Rect(x,y, 40, 40))
+                        screen.blit(grid_surface_copy,(0,100))
+                    print('selected pos',selected_pos)
+                    
+                    pass
 
     if game_state =='main menu':
         screen.blit(main_menu_bg,(0,0))
