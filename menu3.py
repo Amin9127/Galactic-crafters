@@ -834,6 +834,7 @@ while run:
 
                 elif cancel_button.rect.collidepoint(co):
                     game_state='play'
+                    selected_pos=[]
 
             elif game_state=='edit':
                 if transparent_grid_button.rect.collidepoint(co):
@@ -970,28 +971,25 @@ while run:
                         slider_button.rect.y=mouse_y+offset_y
 
                 elif game_state=='shop confirm':
-                    x=(co[0]//40)
-                    y=(co[1]-100)//40
-                    if factory_layout[x][y]==0:
-                        if selection=='place':
+                    if transparent_grid_button.rect.collidepoint(co):
+                        x=(co[0]//40)
+                        y=(co[1]-100)//40
+                        if factory_layout[x][y]==0:                      
                             if [x,y] not in selected_pos:
-                                selected_pos.append([x,y])
-                    elif factory_layout[x][y]==1:
-                        print('1')
-                        if selection=='delete':
-                            print('2')
-                            selected_pos.remove([x,y])
-                            print('3')
-                    
-                    for co in selected_pos:
-                        x= co[0]*40
-                        y= co[1]*40
-                        #draw green squares
-                        pygame.draw.rect(grid_surface_copy, (0,255,0), pygame.Rect(x,y, 40, 40))
-                        screen.blit(grid_surface_copy,(0,100))
-                    print('selected pos',selected_pos)
-                    
-                    pass
+                                if selection=='place':
+                                    selected_pos.append([x,y])
+                        
+                            else:
+                                if selection=='delete':
+                                    selected_pos.remove([x,y])
+                        
+                        for co in selected_pos:
+                            x= co[0]*40
+                            y= co[1]*40
+                            #draw green squares
+                            pygame.draw.rect(grid_surface_copy, (0,255,0), pygame.Rect(x,y, 40, 40))
+                            screen.blit(grid_surface_copy,(0,100))
+
 
     if game_state =='main menu':
         screen.blit(main_menu_bg,(0,0))
