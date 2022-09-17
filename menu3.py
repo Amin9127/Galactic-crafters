@@ -24,13 +24,15 @@ class GreenSquare(pygame.sprite.Sprite):
         self.image=pygame.transform.scale(self.image, (40, 40))
         self.rect=self.image.get_rect(topleft=(x,y))
     
-    def update(self):
+    def update(self,selected_pos):
         self.current_co=self.rect.topleft
-        if [self.current_co[0]/40,self.current_co[1]/40] in selected_pos:
+        self.layout_x=self.current_co[0]/40
+        self.layout_y=self.current_co[1]/40
+        if [self.layout_x,self.layout_y] in selected_pos:
             pass
         else:
 
-            print(self.current_co)
+            print('should be deleted')
             self.kill()
 class Producer(pygame.sprite.Sprite):
     def __init__(self,x,y):
@@ -795,6 +797,7 @@ while run:
 
             elif game_state=='shop confirm':
                 if transparent_grid_button.rect.collidepoint(co):
+                    grid_surface_copy= play_grid_bg
                     slider_drag=True
                     y=(y-100)//40
                     x=(x//40)
@@ -803,7 +806,7 @@ while run:
                         if [x,y] in selected_pos:
                             selected_pos.remove([x,y])
                             selection='delete'
-                            green_square_group.update()
+                            green_square_group.update(selected_pos)
 
                         else:
                             selected_pos.append([x,y])
@@ -985,6 +988,7 @@ while run:
                         slider_button.rect.y=mouse_y+offset_y
 
                 elif game_state=='shop confirm':
+                    grid_surface_copy= play_grid_bg
                     if transparent_grid_button.rect.collidepoint(co):
                         x=(co[0]//40)
                         y=(co[1]-100)//40
@@ -998,11 +1002,12 @@ while run:
                             else:
                                 if selection=='delete':
                                     selected_pos.remove([x,y])  
-                                    green_square_group.update()
+                                    green_square_group.update(selected_pos)
+                                    
                         
 
                         screen.blit(grid_surface_copy,(0,100))
-                        green_square_group.update()
+                        green_square_group.update(selected_pos)
                         green_square_group.draw(grid_surface_copy)
                             
 
@@ -1047,6 +1052,7 @@ while run:
         
         screen.blit(grid_surface_copy,(0,100))
         #copy screen
+        play_grid_bg=grid_surface_copy.copy()
         play_bg=screen.copy()
 
     elif game_state=='producer_popup':
@@ -1096,13 +1102,13 @@ while run:
         slider_button.draw()
 
     elif game_state=='shop confirm':
-        
+        screen.blit(grid_surface_copy,(0,100))
         transparent_grid_button.draw()
         confirm_button.draw()
         cancel_button.draw()
-        green_square_group.update()
+        green_square_group.update(selected_pos)
         green_square_group.draw(grid_surface_copy)
-        screen.blit(grid_surface_copy,(0,100))
+        
 
     elif game_state=='edit':
         screen.blit(grid_surface_copy,(0,100))
