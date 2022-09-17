@@ -34,6 +34,60 @@ class GreenSquare(pygame.sprite.Sprite):
 
             print('should be deleted')
             self.kill()
+class Arrow(pygame.sprite.Sprite):
+    def __init__(self,x,y):
+        super().__init__()
+        self.image=pygame.image.load('images/arrow.png').convert_alpha()
+        self.image=pygame.transform.scale(self.image, (40, 40))
+        self.image=pygame.transform.rotate(self.image,90)
+        self.image_N=self.image
+        self.image_E=pygame.transform.rotate(self.image,270)
+        self.image_S=pygame.transform.rotate(self.image,180)
+        self.image_W=pygame.transform.rotate(self.image,90)
+        self.rect=self.image.get_rect(topleft=(x,y))
+
+        self.current_co=self.rect.topleft
+        self.decimal_co=str(self.current_co[0])+'.'+str(self.current_co[1]) 
+    
+    def update(self):
+        self.current_co=self.rect.topleft
+        self.layout_x=self.current_co[0]//40
+        self.layout_y=self.current_co[1]//40
+        self.decimal_co=str(self.layout_x*40)+'.'+str(self.layout_y*40)
+        print(self.layout_x,self.layout_y)
+        if factory_layout[self.layout_x][self.layout_y] ==0 :
+            self.kill()
+        else:
+            if self.decimal_co in producer_info:
+                if producer_info[self.decimal_co][0]=='n':
+                    self.image=self.image_N
+                elif producer_info[self.decimal_co][0]=='e':
+                    self.image=self.image_E
+                elif producer_info[self.decimal_co][0]=='s':
+                    self.image=self.image_S
+                elif producer_info[self.decimal_co][0]=='w':
+                    self.image=self.image_W
+
+            elif self.decimal_co in crafter_info:
+                if crafter_info[self.decimal_co][0]=='n':
+                    self.image=self.image_N
+                elif crafter_info[self.decimal_co][0]=='e':
+                    self.image=self.image_E
+                elif crafter_info[self.decimal_co][0]=='s':
+                    self.image=self.image_S
+                elif crafter_info[self.decimal_co][0]=='w':
+                    self.image=self.image_W
+
+            elif self.decimal_co in conveyor_info:
+                if conveyor_info[self.decimal_co][0]=='n':
+                    self.image=self.image_N
+                elif conveyor_info[self.decimal_co][0]=='e':
+                    self.image=self.image_E
+                elif conveyor_info[self.decimal_co][0]=='s':
+                    self.image=self.image_S
+                elif conveyor_info[self.decimal_co][0]=='w':
+                    self.image=self.image_W
+
 class Producer(pygame.sprite.Sprite):
     def __init__(self,x,y):
         super().__init__()
@@ -390,6 +444,7 @@ conveyor_group=pygame.sprite.Group()
 material_group=pygame.sprite.Group()
 items_group=pygame.sprite.Group()
 green_square_group=pygame.sprite.Group()
+arrows_group=pygame.sprite.Group()
 
 have_producer=False
 have_crafter=False
@@ -589,7 +644,24 @@ while run:
                 elif shop_button.rect.collidepoint(co):
                     game_state='shop'
                 elif edit_button.rect.collidepoint(co):
-                    game_state='edit'    
+                    game_state='edit'
+                    producer_cos=list(producer_info.keys())
+                    crafter_cos=list(crafter_info.keys())
+                    conveyor_cos=list(conveyor_info.keys())
+                    for co in producer_cos:
+                        co = co.split('.')
+                        new_arrow = Arrow(int(co[0]),int(co[1]))
+                        arrows_group.add(new_arrow)
+                        print('new arrow')
+                    for co in crafter_cos:
+                        co = co.split('.')
+                        new_arrow = Arrow(int(co[0]),int(co[1]))
+                        arrows_group.add(new_arrow)
+                    for co in conveyor_cos:
+                        co = co.split('.')
+                        new_arrow = Arrow(int(co[0]),int(co[1]))
+                        arrows_group.add(new_arrow)    
+
                 elif blueprints_button.rect.collidepoint(co):
                     game_state='blueprints'
                 elif map_button.rect.collidepoint(co):
@@ -928,6 +1000,7 @@ while run:
                     producer_group.update()
                     crafter_group.update()
                     conveyor_group.update()
+                    arrows_group.update()
                     producer_group.draw(grid_surface_copy)
                     crafter_group.draw(grid_surface_copy)
                     conveyor_group.draw(grid_surface_copy)
@@ -937,19 +1010,25 @@ while run:
                 elif delete_button.rect.collidepoint(co):
                     print(selected_producers,'to delete')
                     for pos in selected_producers:
+                        print(pos[0]/40)
+                        factory_layout[int(pos[0]/40)][int(pos[1]/40)]=0
                         decimal_co=str(pos[0])+'.'+str(pos[1])
                         producer_info.pop(decimal_co)
                     for pos in selected_crafters:
+                        factory_layout[int(pos[0]/40)][int(pos[1]/40)]=0
                         decimal_co=str(pos[0])+'.'+str(pos[1])
                         crafter_info.pop(decimal_co)
                     for pos in selected_conveyors:
+                        factory_layout[int(pos[0]/40)][int(pos[1]/40)]=0
                         decimal_co=str(pos[0])+'.'+str(pos[1])
                         conveyor_info.pop(decimal_co)
+
 
                     grid_surface_copy= grid_surface.copy()
                     producer_group.update()
                     crafter_group.update()
                     conveyor_group.update()
+                    arrows_group.update()
                     producer_group.draw(grid_surface_copy)
                     crafter_group.draw(grid_surface_copy)
                     conveyor_group.draw(grid_surface_copy)
@@ -969,6 +1048,7 @@ while run:
                     print(selected_producers)
                     selected_crafters=[]
                     selected_conveyors=[]
+            
 
         elif event.type==pygame.MOUSEBUTTONUP:
             if event.button == 1: 
@@ -1116,6 +1196,7 @@ while run:
         delete_button.draw()
         confirm_button.draw()
         cancel_button.draw()
+        arrows_group.draw(grid_surface_copy)
         if have_producer: 
             producer_group.update()
 
