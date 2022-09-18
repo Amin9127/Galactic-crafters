@@ -87,6 +87,10 @@ class Arrow(pygame.sprite.Sprite):
                 elif conveyor_info[self.decimal_co][0]=='w':
                     self.image=self.image_W
 
+class Blueprints(pygame.sprite.Sprite):
+    def  __init__(self,x,y):
+        pass
+    
 class Producer(pygame.sprite.Sprite):
     def __init__(self,x,y):
         super().__init__()
@@ -166,9 +170,6 @@ class Material(pygame.sprite.Sprite):
         self.previous_conveyor_pos=''  
    
     def update(self):
-        
-        #self.  =str(co[0])+'.'+str(co[1])
-        #print(co,'go')
         self.this_producer_info=producer_info.get(self.decimal_co)
         conveyor_cos=list(conveyor_info.keys())
         if self.conveyor_thrust==False and self.producer_thrust==False:
@@ -223,7 +224,6 @@ class Material(pygame.sprite.Sprite):
                 crafter_info[self.decimal_co][2].update({self.type:self.stored_amount+self.amount})
             else:
                 crafter_info[self.decimal_co][2].update({self.type:self.amount})
-            print(crafter_info)
 
         if self.rect.x>1000:
             self.kill()
@@ -337,18 +337,12 @@ class Crafter(pygame.sprite.Sprite):
         self.rect=self.image.get_rect(topleft=(x,y))
 
         self.decimal_co=str(x)+'.'+str(y)
-
     def update(self):
+        
         self.current_co=self.rect.topleft
         self.decimal_co=str(self.current_co[0])+'.'+str(self.current_co[1])
-
-        self.item=crafter_info[self.decimal_co][1]
-        self.item_bp=list(blueprints[self.item].keys())
-        self.item_bp_components=len(self.item_bp)
-        self.components_fulfilled=0
-        self.craft=False
-
-        if self.decimal_co not in crafter_info.keys():
+        
+        if self.decimal_co not in crafter_info:
             self.kill()
         else:
             if crafter_info[self.decimal_co][0]=='n':
@@ -360,29 +354,35 @@ class Crafter(pygame.sprite.Sprite):
             elif crafter_info[self.decimal_co][0]=='w':
                 self.image=self.image_W
 
-        for x in self.item_bp:
-            if crafter_info[self.decimal_co][2].get(x)is not None:
-                if crafter_info[self.decimal_co][2].get(x)>=blueprints[self.item][x]:
-                    self.components_fulfilled +=1
-            else:
-                self.components_fulfilled=0
-                
-        if self.components_fulfilled==self.item_bp_components:
-            self.craft=True
-        else:
-            return False
-
-        if self.craft==True:
-            for x in self.item_bp:
-                crafter_info[self.decimal_co][2][x]-=blueprints[self.item][x]
-                self.co=self.decimal_co.split('.')
-                self.co[0]=int(self.co[0])
-                self.co[1]=int(self.co[1])
+            self.item=crafter_info[self.decimal_co][1]
+            self.item_bp=list(blueprints[self.item].keys())
+            self.item_bp_components=len(self.item_bp)
+            self.components_fulfilled=0
             self.craft=False
-            print('crafted')
-            return True
-        else:
-            return False
+
+            for x in self.item_bp:
+                if crafter_info[self.decimal_co][2].get(x)is not None:
+                    if crafter_info[self.decimal_co][2].get(x)>=blueprints[self.item][x]:
+                        self.components_fulfilled +=1
+                else:
+                    self.components_fulfilled=0
+                    
+            if self.components_fulfilled==self.item_bp_components:
+                self.craft=True
+            else:
+                return False
+
+            if self.craft==True:
+                for x in self.item_bp:
+                    crafter_info[self.decimal_co][2][x]-=blueprints[self.item][x]
+                    self.co=self.decimal_co.split('.')
+                    self.co[0]=int(self.co[0])
+                    self.co[1]=int(self.co[1])
+                self.craft=False
+                print('crafted')
+                return True
+            else:
+                return False
 
     def create_item(self):
         return Items(self.co,self.item)
@@ -418,8 +418,32 @@ class Conveyor(pygame.sprite.Sprite):
             elif conveyor_info[self.decimal_co][0]=='w':
                 self.image=self.image_W
     
-
+#screen set up
+screen=pygame.display.set_mode((900,900))
+pygame.display.set_caption('assembly game')
+clock=pygame.time.Clock()
+game_active = True
+surface=pygame.Surface((900,900))
+white=(255,255,255)
+surface.fill(white)
 font = pygame.font.Font('Pixeltype.ttf',16)
+
+#bars images
+copper_img=pygame.image.load('images/copper.png').convert_alpha()
+iron_img=pygame.image.load('images/iron.png').convert_alpha()
+gold_img=pygame.image.load('images/gold.png').convert_alpha()
+aluminium_img=pygame.image.load('images/aluminium.png').convert_alpha()
+coal_img=pygame.image.load('images/coal.png').convert_alpha()
+lead_img=pygame.image.load('images/lead.png').convert_alpha()
+empty_slot_img=pygame.image.load('images/cross.png').convert_alpha()
+#item images
+circuit_img=pygame.image.load('images/circuit.png').convert_alpha()
+
+crafter_inv_images={1:empty_slot_img,2:empty_slot_img,3:empty_slot_img,4:empty_slot_img,5:empty_slot_img,6:empty_slot_img,}
+item_imgs={'empty':empty_slot_img,'copper':copper_img,'iron':iron_img,'gold':gold_img,'aluminium':aluminium_img,'lead':lead_img,'coal':coal_img,'circuit':circuit_img}
+blueprints={'circuit':{'copper':3,'gold':1},'motherboard':{'circuit':6,'copper':10},'cpu':{},'ram':{},'power supply':{},'hdd':{},'cell':{},'engine':{},}
+bp_ordered_list=['circuit','motherboard','ram','cpu','power supply','hdd','battery','engine']
+
 
 factory_layout=[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
 selected_pos=[]
@@ -430,6 +454,8 @@ producer_info={}
 crafter_info={}
 #conveyor_info={'0.0':'n'}
 conveyor_info={}
+
+
 
 
 selected_producers=[]
@@ -450,7 +476,7 @@ have_producer=False
 have_crafter=False
 have_conveyor=False
 
-blueprints={'circuit':{'copper':3,'gold':1},'cell':{}}
+
 
 #output factory layout
 '''
@@ -460,14 +486,6 @@ for x in factory_layout:
     print()
 '''
 
-#screen set up
-screen=pygame.display.set_mode((900,900))
-pygame.display.set_caption('assembly game')
-clock=pygame.time.Clock()
-game_active = True
-surface=pygame.Surface((900,900))
-white=(255,255,255)
-surface.fill(white)
 
 #background images
 main_menu_bg=pygame.image.load('images/background.png').convert_alpha()
@@ -502,21 +520,6 @@ producer_popup_img=pygame.image.load('images/gui_flat.png').convert_alpha()
 producer_popup_surface=pygame.transform.scale(producer_popup_img,(200,225))
 transparent_producer_popup_surface=pygame.transform.scale(producer_popup_img,(200,225))
 transparent_producer_popup_surface.set_alpha(0)
-
-copper_img=pygame.image.load('images/copper.png').convert_alpha()
-iron_img=pygame.image.load('images/iron.png').convert_alpha()
-gold_img=pygame.image.load('images/gold.png').convert_alpha()
-aluminium_img=pygame.image.load('images/aluminium.png').convert_alpha()
-coal_img=pygame.image.load('images/coal.png').convert_alpha()
-lead_img=pygame.image.load('images/lead.png').convert_alpha()
-empty_slot_img=pygame.image.load('images/cross.png').convert_alpha()
-
-crafter_inv_images={1:empty_slot_img,2:empty_slot_img,3:empty_slot_img,4:empty_slot_img,5:empty_slot_img,6:empty_slot_img,}
-item_imgs={'empty':empty_slot_img,'copper':copper_img,'iron':iron_img,'gold':gold_img,'aluminium':aluminium_img,'lead':lead_img,'coal':coal_img}
-
-#producer popup button instantiation
-
-
 
 #sprite images:
 producer_img=pygame.image.load('images/producer.png').convert_alpha()
@@ -589,6 +592,7 @@ delete_img =pygame.image.load('images/delete.png').convert_alpha()
 rotate_button=Buttons(800,400,rotate_img,0.5,0.5)
 delete_button=Buttons(800,450,delete_img,0.5,0.5)
 
+current_slider_pos=150
 
 
 
@@ -805,7 +809,8 @@ while run:
             
             elif game_state=='crafter_popup':
                 if transparent_crafter_popup.rect.collidepoint(co) == False:
-                    game_state='play'            
+                    game_state='play'   
+                #elif          
                 
             elif game_state=='ingame_settings':
                 if menu_button.rect.collidepoint(co):
@@ -1063,7 +1068,6 @@ while run:
                     selected_crafters=[]
                     selected_conveyors=[]
             
-
         elif event.type==pygame.MOUSEBUTTONUP:
             if event.button == 1: 
                 slider_drag=False
@@ -1080,7 +1084,7 @@ while run:
                     else:
                         mouse_y=co[1]
                         slider_button.rect.y=mouse_y+offset_y
-
+                    current_slider_pos = slider_button.rect.y
                 elif game_state=='shop confirm':
                     grid_surface_copy= play_grid_bg
                     if transparent_grid_button.rect.collidepoint(co):
@@ -1119,14 +1123,14 @@ while run:
                                             arrows_group.add(new_arrow)
 
                                     elif decimal_co in crafter_cos:
-                                        if co not in selected_producers:
+                                        if co not in selected_crafters:
                                             selected_crafters.append(co)
                                             selected_machines.append(co)
                                             new_arrow = Arrow(int(co[0]),int(co[1]))
                                             arrows_group.add(new_arrow)
 
                                     elif decimal_co in conveyor_cos:
-                                        if co not in selected_producers:
+                                        if co not in selected_conveyors:
                                             selected_conveyors.append(co)
                                             selected_machines.append(co)
                                             new_arrow = Arrow(int(co[0]),int(co[1]))
@@ -1238,6 +1242,15 @@ while run:
         transparent_popup.draw()
         scrollbar_button.draw()
         slider_button.draw()
+        bp_rotations=round(((len(bp_ordered_list)-6)/2)+1)
+        for x in range(1,bp_rotations):
+            scrollbar_section=150+(x*(round(650/bp_rotations)))
+            print('scrollbar section',scrollbar_section)
+            print(current_slider_pos)
+            if scrollbar_button.rect.y<scrollbar_section:
+                print('scrollbar section over',scrollbar_section)
+                print('gonna break')
+                break
 
     elif game_state=='shop confirm':
         screen.blit(grid_surface_copy,(0,100))
