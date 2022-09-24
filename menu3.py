@@ -4,7 +4,7 @@ import time
 
 pygame.init()
 pygame.font.init()
-
+lists=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]#,20]
 class Buttons():
     def __init__(self,x,y,image,scale_x,scale_y):
         self.image=pygame.transform.scale(image, (200*scale_x, 100*scale_y))
@@ -26,12 +26,11 @@ class GreenSquare(pygame.sprite.Sprite):
     
     def update(self,selected_pos):
         self.current_co=self.rect.topleft
-        self.layout_x=self.current_co[0]/40
-        self.layout_y=self.current_co[1]/40
-        if [self.layout_x,self.layout_y] in selected_pos:
-            pass
-        else:
-            self.kill()
+        self.layout_x=self.current_co[0]//40
+        self.layout_y=self.current_co[1]//40
+        if [self.layout_x,self.layout_y] not in selected_pos:
+            self.kill()   
+
 class Arrow(pygame.sprite.Sprite):
     def __init__(self,x,y):
         super().__init__()
@@ -54,8 +53,10 @@ class Arrow(pygame.sprite.Sprite):
         self.co=[self.layout_x*40,self.layout_y*40]
         self.decimal_co=str(self.layout_x*40)+'.'+str(self.layout_y*40)
         print(self.layout_x,self.layout_y)
-        if self.co in selected_machines:
+
+        if self.co not in selected_machines:
             self.kill()
+            print('hio')
         else:
             if self.decimal_co in producer_info:
                 if producer_info[self.decimal_co][0]=='n':
@@ -128,8 +129,6 @@ class Producer(pygame.sprite.Sprite):
 
 class Material(pygame.sprite.Sprite):
     def __init__(self,co):
-        global producer_info,crafter_info,conveyor_info
-
         super().__init__()
         self.image_copper=pygame.image.load('images/copper.png').convert_alpha()
         self.image_iron=pygame.image.load('images/iron.png').convert_alpha()
@@ -171,7 +170,6 @@ class Material(pygame.sprite.Sprite):
    
     def update(self):
         self.this_producer_info=producer_info.get(self.decimal_co)
-        conveyor_cos=list(conveyor_info.keys())
         if self.conveyor_thrust==False and self.producer_thrust==False:
 
             if pygame.sprite.spritecollideany(self,conveyor_group,pygame.sprite.collide_rect_ratio(1)):
@@ -261,9 +259,7 @@ class Items(pygame.sprite.Sprite):
 
     def update(self):
         self.this_crafter_info=crafter_info.get(self.decimal_co)
-        conveyor_cos=list(conveyor_info.keys())
         if self.conveyor_thrust==False and self.crafter_thrust==False:
-
             if pygame.sprite.spritecollideany(self,conveyor_group,pygame.sprite.collide_rect_ratio(1)):
                 self.x= ((self.rect.x)//40)*40
                 self.y= (((self.rect.y))//40)*40
@@ -335,8 +331,8 @@ class Crafter(pygame.sprite.Sprite):
         self.image_W=pygame.transform.rotate(self.image,90)
 
         self.rect=self.image.get_rect(topleft=(x,y))
-
         self.decimal_co=str(x)+'.'+str(y)
+
     def update(self):
         
         self.current_co=self.rect.topleft
@@ -521,6 +517,10 @@ producer_popup_surface=pygame.transform.scale(producer_popup_img,(200,225))
 transparent_producer_popup_surface=pygame.transform.scale(producer_popup_img,(200,225))
 transparent_producer_popup_surface.set_alpha(0)
 
+#blueprint tabs images:
+blueprint_tab_img=pygame.image.load('images/gui_flat.png').convert_alpha()
+blueprint_tab_surface=pygame.transform.scale(blueprint_tab_img,(200,225))
+
 #sprite images:
 producer_img=pygame.image.load('images/producer.png').convert_alpha()
 crafter_img=pygame.image.load('images/crafter.png').convert_alpha()
@@ -627,6 +627,7 @@ while run:
                     co[0]=int(co[0])
                     co[1]=int(co[1])
                     material_group.add(Producer.create_material('self',co))
+
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             x,y=pygame.mouse.get_pos()
@@ -764,8 +765,6 @@ while run:
                             text4=font.render(str(text4msg),False,(0,0,0))
                             text5=font.render(str(text5msg),False,(0,0,0))
                             text6=font.render(str(text6msg),False,(0,0,0))
-
-                            
                             
                                 
                             inv_button1=Buttons(co[0],co[1],item_imgs[crafter_inv_item1],0.25,0.25)
@@ -810,8 +809,8 @@ while run:
             elif game_state=='crafter_popup':
                 if transparent_crafter_popup.rect.collidepoint(co) == False:
                     game_state='play'   
-                #elif          
-                
+                #eli     f          
+
             elif game_state=='ingame_settings':
                 if menu_button.rect.collidepoint(co):
                     game_state= 'main menu'
@@ -857,7 +856,7 @@ while run:
 
             elif game_state=='shop confirm':
                 if transparent_grid_button.rect.collidepoint(co):
-                    grid_surface_copy= play_grid_bg
+                    grid_surface_copy=play_grid_bg
                     slider_drag=True
                     y=(y-100)//40
                     x=(x//40)
@@ -909,7 +908,7 @@ while run:
                             print(conveyor_info)
                     selected_pos=[]
 
-                elif cancel_button.rect.collidepoint(co):
+                elif cancel_button.rect.collidepoint(co  ):
                     game_state='play'
                     selected_pos=[]
 
@@ -936,6 +935,7 @@ while run:
                                 selected_producers.remove(co)
                                 selected_machines.remove(co)
                                 arrows_group.update(selected_machines)
+                                print(selected_machines)
                                 selection='remove'
                                 print(selected_producers,'selected producers')
                             else:
@@ -973,6 +973,18 @@ while run:
                                 arrows_group.add(new_arrow)
                                 selection='select'
                                 print(selected_conveyors,'selected connveyors')
+                        
+                        grid_surface_copy= grid_surface.copy()
+                        screen.blit(grid_surface_copy,(0,100))
+                        rotate_button.draw()
+                        delete_button.draw()
+                        confirm_button.draw()
+                        cancel_button.draw()
+                        producer_group.draw(grid_surface_copy)
+                        crafter_group.draw(grid_surface_copy)
+                        conveyor_group.draw(grid_surface_copy)
+                        material_group.draw(grid_surface_copy) 
+                        arrows_group.draw(grid_surface_copy)
                     
                     else:
                         pass
@@ -1015,7 +1027,6 @@ while run:
                             conveyor_info[decimal_co]='n'
 
                     #redraw rotated machines
-                    grid_surface_copy= grid_surface.copy()
                     producer_group.update()
                     crafter_group.update()
                     conveyor_group.update()
@@ -1024,6 +1035,7 @@ while run:
                     crafter_group.draw(grid_surface_copy)
                     conveyor_group.draw(grid_surface_copy)
                     material_group.draw(grid_surface_copy)
+                    arrows_group.draw(grid_surface_copy)
                     print(producer_info)
                 
                 elif delete_button.rect.collidepoint(co):
@@ -1042,6 +1054,10 @@ while run:
                         decimal_co=str(pos[0])+'.'+str(pos[1])
                         conveyor_info.pop(decimal_co)
 
+                    selected_producers=[]
+                    selected_crafters=[]
+                    selected_conveyors=[]     
+                    selected_machines=[]
 
                     grid_surface_copy= grid_surface.copy()
                     producer_group.update()
@@ -1052,21 +1068,27 @@ while run:
                     crafter_group.draw(grid_surface_copy)
                     conveyor_group.draw(grid_surface_copy)
                     material_group.draw(grid_surface_copy)
-                    selected_producers=[]
-                    selected_crafters=[]
-                    selected_conveyors=[]     
 
                 elif confirm_button.rect.collidepoint(co):
                     game_state='play'
                     selected_producers=[]
                     selected_crafters=[]
-                    selected_conveyors=[]   
+                    selected_conveyors=[] 
+                    selected_machines=[]
+                    arrows_group.update(selected_machines)  
 
                 elif cancel_button.rect.collidepoint(co):
+                    grid_surface_copy= grid_surface.copy()
+                    producer_group.draw(grid_surface_copy)
+                    crafter_group.draw(grid_surface_copy)
+                    conveyor_group.draw(grid_surface_copy)
+                    material_group.draw(grid_surface_copy)
                     selected_producers=[]
-                    print(selected_producers)
                     selected_crafters=[]
                     selected_conveyors=[]
+                    selected_machines=[]
+                    arrows_group.update(selected_machines)
+
             
         elif event.type==pygame.MOUSEBUTTONUP:
             if event.button == 1: 
@@ -1084,9 +1106,28 @@ while run:
                     else:
                         mouse_y=co[1]
                         slider_button.rect.y=mouse_y+offset_y
-                    current_slider_pos = slider_button.rect.y
+                    current_slider_pos = slider_button.rect.y -150
+                    bp_rotations=round(((len(lists)-8)/2)+1)
+                                
+                    #bp_rotations=round(((20-6)/2)+1)
+                    print(current_slider_pos)
+                    for x in range(1,bp_rotations+1):
+                        scrollbar_section=(x*(round(650/bp_rotations)))
+                        if current_slider_pos<scrollbar_section and current_slider_pos>((x-1)*(round(650/bp_rotations))):
+                            print(scrollbar_section,'sections',((x-1)*(round(650/bp_rotations))))
+                            bp_position = x*2
+                            print(bp_position,'position')
+                            list_length = len(lists)%8
+                            print(len(lists),list_length,'remainder')
+                            if (bp_position-1)<(len(lists)-(len(lists)%8)):
+                                for y in range(0,8):
+                                    print(lists[y+bp_position-2],'this')
+                            else:
+                                for x in range(list_length):
+                                    print(lists[x],'this')
+
                 elif game_state=='shop confirm':
-                    grid_surface_copy= play_grid_bg
+                    print(selected_pos)
                     if transparent_grid_button.rect.collidepoint(co):
                         x=(co[0]//40)
                         y=(co[1]-100)//40
@@ -1102,10 +1143,9 @@ while run:
                                     selected_pos.remove([x,y])  
                                     green_square_group.update(selected_pos)
                                     
-                    
-                        screen.blit(grid_surface_copy,(0,100))
                         green_square_group.update(selected_pos)
                         green_square_group.draw(grid_surface_copy)
+                        screen.blit(grid_surface_copy,(0,100))
                             
                 elif game_state=='edit':
                         if transparent_grid_button.rect.collidepoint(co):
@@ -1137,22 +1177,39 @@ while run:
                                             arrows_group.add(new_arrow)
 
                                 elif selection =='remove':
-                                    if decimal_co in producer_cos:
-                                        if co in selected_producers:
-                                            selected_producers.remove(co)
-                                            selected_machines.remove(co)
-                                            arrows_group.update(selected_machines)
-                                    elif decimal_co in crafter_cos:
-                                        if co in selected_producers:
-                                            selected_crafters.remove(co)
-                                            selected_machines.remove(co)
-                                            arrows_group.update(selected_machines)
-                                    elif decimal_co in conveyor_cos:
-                                        if co in selected_producers:
-                                            selected_conveyors.remove(co)   
-                                            selected_machines.remove(co)  
-                                            arrows_group.update(selected_machines)      
-                        print(selected_producers)                         
+                                    if co in selected_machines:
+                                        if decimal_co in producer_cos:
+                                            if co in selected_producers:
+                                                selected_producers.remove(co)
+                                                selected_machines.remove(co)
+                                                arrows_group.update(selected_machines)
+
+                                        elif decimal_co in crafter_cos:
+                                            if co in selected_producers:
+                                                selected_crafters.remove(co)
+                                                selected_machines.remove(co)
+                                                arrows_group.update(selected_machines)
+
+
+                                        elif decimal_co in conveyor_cos:
+                                            if co in selected_producers:
+                                                selected_conveyors.remove(co)   
+                                                selected_machines.remove(co)  
+                                                arrows_group.update(selected_machines)
+
+                                        grid_surface_copy= grid_surface.copy()
+                                        screen.blit(grid_surface_copy,(0,100))
+                                        rotate_button.draw()
+                                        delete_button.draw()
+                                        confirm_button.draw()
+                                        cancel_button.draw()
+                                        producer_group.draw(grid_surface_copy)
+                                        crafter_group.draw(grid_surface_copy)
+                                        conveyor_group.draw(grid_surface_copy)
+                                        material_group.draw(grid_surface_copy) 
+                                        arrows_group.draw(grid_surface_copy)      
+                                        print(selected_producers)    
+
 
     if game_state =='main menu':
         screen.blit(main_menu_bg,(0,0))
@@ -1242,15 +1299,22 @@ while run:
         transparent_popup.draw()
         scrollbar_button.draw()
         slider_button.draw()
-        bp_rotations=round(((len(bp_ordered_list)-6)/2)+1)
-        for x in range(1,bp_rotations):
-            scrollbar_section=150+(x*(round(650/bp_rotations)))
-            print('scrollbar section',scrollbar_section)
-            print(current_slider_pos)
-            if scrollbar_button.rect.y<scrollbar_section:
-                print('scrollbar section over',scrollbar_section)
-                print('gonna break')
-                break
+        blueprint_button1=Buttons(120,300,blueprint_tab_surface,1.5,1.25)
+        blueprint_button2=Buttons(430,300,blueprint_tab_surface,1.5,1.25)
+        blueprint_button3=Buttons(120,425,blueprint_tab_surface,1.5,1.25)
+        blueprint_button4=Buttons(430,425,blueprint_tab_surface,1.5,1.25)
+        blueprint_button5=Buttons(120,550,blueprint_tab_surface,1.5,1.25)
+        blueprint_button6=Buttons(430,550,blueprint_tab_surface,1.5,1.25)
+        blueprint_button7=Buttons(120,675,blueprint_tab_surface,1.5,1.25)
+        blueprint_button8=Buttons(430,675,blueprint_tab_surface,1.5,1.25)
+        blueprint_button1.draw()
+        blueprint_button2.draw()
+        blueprint_button3.draw()
+        blueprint_button4.draw()
+        blueprint_button5.draw()
+        blueprint_button6.draw()
+        blueprint_button7.draw()
+        blueprint_button8.draw()
 
     elif game_state=='shop confirm':
         screen.blit(grid_surface_copy,(0,100))
