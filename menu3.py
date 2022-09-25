@@ -4,7 +4,7 @@ import time
 
 pygame.init()
 pygame.font.init()
-lists=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]#,20]
+
 class Buttons():
     def __init__(self,x,y,image,scale_x,scale_y):
         self.image=pygame.transform.scale(image, (200*scale_x, 100*scale_y))
@@ -471,7 +471,8 @@ circuit_img=pygame.image.load('images/circuit.png').convert_alpha()
 crafter_inv_images={1:empty_slot_img,2:empty_slot_img,3:empty_slot_img,4:empty_slot_img,5:empty_slot_img,6:empty_slot_img,}
 item_imgs={'empty':empty_slot_img,'copper':copper_img,'iron':iron_img,'gold':gold_img,'aluminium':aluminium_img,'lead':lead_img,'coal':coal_img,'circuit':circuit_img}
 blueprints={'circuit':{'copper':3,'gold':1},'motherboard':{'circuit':6,'copper':10},'cpu':{},'ram':{},'power supply':{},'hdd':{},'cell':{},'engine':{},}
-bp_ordered_list=['circuit','motherboard','ram','cpu','power supply','hdd','battery','engine']
+bp_ordered_list=['circuit','motherboard','ram','cpu','power supply','hdd','battery','engine','item 9','item 10','item 11','item 12']
+lists=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
 bptitles2=['nothing','nothing','nothing','nothing','nothing','nothing','nothing','nothing']
 bptitles={0:'',1:'',2:'',3:'',4:'',5:'',6:'',7:''}
 factory_layout=[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
@@ -1140,7 +1141,7 @@ while run:
             if slider_drag:
                 if game_state=='blueprints':
 
-                
+                    #slider movement mechanism
                     if offset_y+mouse_y<150:
                             slider_button.rect.top=150
                     elif offset_y+mouse_y>800:
@@ -1148,28 +1149,23 @@ while run:
                     else:
                         mouse_y=co[1]
                         slider_button.rect.y=mouse_y+offset_y
+
+                    #blueprint rotation algorithm
                     current_slider_pos = slider_button.rect.y -150
-                    bp_rotations=round(((len(lists)-8)/2)+1)
-                                
-                    #bp_rotations=round(((20-6)/2)+1)
-                    print(current_slider_pos)
+                    bp_rotations=round(((len(lists)-8)/2)+1)  
                     for x in range(1,bp_rotations+1):
                         scrollbar_section=(x*(round(650/bp_rotations)))
+                        #print(scrollbar_section,'section')
                         if current_slider_pos<scrollbar_section and current_slider_pos>((x-1)*(round(650/bp_rotations))):
-                            print(scrollbar_section,'sections',((x-1)*(round(650/bp_rotations))))
-                            bp_position = x*2
-                            print(bp_position,'position')
-                            list_remainder = len(lists)%8
-                            print(len(lists),list_remainder,'remainder')
-                            if (bp_position-1)<(len(lists)-(len(lists)%8)):
-                                for y in range(0,8):
-                                    #print(lists[y+bp_position-2],'this')
-                                    bptitles2[y]=lists[y+bp_position-2]
+                            print((x-1)*(round(650/bp_rotations)),'sections',scrollbar_section)
+                            bp_position = (x*2)-2
+                            remaining_bp=len(lists)-(bp_position+8)
+                            if remaining_bp<=1:
+                                bptitles2[6]=lists[len(lists)-1]
+                                bptitles2[7]='nothing'
                             else:
-                                print('hi')
-                                for x in range(list_remainder):
-                                    bptitles2[6+x]=lists[y+bp_position-2]
-                                    print(lists[x+((len(lists)//8)*8)],'this')
+                                for y in range(0,8):
+                                    bptitles2[y]=lists[y+bp_position]
 
                     bp_title1=font.render(str(bptitles2[0]),False,(0,0,0))
                     bp_title2=font.render(str(bptitles2[1]),False,(0,0,0))
