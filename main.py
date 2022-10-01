@@ -122,9 +122,37 @@ class Arrow(pygame.sprite.Sprite):
                     self.image=self.image_W
 
 class Blueprints(pygame.sprite.Sprite):
-    def  __init__(self,x,y):
-        pass
-    
+    def  __init__(self,title_position):
+        self.bp_item_images={1:empty_slot_img,2:empty_slot_img,3:empty_slot_img,4:empty_slot_img,5:empty_slot_img,6:empty_slot_img,}
+
+        self.img=pygame.image.load('images/gui_flat.png').convert_alpha()
+        self.image=pygame.transform.scale(self.img,(200,225))
+        self.bp_title = bp_ordered_list[title_position]
+        self.bp_items=blueprints[self.bp_title].keys()
+        self.count=0
+        for item in self.bp_items:
+            self.bp_item_images[self.count]=item_imgs[item]
+            self.count+=1
+
+        '''self.text1=font.render(str(text1msg),False,(0,0,0))
+        self.text2=font.render(str(text2msg),False,(0,0,0))
+        self.text3=font.render(str(text3msg),False,(0,0,0))
+        self.text4=font.render(str(text4msg),False,(0,0,0))
+        self.text5=font.render(str(text5msg),False,(0,0,0))
+        self.text6=font.render(str(text6msg),False,(0,0,0))'''
+        
+
+            
+        self.item_button1=Buttons(co[0],co[1],item_imgs[crafter_inv_item1],0.25,0.25)
+        self.item_button2=Buttons(co[0]+40,co[1],item_imgs[crafter_inv_item2],0.25,0.25)
+        self.item_button3=Buttons(co[0]+80,co[1],item_imgs[crafter_inv_item3],0.25,0.25)
+        self.item_button4=Buttons(co[0],co[1]+40,item_imgs[crafter_inv_item4],0.25,0.25)
+        self.item_button5=Buttons(co[0]+40,co[1]+40,item_imgs[crafter_inv_item5],0.25,0.25)
+        self.item_button6=Buttons(co[0]+80,co[1]+40,item_imgs[crafter_inv_item6],0.25,0.25)
+
+
+
+
 class Producer(pygame.sprite.Sprite):
     def __init__(self,x,y):
         super().__init__()
@@ -372,7 +400,6 @@ class Crafter(pygame.sprite.Sprite):
         self.decimal_co=str(self.current_co[0])+'.'+str(self.current_co[1])
         
         if self.decimal_co not in crafter_info:
-            self.kill()
         else:
             if crafter_info[self.decimal_co][0]=='n':
                 self.image=self.image_N
@@ -385,6 +412,7 @@ class Crafter(pygame.sprite.Sprite):
 
             self.item=crafter_info[self.decimal_co][1]
             self.item_bp=list(blueprints[self.item].keys())
+
             self.item_bp_components=len(self.item_bp)
             self.components_fulfilled=0
             self.craft=False
@@ -455,7 +483,7 @@ game_active = True
 surface=pygame.Surface((900,900))
 white=(255,255,255)
 surface.fill(white)
-font = pygame.font.Font('Pixeltype.ttf',16)
+font = pygame.font.Font('Pixeltype.ttf',16)s
 
 #bars images
 copper_img=pygame.image.load('images/copper.png').convert_alpha()
@@ -499,8 +527,10 @@ crafter_group=pygame.sprite.Group()
 conveyor_group=pygame.sprite.Group()
 material_group=pygame.sprite.Group()
 items_group=pygame.sprite.Group()
+
 green_square_group=pygame.sprite.Group()
 arrows_group=pygame.sprite.Group()
+blueprints_group=pygame.sprite.Group()
 
 have_producer=False
 have_crafter=False
@@ -544,6 +574,11 @@ slider_img=pygame.image.load('images/slider.png').convert_alpha()
 scrollbar_button=Buttons(750,150,scrollbar_img,0.25,7)
 slider_button=Buttons(750,150,slider_img,0.25,0.5)
 slider_drag=False
+
+blueprint_position={0:[120,300],1:[430,300],2:[120,425],3:[430,425],4:[120,550],5:[430,550],6:[120,675],7:[430,675]}
+titles_done_rotation = -1
+
+
 
 #producer popup images:
 producer_popup_img=pygame.image.load('images/gui_flat.png').convert_alpha()
@@ -1131,7 +1166,6 @@ while run:
                     selected_machines=[]
                     arrows_group.update(selected_machines)
 
-            
         elif event.type==pygame.MOUSEBUTTONUP:
             if event.button == 1: 
                 slider_drag=False
@@ -1152,20 +1186,38 @@ while run:
 
                     #blueprint rotation algorithm
                     current_slider_pos = slider_button.rect.y -150
-                    bp_rotations=round(((len(lists)-8)/2)+1)  
+                    bp_rotations=round(((len(bp_ordered_list)-8)/2)+1)  
                     for x in range(1,bp_rotations+1):
+                        
                         scrollbar_section=(x*(round(650/bp_rotations)))
-                        #print(scrollbar_section,'section')
                         if current_slider_pos<scrollbar_section and current_slider_pos>((x-1)*(round(650/bp_rotations))):
-                            print((x-1)*(round(650/bp_rotations)),'sections',scrollbar_section)
-                            bp_position = (x*2)-2
-                            remaining_bp=len(lists)-(bp_position+8)
-                            if remaining_bp<=1:
-                                bptitles2[6]=lists[len(lists)-1]
-                                bptitles2[7]='nothing'
+                            #current_rotation_limits1=(x-1)*(round(650/bp_rotations)
+                            #current_rotation_limits2=scrollbar_section
+
+                            if titles_done_rotation==x:
+                                pass
                             else:
-                                for y in range(0,8):
-                                    bptitles2[y]=lists[y+bp_position]
+                                current_rotation=x
+                                print((x-1)*(round(650/bp_rotations)),'sections',scrollbar_section)
+                                bp_position = (x*2)-2
+                                remaining_bp=len(bp_ordered_list)-(bp_position+8)
+                                if remaining_bp<=1:
+                                    for y in range(0,6):
+                                        bptitles2[y]=bp_ordered_list[y+bp_position]
+                                        #new_bp= Blueprints()
+                                        #blueprints_group.add(new_bp)
+
+                                        
+                                    bptitles2[6]=bp_ordered_list[len(bp_ordered_list)-1]
+                                    bptitles2[7]='nothing'
+
+                                
+                                else:
+                                    for y in range(0,8):
+                                        bptitles2[y]=bp_ordered_list[y+bp_position]
+                                titles_done_rotation = x
+                                print('done')
+                        
 
                     bp_title1=font.render(str(bptitles2[0]),False,(0,0,0))
                     bp_title2=font.render(str(bptitles2[1]),False,(0,0,0))
@@ -1366,8 +1418,6 @@ while run:
         blueprint_button7.draw()
         blueprint_button8.draw()
 
-
-        
 
         screen.blit(bp_title1,(140,320))
         screen.blit(bp_title2,(450,320))
