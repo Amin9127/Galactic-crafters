@@ -6,6 +6,9 @@ from classes import *
 pygame.init()
 pygame.font.init()
 
+global money
+money=0
+
 class Buttons():
     def __init__(self,x,y,image,scale_x,scale_y):
         self.image=pygame.transform.scale(image, (200*scale_x, 100*scale_y))
@@ -14,7 +17,7 @@ class Buttons():
     def draw(self):
         screen.blit(self.image,(self.rect.x,self.rect.y))
 
-def draw_money():
+def draw_money(money):
     screen.blit(money_panel_img,(200,0))
     counter=0
     money1=money
@@ -393,8 +396,7 @@ conveyor_info={}
 #seller_info=['0.0':'n']
 seller_info={}
 
-global money
-money=0
+
 
 
 selected_producers=[]
@@ -582,7 +584,7 @@ while run:
                     co = x.split('.')
                     co[0]=int(co[0])
                     co[1]=int(co[1])
-                    material_group.add(Producer.create_material('self',co))
+                    material_group.add(Producer.create_material('self',co,producer_info))
 
         #all keybinds check and what it does in this if elif ladder
         if event.type == pygame.KEYDOWN:
@@ -1315,7 +1317,9 @@ while run:
     elif game_state=='play':
 
         producer_group.update(producer_info)
-        material_group.update(conveyor_info,conveyor_group,crafter_info,crafter_group,seller_group,conveyor_info,conveyor_group,crafter_info,crafter_group,seller_group)
+        #material_group.update(producer_info,conveyor_info,conveyor_group,crafter_info,crafter_group,seller_group,money)
+        for material in material_group:
+            money = material.update(producer_info,conveyor_info,conveyor_group,crafter_info,crafter_group,seller_group,money)
 
         if have_crafter:
             items_group.update()
@@ -1345,7 +1349,7 @@ while run:
         items_group.draw(grid_surface_copy)
 
 
-        draw_money()
+        draw_money(money)
 
         screen.blit(grid_surface_copy,(0,100))
         #copy screen
@@ -1354,7 +1358,7 @@ while run:
 
     elif game_state=='producer_popup':
         screen.blit(grid_surface_copy,(0,100))
-        draw_money()
+        draw_money(money)
 
 
         screen.blit(producer_popup_surface,selected_co)
@@ -1368,7 +1372,7 @@ while run:
     
     elif game_state=='crafter_popup':
         screen.blit(grid_surface_copy,(0,100))
-        draw_money()
+        draw_money(money)
 
         screen.blit(producer_popup_surface,selected_co)
         transparent_crafter_popup.draw()
@@ -1389,7 +1393,7 @@ while run:
     elif game_state=='shop':
         screen.blit(play_bg,(0,0))
         screen.blit(shop_surface,(100,150))
-        draw_money()
+        draw_money(money)
 
         
         transparent_popup.draw()
@@ -1402,7 +1406,7 @@ while run:
 
     elif game_state=='blueprints':
         screen.blit(play_bg,(0,0))
-        draw_money()
+        draw_money(money)
 
         screen.blit(shop_surface,(100,150))
         transparent_popup.draw()
@@ -1448,7 +1452,7 @@ while run:
 
     elif game_state=='shop confirm':
         screen.blit(grid_surface_copy,(0,100))
-        draw_money()
+        draw_money(money)
 
         transparent_grid_button.draw()
         confirm_button.draw()
@@ -1457,7 +1461,7 @@ while run:
         green_square_group.draw(grid_surface_copy)
         
     elif game_state=='edit':
-        draw_money()
+        draw_money(money)
 
         screen.blit(grid_surface_copy,(0,100))
         rotate_button.draw()

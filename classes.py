@@ -45,7 +45,7 @@ class Producer(Machine):
     def __init__(self,x,y,img,producer_info):
         super().__init__(x,y,img)
 
-    def create_material(self,co):
+    def create_material(self,co,producer_info):
         return Material(co,producer_info)
 
 class Material(pygame.sprite.Sprite):
@@ -90,8 +90,7 @@ class Material(pygame.sprite.Sprite):
         self.previous_conveyor_pos=''  
         self.worth=1000
    
-    def update(self,conveyor_info,conveyor_group,crafter_info,crafter_group,seller_group):
-        global money
+    def update(self,producer_info,conveyor_info,conveyor_group,crafter_info,crafter_group,seller_group,money):
         self.this_producer_info=producer_info.get(self.decimal_co)
         if self.conveyor_thrust==False and self.producer_thrust==False:
 
@@ -146,13 +145,6 @@ class Material(pygame.sprite.Sprite):
             else:
                 crafter_info[self.decimal_co][2].update({self.type:self.amount})
 
-        if pygame.sprite.spritecollideany(self,seller_group,pygame.sprite.collide_rect_ratio(1)) and self.producer_thrust==False:
-            self.x= ((self.rect.x)//40)*40
-            self.y= (((self.rect.y))//40)*40
-            self.decimal_co=str(self.x)+'.'+str(self.y)
-            self.kill()
-            money+=self.worth
-
 
         if self.rect.x>1000:
             self.kill()
@@ -162,3 +154,11 @@ class Material(pygame.sprite.Sprite):
             self.kill()
         elif self.rect.y<0:
             self.kill()
+        
+        if pygame.sprite.spritecollideany(self,seller_group,pygame.sprite.collide_rect_ratio(1)) and self.producer_thrust==False:
+            self.x= ((self.rect.x)//40)*40
+            self.y= (((self.rect.y))//40)*40
+            self.decimal_co=str(self.x)+'.'+str(self.y)
+            self.kill()
+            money+=self.worth
+        return money
