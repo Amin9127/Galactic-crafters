@@ -1,4 +1,4 @@
-def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_info,Producer,producer_group,crafter_info,Crafter,crafter_group,conveyor_info,Conveyor,conveyor_group,seller_info,Seller,seller_group,factory_layout):
+def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout):
     game_state='play'
     screen.blit(grid_surface,(0,100))
     for co in selected_pos:
@@ -10,7 +10,7 @@ def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,pr
         print(decimal_co,'in function')
         if selected_machine =='producer':
             producer_info[decimal_co]=['n','copper',1]
-            new_producer=Producer(x,y)
+            new_producer=Producer(x,y,producer_img,producer_info)
             producer_group.add(new_producer)
             factory_layout[co[0]][co[1]]=1
             have_producer=True
@@ -22,13 +22,13 @@ def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,pr
             have_crafter=True
         elif selected_machine=='conveyor':
             conveyor_info[decimal_co]='n'
-            new_conveyor=Conveyor(x,y)
+            new_conveyor=Conveyor(x,y,conveyor_img)
             conveyor_group.add(new_conveyor)
             factory_layout[co[0]][co[1]]=1
             have_conveyor=True
         elif selected_machine=='seller':
             seller_info[decimal_co]='n'
-            new_seller=Seller(x,y)
+            new_seller=Seller(x,y,seller_img)
             seller_group.add(new_seller)
             factory_layout[co[0]][co[1]]=1
             have_seller=True
@@ -87,9 +87,9 @@ def rotate(selected_producers,selected_machines,arrows_group,material_group,prod
 
 
     #redraw rotated machines
-    producer_group.update()
+    producer_group.update(producer_info)
     crafter_group.update()
-    conveyor_group.update()
+    conveyor_group.update(conveyor_info)
     arrows_group.update(selected_machines)
     producer_group.draw(grid_surface_copy)
     crafter_group.draw(grid_surface_copy)

@@ -2,6 +2,7 @@ import pygame
 from sys import exit
 import time
 from button_functions import *
+from classes import *
 pygame.init()
 pygame.font.init()
 
@@ -12,6 +13,25 @@ class Buttons():
         self.rect.topleft=(x,y)
     def draw(self):
         screen.blit(self.image,(self.rect.x,self.rect.y))
+
+def draw_money():
+    screen.blit(money_panel_img,(200,0))
+    counter=0
+    money1=money
+    abbreviation={0:'',1:'K',2:'M',3:'B',4:'T',5:'q',6:'Q'}
+    allowed=True
+    while allowed:
+        money1=money1//1000
+        if money1 >=10:
+            counter+=1
+        else:
+            allowed=False
+
+
+    money_msg=str(round(money/(1000**(counter)),1))+str(abbreviation[counter])
+    money_text=font_50.render(money_msg,None,100)
+    money_text_rect=money_text.get_rect(center=(400,38))
+    screen.blit(money_text,money_text_rect)
 
 def draw_text(text,font,text_colour,x,y):
     img=font.render(text,True,text_colour)
@@ -164,157 +184,8 @@ class Blueprints(pygame.sprite.Sprite):
         
 #new_bp= Blueprints(2)
 #blueprints_group.add(new_bp)
-
-class Producer(pygame.sprite.Sprite):
-    def __init__(self,x,y):
-        super().__init__()
-        self.image=pygame.image.load('images/producer.png').convert_alpha()
-        self.image=pygame.transform.scale(self.image, (40, 40))
-        self.image_N=self.image
-        self.image_E=pygame.transform.rotate(self.image,270)
-        self.image_S=pygame.transform.rotate(self.image,180)
-        self.image_W=pygame.transform.rotate(self.image,90)
-
-        self.rect=self.image.get_rect(topleft=(x,y))
-        self.current_co=self.rect.topleft
-        self.decimal_co=str(self.current_co[0])+'.'+str(self.current_co[1])
-
-    def update(self):
-        self.current_co=self.rect.topleft
-        self.decimal_co=str(self.current_co[0])+'.'+str(self.current_co[1])
-        #print(self.decimal_co,producer_info)
-
-        if self.decimal_co not in producer_info.keys():
-            self.kill()
-        else:
-            if producer_info[self.decimal_co][0]=='n':
-                self.image=self.image_N
-            elif producer_info[self.decimal_co][0]=='e':
-                self.image=self.image_E
-            elif producer_info[self.decimal_co][0]=='s':
-                self.image=self.image_S
-            elif producer_info[self.decimal_co][0]=='w':
-                self.image=self.image_W
-
-    def create_material(self,co):
-        return Material(co)
-        
-class Material(pygame.sprite.Sprite):
-    def __init__(self,co):
-        super().__init__()
-        self.image_copper=pygame.image.load('images/copper.png').convert_alpha()
-        self.image_iron=pygame.image.load('images/iron.png').convert_alpha()
-        self.image_gold=pygame.image.load('images/gold.png').convert_alpha()
-        self.image_aluminium=pygame.image.load('images/aluminium.png').convert_alpha()
-        self.image_coal=pygame.image.load('images/coal.png').convert_alpha()
-        self.image_lead=pygame.image.load('images/lead.png').convert_alpha()
-        self.spawn_co=co
-
-        self.decimal_co=str(self.spawn_co[0])+'.'+str(self.spawn_co[1])
- 
-        if producer_info[self.decimal_co][1]=='copper':
-            self.type='copper'
-            self.image=self.image_copper
-        elif producer_info[self.decimal_co][1]=='iron':
-            self.type='iron'
-            self.image=self.image_iron
-        elif producer_info[self.decimal_co][1]=='gold':
-            self.type='gold'
-            self.image=self.image_gold
-        elif producer_info[self.decimal_co][1]=='aluminium':
-            self.type='aluminium'
-            self.image=self.image_aluminium
-        elif producer_info[self.decimal_co][1]=='lead':
-            self.type='lead'
-            self.image=self.image_lead
-        elif producer_info[self.decimal_co][1]=='coal':
-            self.type='coal'
-            self.image=self.image_coal
-        
-        self.image=pygame.transform.scale(self.image,(20,20))
-
-        self.amount= producer_info[self.decimal_co][2]
-        self.rect=self.image.get_rect(center=(self.spawn_co[0]+20,self.spawn_co[1]+20))
-        self.count=0
-        self.producer_thrust=True
-        self.conveyor_thrust=False
-        self.previous_conveyor_pos=''  
-        self.worth=10
-   
-    def update(self):
-        global money
-        self.this_producer_info=producer_info.get(self.decimal_co)
-        if self.conveyor_thrust==False and self.producer_thrust==False:
-
-            if pygame.sprite.spritecollideany(self,conveyor_group,pygame.sprite.collide_rect_ratio(1)):
-                self.x= ((self.rect.x)//40)*40
-                self.y= (((self.rect.y))//40)*40
-                self.decimal_co=str(self.x)+'.'+str(self.y)
-                if self.decimal_co!=self.previous_conveyor_pos:
-                    self.conveyor_direction=conveyor_info.get(self.decimal_co)
-                    self.conveyor_thrust=True
-                    self.producer_thrust=False
-                    self.count=0
-                    self.previous_conveyor_pos=self.decimal_co
-        self.count+=1
         
 
-
-
-        if self.count<8 and self.producer_thrust==True:
-            if self.this_producer_info is None:
-                pass
-            elif self.this_producer_info[0]=='n':
-                self.rect.y-=5#*dt
-            elif self.this_producer_info[0]=='e':
-                self.rect.x+=5#*dt
-            elif self.this_producer_info[0]=='s':
-                self.rect.y+=5#*dt
-            elif self.this_producer_info[0]=='w':
-                self.rect.x-=5#*dt
-        else:
-            self.producer_thrust=False
-
-        if self.count<16 and self.conveyor_thrust==True:
-            if self.conveyor_direction=='n':
-                self.rect.y-=5
-            elif self.conveyor_direction=='e':
-                self.rect.x+=5
-            elif self.conveyor_direction=='s':
-                self.rect.y+=5
-            elif self.conveyor_direction=='w':
-                self.rect.x-=5
-            self.count+=1
-        else:
-            self.conveyor_thrust=False
-
-        if pygame.sprite.spritecollideany(self,crafter_group,pygame.sprite.collide_rect_ratio(1)):
-            self.x= ((self.rect.x)//40)*40
-            self.y= (((self.rect.y))//40)*40
-            self.decimal_co=str(self.x)+'.'+str(self.y)
-            self.kill()
-            if self.type in crafter_info[self.decimal_co][2]:
-                self.stored_amount=crafter_info[self.decimal_co][2][self.type]
-                crafter_info[self.decimal_co][2].update({self.type:self.stored_amount+self.amount})
-            else:
-                crafter_info[self.decimal_co][2].update({self.type:self.amount})
-
-        if pygame.sprite.spritecollideany(self,seller_group,pygame.sprite.collide_rect_ratio(1)) and self.producer_thrust==False:
-            self.x= ((self.rect.x)//40)*40
-            self.y= (((self.rect.y))//40)*40
-            self.decimal_co=str(self.x)+'.'+str(self.y)
-            self.kill()
-            money+=self.worth
-            print(money)
-
-        if self.rect.x>1000:
-            self.kill()
-        elif self.rect.x<0:
-            self.kill()
-        elif self.rect.y>1000:
-            self.kill()
-        elif self.rect.y<0:
-            self.kill()
         
 class Items(pygame.sprite.Sprite):
     def __init__(self,co,item):
@@ -477,67 +348,7 @@ class Crafter(pygame.sprite.Sprite):
     def create_item(self):
         return Items(self.co,self.item)
 
-class Conveyor(pygame.sprite.Sprite):
-    def __init__(self,x,y):
-        super().__init__()
-        self.image=pygame.image.load('images/conveyor.png').convert_alpha()
-        self.image=pygame.transform.scale(self.image, (40, 40))
-        self.image_N=self.image
-        self.image_E=pygame.transform.rotate(self.image,270)
-        self.image_S=pygame.transform.rotate(self.image,180)
-        self.image_W=pygame.transform.rotate(self.image,90)
-        self.rect=self.image.get_rect(topleft=(x,y))
 
-        self.decimal_co=str(x)+'.'+str(y)
-
-    def update(self):
-        self.current_co=self.rect.topleft
-        x= self.current_co[0]
-        y= self.current_co[1]
-        self.decimal_co=str(x)+'.'+str(y)
-
-        if self.decimal_co not in conveyor_info.keys():
-            self.kill()
-        else:
-            if conveyor_info[self.decimal_co][0]=='n':
-                self.image=self.image_N
-            elif conveyor_info[self.decimal_co][0]=='e':
-                self.image=self.image_E
-            elif conveyor_info[self.decimal_co][0]=='s':
-                self.image=self.image_S
-            elif conveyor_info[self.decimal_co][0]=='w':
-                self.image=self.image_W
-    
-class Seller(pygame.sprite.Sprite):
-    def __init__(self,x,y):
-        super().__init__()
-        self.image=pygame.image.load('images/seller.png').convert_alpha()
-        self.image=pygame.transform.scale(self.image, (40, 40))
-        self.image_N=self.image
-        self.image_E=self.image
-        self.image_S=self.image
-        self.image_W=self.image
-
-        self.rect=self.image.get_rect(topleft=(x,y))
-        self.decimal_co=str(x)+'.'+str(y)
-
-
-    def update(self):
-        
-        self.current_co=self.rect.topleft
-        self.decimal_co=str(self.current_co[0])+'.'+str(self.current_co[1])
-        
-        if self.decimal_co not in seller_info:
-            self.kill()
-        else:
-            if seller_info[self.decimal_co][0]=='n':
-                self.image=self.image_N
-            elif seller_info[self.decimal_co][0]=='e':
-                self.image=self.image_E
-            elif seller_info[self.decimal_co][0]=='s':
-                self.image=self.image_S
-            elif seller_info[self.decimal_co][0]=='w':
-                self.image=self.image_W
 
 
 #screen set up
@@ -549,7 +360,7 @@ surface=pygame.Surface((900,900))
 white=(255,255,255)
 surface.fill(white)
 font = pygame.font.Font('Pixeltype.ttf',16)
-
+font_50 = pygame.font.Font('Pixeltype.ttf',50)
 #bars images
 copper_img=pygame.image.load('images/copper.png').convert_alpha()
 iron_img=pygame.image.load('images/iron.png').convert_alpha()
@@ -838,7 +649,7 @@ while run:
                     game_state = 'shop'
                 elif event.key == pygame.K_RETURN:
                     print('enter')
-                    game_state = confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_info,Producer,producer_group,crafter_info,Crafter,crafter_group,conveyor_info,Conveyor,conveyor_group,seller_info,Seller,seller_group,factory_layout)
+                    game_state = confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout)
                     selected_pos=[]
 
             elif game_state == 'edit':
@@ -899,10 +710,10 @@ while run:
 
 
                     grid_surface_copy= grid_surface.copy()
-                    producer_group.update()
+                    producer_group.update(producer_info)
                     crafter_group.update()
-                    conveyor_group.update()
-                    seller_group.update()
+                    conveyor_group.update(conveyor_info)
+                    seller_group.update(seller_info)
                     arrows_group.update(selected_machines)
                     producer_group.draw(grid_surface_copy)
                     crafter_group.draw(grid_surface_copy)
@@ -1180,7 +991,7 @@ while run:
 
 
                 elif confirm_button.rect.collidepoint(co):
-                    game_state = confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_info,Producer,producer_group,crafter_info,Crafter,crafter_group,conveyor_info,Conveyor,conveyor_group,seller_info,Seller,seller_group,factory_layout)
+                    game_state = confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout)
                     selected_pos=[]
                 elif cancel_button.rect.collidepoint(co):
                     game_state='play'
@@ -1202,6 +1013,7 @@ while run:
                     producer_cos=list(producer_info.keys())
                     crafter_cos=list(crafter_info.keys())
                     conveyor_cos=list(conveyor_info.keys())
+                    seller_cos=list(seller_info.keys())
 
                     if factory_layout[layout_x][layout_y]==1:
                         if decimal_co in producer_cos:
@@ -1294,9 +1106,9 @@ while run:
                     selected_sellers=[]
 
                     grid_surface_copy= grid_surface.copy()
-                    producer_group.update()
+                    producer_group.update(producer_info)
                     crafter_group.update()
-                    conveyor_group.update()
+                    conveyor_group.update(conveyor_info)
                     arrows_group.update(selected_machines)
                     producer_group.draw(grid_surface_copy)
                     crafter_group.draw(grid_surface_copy)
@@ -1471,7 +1283,7 @@ while run:
                                                 arrows_group.update(selected_machines)
 
                                         elif decimal_co in seller_cos:
-                                            if co in selected_seller:
+                                            if co in selected_sellers:
                                                 selected_sellers.remove(co)   
                                                 selected_machines.remove(co)  
                                                 arrows_group.update(selected_machines)
@@ -1487,7 +1299,7 @@ while run:
                                         crafter_group.draw(grid_surface_copy)
                                         conveyor_group.draw(grid_surface_copy)
                                         material_group.draw(grid_surface_copy) 
-                                        seller_gorup.draw(grid_surface_copy)
+                                        seller_group.draw(grid_surface_copy)
                                         arrows_group.draw(grid_surface_copy)      
 
 
@@ -1502,8 +1314,8 @@ while run:
 
     elif game_state=='play':
 
-        producer_group.update()
-        material_group.update()
+        producer_group.update(producer_info)
+        material_group.update(conveyor_info,conveyor_group,crafter_info,crafter_group,seller_group,conveyor_info,conveyor_group,crafter_info,crafter_group,seller_group)
 
         if have_crafter:
             items_group.update()
@@ -1531,8 +1343,10 @@ while run:
         #materials
         material_group.draw(grid_surface_copy)
         items_group.draw(grid_surface_copy)
-        
-        screen.blit(money_panel_img,(200,0))
+
+
+        draw_money()
+
         screen.blit(grid_surface_copy,(0,100))
         #copy screen
         play_grid_bg=grid_surface_copy.copy()
@@ -1540,6 +1354,9 @@ while run:
 
     elif game_state=='producer_popup':
         screen.blit(grid_surface_copy,(0,100))
+        draw_money()
+
+
         screen.blit(producer_popup_surface,selected_co)
         transparent_producer_popup.draw()
         copper_button.draw()
@@ -1551,6 +1368,8 @@ while run:
     
     elif game_state=='crafter_popup':
         screen.blit(grid_surface_copy,(0,100))
+        draw_money()
+
         screen.blit(producer_popup_surface,selected_co)
         transparent_crafter_popup.draw()
         screen.blit(text1,(selected_co[0]+40,selected_co[1]+20))
@@ -1570,6 +1389,9 @@ while run:
     elif game_state=='shop':
         screen.blit(play_bg,(0,0))
         screen.blit(shop_surface,(100,150))
+        draw_money()
+
+        
         transparent_popup.draw()
         producer_button.draw()
         crafter_button.draw()
@@ -1580,6 +1402,8 @@ while run:
 
     elif game_state=='blueprints':
         screen.blit(play_bg,(0,0))
+        draw_money()
+
         screen.blit(shop_surface,(100,150))
         transparent_popup.draw()
         scrollbar_button.draw()
@@ -1624,6 +1448,8 @@ while run:
 
     elif game_state=='shop confirm':
         screen.blit(grid_surface_copy,(0,100))
+        draw_money()
+
         transparent_grid_button.draw()
         confirm_button.draw()
         cancel_button.draw()
@@ -1631,6 +1457,8 @@ while run:
         green_square_group.draw(grid_surface_copy)
         
     elif game_state=='edit':
+        draw_money()
+
         screen.blit(grid_surface_copy,(0,100))
         rotate_button.draw()
         delete_button.draw()
@@ -1638,9 +1466,13 @@ while run:
         cancel_button.draw()
         arrows_group.draw(grid_surface_copy)
         if have_producer: 
-            producer_group.update()
+            producer_group.update(producer_info)
 
     elif game_state=='ingame_settings':
+        screen.blit(money_panel_img,(200,0))
+        money_text=font_50.render(str(money),None,100)
+        money_text_rect=money_text.get_rect(center=(400,38))
+        screen.blit(money_text,money_text_rect)
         screen.blit(play_bg,(0,0))
         screen.blit(settings_surface,(225,150))
         transparent_settings.draw()
