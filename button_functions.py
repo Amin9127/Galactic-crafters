@@ -1,4 +1,4 @@
-def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout):
+def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,crafter_img,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout):
     game_state='play'
     screen.blit(grid_surface,(0,100))
     for co in selected_pos:
@@ -16,7 +16,7 @@ def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,pr
             have_producer=True
         elif selected_machine=='crafter':
             crafter_info[decimal_co]=['n','circuit',{}]
-            new_crafter=Crafter(x,y)
+            new_crafter=Crafter(x,y,crafter_img)
             crafter_group.add(new_crafter)
             factory_layout[co[0]][co[1]]=1
             have_crafter=True
