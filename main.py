@@ -113,7 +113,6 @@ class Arrow(pygame.sprite.Sprite):
 
         if self.co not in selected_machines:
             self.kill()
-            print('hio')
         else:
             if self.decimal_co in producer_info:
                 if producer_info[self.decimal_co][0]=='n':
@@ -412,7 +411,7 @@ rotate_button=Buttons(800,400,rotate_img,0.5,0.5)
 delete_button=Buttons(800,450,delete_img,0.5,0.5)
 
 current_slider_pos=150
-
+bp_mode=''
 
 
 #timers
@@ -615,7 +614,6 @@ while run:
                 elif blueprints_button.rect.collidepoint(co):
                     game_state='blueprints'
 
-
                     for y in range(0,8):
                         bptitles2[y]=bp_ordered_list[y]
                         new_bp= Blueprints((y),y)
@@ -743,9 +741,12 @@ while run:
                             inv_button5=Buttons(co[0]+40,co[1]+40,item_imgs[crafter_inv_item5],0.25,0.25)
                             inv_button6=Buttons(co[0]+80,co[1]+40,item_imgs[crafter_inv_item6],0.25,0.25)
 
+                            item_button=Buttons(co[0]+140,co[1]+30,item_imgs[crafter_info[decimal_co][1]],0.15,0.15)
+
                             co = [x+40,y+100]
                             selected_co=co
                             transparent_crafter_popup=Buttons(co[0],co[1],transparent_producer_popup_surface,1,2.25)
+                            last_selected_crafter = decimal_co
                             
                             game_state='crafter_popup'
                         elif decimal_co in conveyor_cos:
@@ -778,7 +779,15 @@ while run:
             elif game_state=='crafter_popup':
                 if transparent_crafter_popup.rect.collidepoint(co) == False:
                     game_state='play'   
-                #elif          
+                elif item_button.rect.collidepoint(co):
+                    game_state='blueprints'
+
+                    for y in range(0,8):
+                        bptitles2[y]=bp_ordered_list[y]
+                        new_bp= Blueprints((y),y)
+                        blueprints_group.add(new_bp)
+
+                    bp_mode = 'selection'     
 
             elif game_state=='ingame_settings':
                 if menu_button.rect.collidepoint(co):
@@ -825,6 +834,17 @@ while run:
                         slider_drag=True
                         mouse_y=co[1]
                         offset_y=slider_button.rect.y-mouse_y
+                if bp_mode =='selection':
+                    if transparent_popup.rect.collidepoint(co) == False:
+                        game_state ='play'
+                    for bp in blueprints_group:
+                        if bp.rect.collidepoint(co):
+                            selected_bp =bp.bp_title
+                            crafter_info[last_selected_crafter][1]=selected_bp
+                    print(crafter_info)
+                    game_state='play'
+                        
+                
 
             elif game_state=='shop confirm':
                 if transparent_grid_button.rect.collidepoint(co):
@@ -1051,7 +1071,7 @@ while run:
                                 print((x-1)*(round(650/bp_rotations)),'sections',scrollbar_section)
                                 bp_position = (x*2)-2
                                 remaining_bp=len(bp_ordered_list)-(bp_position+8)
-                                if remaining_bp<=1:
+                                if x == bp_rotations and len(bp_ordered_list)%2 ==1:
                                     for y in range(0,6):
                                         bptitles2[y]=bp_ordered_list[y+bp_position]
                                         new_bp= Blueprints(y+bp_position,y)
@@ -1211,7 +1231,7 @@ while run:
             if crafter.update(crafter_info,blueprints)==True:
                 #crafter_group.update()==True:
                 item_group.add(crafter.create_item(blueprints_value))
-                print(item_group)
+
        
         screen.fill((52,78,91))
         #buttons
@@ -1273,6 +1293,7 @@ while run:
         inv_button4.draw()
         inv_button5.draw()
         inv_button6.draw()
+        item_button.draw()
 
     elif game_state=='shop':
         screen.blit(play_bg,(0,0))
@@ -1291,8 +1312,6 @@ while run:
     elif game_state=='blueprints':
         screen.blit(play_bg,(0,0))
         draw_money(money)
-
-        
         transparent_popup.draw()
         scrollbar_button.draw()
         slider_button.draw()
@@ -1310,12 +1329,8 @@ while run:
 
         blueprints_group.draw(blueprint_surface_copy)
 
-        #new_bp=Blueprints(1)
-        #blueprints_group.add(new_bp)
-        
         screen.blit(blueprint_surface_copy,(100,150))
         blueprints_group.update()
-        #screen.blit(blueprint_tab_surface,(100,150))
 
 
     elif game_state=='shop confirm':

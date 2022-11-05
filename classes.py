@@ -283,7 +283,6 @@ class Crafter(Machine):
         super().__init__(x,y,img)
 
     def update(self,crafter_info,blueprints):
-        print('crafter update')
         
         self.current_co=self.rect.topleft
         self.decimal_co=str(self.current_co[0])+'.'+str(self.current_co[1])
