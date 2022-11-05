@@ -147,38 +147,39 @@ class Arrow(pygame.sprite.Sprite):
 class Blueprints(pygame.sprite.Sprite):
     def  __init__(self,title_position,y):
         super().__init__()
-        self.bp_item_images={0:'empty',1:empty_slot_img,2:empty_slot_img,3:empty_slot_img,4:empty_slot_img,5:empty_slot_img}
+        self.bp_item_images={0:empty_slot_img,1:empty_slot_img,2:empty_slot_img,3:empty_slot_img,4:empty_slot_img,5:empty_slot_img}
+        print(title_position,'title position')
+        self.position=y
 
         self.image=pygame.image.load('images/gui_flat.png').convert_alpha()
         self.image=pygame.transform.scale(self.image,(300,135))
         self.rect=self.image.get_rect(topleft=blueprint_position[y])
 
-        self.bp_title = bp_ordered_list[title_position]
-        self.bp_items=blueprints[self.bp_title].keys()
-        self.count=0
+        if title_position==-1:
+            self.bp_title='nothing'
+        else:
+            self.bp_title = bp_ordered_list[title_position]
+            self.bp_items=blueprints[self.bp_title].keys()
+            self.count=0
 
-        for item in self.bp_items:
-            self.bp_item_images[self.count]=item_imgs[item]
-            self.count+=1
+            for item in self.bp_items:
+                self.bp_item_images[self.count]=item_imgs[item]
+                self.count+=1
 
-        #self.text1=font.render(str(text1msg),False,(0,0,0))
-        #self.text2=font.render(str(text2msg),False,(0,0,0))
-        #self.text3=font.render(str(text3msg),False,(0,0,0))
-        #self.text4=font.render(str(text4msg),False,(0,0,0))
-        #self.text5=font.render(str(text5msg),False,(0,0,0))
-        #self.text6=font.render(str(text6msg),False,(0,0,0))
-        
-
-       #self.image.blit(item_imgs[self.bp_item_images[0]],self.rect)
-       #self.item_button1=Buttons(co[0],co[1],item_imgs[self.bp_item_images[0]],0.25,0.25)
-       #self.item_button2=Buttons(co[0]+40,co[1],item_imgs[self.bp_item_images[1]],0.25,0.25)
-       #self.item_button3=Buttons(co[0]+80,co[1],item_imgs[self.bp_item_images[2]],0.25,0.25)
-       #self.item_button4=Buttons(co[0],co[1]+40,item_imgs[self.bp_item_images[3]],0.25,0.25)
-       #self.item_button5=Buttons(co[0]+40,co[1]+40,item_imgs[self.bp_item_images[4]],0.25,0.25)
-       #self.item_button6=Buttons(co[0]+80,co[1]+40,item_imgs[self.bp_item_images[5]],0.25,0.25)
-
+        print(self.bp_title)
+        self.title=font.render(str(self.bp_title),False,(0,0,0))
+       
     def update(self):
-        self.item_button1.draw()
+        self.pos = blueprint_title_position[self.position]
+        screen.blit(self.title,blueprint_title_position[self.position])
+        screen.blit(self.bp_item_images[0],(self.pos[0],self.pos[1]+10))
+        screen.blit(self.bp_item_images[1],(self.pos[0]+40,self.pos[1]+10))
+        screen.blit(self.bp_item_images[2],(self.pos[0]+80,self.pos[1]+10))
+        screen.blit(self.bp_item_images[3],(self.pos[0],self.pos[1]+60))
+        screen.blit(self.bp_item_images[4],(self.pos[0]+40,self.pos[1]+60))
+        screen.blit(self.bp_item_images[5],(self.pos[0]+80,self.pos[1]+60))
+
+        #self.item_button1.draw()
         #self.item_button2.draw()
         #self.item_button3.draw()
         #self.item_button4.draw()
@@ -212,11 +213,12 @@ circuit_img=pygame.image.load('images/circuit.png').convert_alpha()
 
 crafter_inv_images={1:empty_slot_img,2:empty_slot_img,3:empty_slot_img,4:empty_slot_img,5:empty_slot_img,6:empty_slot_img,}
 item_imgs={'empty':empty_slot_img,'copper':copper_img,'iron':iron_img,'gold':gold_img,'aluminium':aluminium_img,'lead':lead_img,'coal':coal_img,'circuit':circuit_img}
-blueprints={'circuit':{'copper':3,'gold':1},'motherboard':{'circuit':6,'copper':10},'cpu':{},'ram':{},'power supply':{},'hdd':{},'battery':{},'engine':{},}
+blueprints={'circuit':{'copper':3,'gold':1},'motherboard':{'circuit':6,'copper':10},'cpu':{},'ram':{},'power supply':{},'hdd':{},'battery':{},'engine':{},'engine2':{}}
 blueprints_value={'circuit':1,'motherboard':1, 'cpu':1,'ram':1,'power supply':1,'hdd':1,'battery':1,'engine':1}
 
-bp_ordered_list=['circuit','motherboard','ram','cpu','power supply','hdd','battery','engine']#,'item 9','item 10','item 11','item 12']
+bp_ordered_list=['circuit','motherboard','ram','cpu','power supply','hdd','battery','engine','engine2']#,'item 9','item 10','item 11','item 12']
 lists=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
+
 bptitles2=['nothing','nothing','nothing','nothing','nothing','nothing','nothing','nothing']
 bptitles={0:'',1:'',2:'',3:'',4:'',5:'',6:'',7:''}
 factory_layout=[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
@@ -285,6 +287,7 @@ transparent_settings_surface.set_alpha(0)
 
 blank_popup_img=pygame.image.load('images/panel8.png').convert_alpha()
 shop_surface=pygame.transform.scale(blank_popup_img,(650,700))
+blueprint_surface=pygame.transform.scale(blank_popup_img,(650,700))
 transparent_popup = pygame.transform.scale(blank_popup_img,(650,700))
 transparent_popup.set_alpha(50)
 
@@ -298,6 +301,7 @@ scrollbar_button=Buttons(750,150,scrollbar_img,0.25,7)
 slider_button=Buttons(750,150,slider_img,0.25,0.5)
 slider_drag=False
 blueprint_position={0:[20,145],1:[330,145],2:[20,280],3:[330,280],4:[20,415],5:[330,415],6:[20,550 ],7:[330,550]}
+blueprint_title_position={0:[140,310],1:[450,310],2:[140,445],3:[450,445],4:[140,580],5:[450,580],6:[140,715 ],7:[450,715]}
 titles_done_rotation = -1
 
 #money panel
@@ -1012,42 +1016,48 @@ while run:
 
                     #blueprint rotation algorithm
                     current_slider_pos = slider_button.rect.y -150
-                    bp_rotations=round(((len(lists)-8)/2)+1)  
+                    #number of rotations has 8 per screen so -8 shows 2 new at a time so /2 and +1 for extra partition
+                    bp_rotations=round(((len(bp_ordered_list)-8)/2)+1)  
+
                     for x in range(1,bp_rotations+1):
                         
                         scrollbar_section=(x*(round(650/bp_rotations)))
                         if current_slider_pos<scrollbar_section and current_slider_pos>((x-1)*(round(650/bp_rotations))):
 
+                            #if titles have already been made for the same section
                             if titles_done_rotation==x:
                                 pass
                             else:
+                                for blueprint in blueprints_group:
+                                    blueprint.kill()
                                 current_rotation=x
                                 print((x-1)*(round(650/bp_rotations)),'sections',scrollbar_section)
                                 bp_position = (x*2)-2
-                                remaining_bp=len(lists)-(bp_position+8)
+                                remaining_bp=len(bp_ordered_list)-(bp_position+8)
                                 if remaining_bp<=1:
                                     for y in range(0,6):
-                                        bptitles2[y]=lists[y+bp_position]
-                                        #new_bp= Blueprints(y+bp_position,y)
-                                        #blueprints_group.add(new_bp)
+                                        bptitles2[y]=bp_ordered_list[y+bp_position]
+                                        new_bp= Blueprints(y+bp_position,y)
+                                        blueprints_group.add(new_bp)
+                                    
                                         
-
-                                        
-                                    bptitles2[6]=lists[len(lists)-1]
+                                    bptitles2[6]=bp_ordered_list[len(bp_ordered_list)-1]
+                                    new_bp= Blueprints(len(bp_ordered_list)-1,6)
+                                    blueprints_group.add(new_bp)
                                     bptitles2[7]='nothing'
-
+                                    new_bp= Blueprints(-1,7)
+                                    blueprints_group.add(new_bp)
                                 
                                 else:
                                     for y in range(0,8):
-                                        bptitles2[y]=lists[y+bp_position]
-                                        #new_bp= Blueprints((y+bp_position),y)
-                                        #print(y)
-                                        #blueprints_group.add(new_bp)
+                                        bptitles2[y]=bp_ordered_list[y+bp_position]
+                                        new_bp= Blueprints((y+bp_position),y)
+                                        blueprints_group.add(new_bp)
                                 titles_done_rotation = x
                                 print('done')
                         
 
-                    bp_title1=font.render(str(bptitles2[0]),False,(0,0,0))
+                    bp_title1=font.render(str(bptitles2[0]),True,(0,0,0))
                     bp_title2=font.render(str(bptitles2[1]),False,(0,0,0))
                     bp_title3=font.render(str(bptitles2[2]),False,(0,0,0))
                     bp_title4=font.render(str(bptitles2[3]),False,(0,0,0))
@@ -1265,46 +1275,30 @@ while run:
         screen.blit(play_bg,(0,0))
         draw_money(money)
 
-        screen.blit(shop_surface,(100,150))
+        
         transparent_popup.draw()
         scrollbar_button.draw()
         slider_button.draw()
 
-        shop_surface_copy= shop_surface.copy()
+        blueprint_surface_copy= blueprint_surface.copy()
 
-        blueprint_button1=Buttons(120,300,blueprint_tab_surface,1.5,1.25)
-        blueprint_button2=Buttons(430,300,blueprint_tab_surface,1.5,1.25)
-        blueprint_button3=Buttons(120,425,blueprint_tab_surface,1.5,1.25)
-        blueprint_button4=Buttons(430,425,blueprint_tab_surface,1.5,1.25)
-        blueprint_button5=Buttons(120,550,blueprint_tab_surface,1.5,1.25)
-        blueprint_button6=Buttons(430,550,blueprint_tab_surface,1.5,1.25)
-        blueprint_button7=Buttons(120,675,blueprint_tab_surface,1.5,1.25)
-        blueprint_button8=Buttons(430,675,blueprint_tab_surface,1.5,1.25)
+        blueprint_button1=Buttons(120,300,blueprint_surface_copy,1.5,1.25)
+        blueprint_button2=Buttons(430,300,blueprint_surface_copy,1.5,1.25)
+        blueprint_button3=Buttons(120,425,blueprint_surface_copy,1.5,1.25)
+        blueprint_button4=Buttons(430,425,blueprint_surface_copy,1.5,1.25)
+        blueprint_button5=Buttons(120,550,blueprint_surface_copy,1.5,1.25)
+        blueprint_button6=Buttons(430,550,blueprint_surface_copy,1.5,1.25)
+        blueprint_button7=Buttons(120,675,blueprint_surface_copy,1.5,1.25)
+        blueprint_button8=Buttons(430,675,blueprint_surface_copy,1.5,1.25)
 
-        blueprint_button1.draw()
-        blueprint_button2.draw()
-        blueprint_button3.draw()
-        blueprint_button4.draw()
-        blueprint_button5.draw()
-        blueprint_button6.draw()
-        blueprint_button7.draw()
-        blueprint_button8.draw()
-
-        
-        screen.blit(bp_title1,(140,320))
-        screen.blit(bp_title2,(450,320))
-        screen.blit(bp_title3,(140,445))
-        screen.blit(bp_title4,(450,445))
-        screen.blit(bp_title5,(140,570))
-        screen.blit(bp_title6,(450,580))
-        screen.blit(bp_title7,(140,695))
-        screen.blit(bp_title8,(450,695))
+        blueprints_group.draw(blueprint_surface_copy)
 
         #new_bp=Blueprints(1)
         #blueprints_group.add(new_bp)
-        #blueprints_group.draw(blueprint_tab_surface)
-        #blueprints_group.update()
-        screen.blit(blueprint_tab_surface,(100,150))
+        
+        screen.blit(blueprint_surface_copy,(100,150))
+        blueprints_group.update()
+        #screen.blit(blueprint_tab_surface,(100,150))
 
 
     elif game_state=='shop confirm':

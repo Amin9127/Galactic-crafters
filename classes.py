@@ -174,7 +174,7 @@ class Material(pygame.sprite.Sprite):
             self.y= (((self.rect.y))//40)*40
             self.decimal_co=str(self.x)+'.'+str(self.y)
             self.kill()
-            money+=self.worth+0.5
+            money+=self.worth
         return money
 
 
