@@ -153,7 +153,9 @@ class Blueprints(pygame.sprite.Sprite):
 
         self.image=pygame.image.load('images/gui_flat.png').convert_alpha()
         self.image=pygame.transform.scale(self.image,(300,135))
-        self.rect=self.image.get_rect(topleft=blueprint_position[y])
+        print(self.image.get_size())
+        self.title_pos=blueprint_title_position[y]
+        self.rect=self.image.get_rect(topleft=(self.title_pos[0]-30,self.title_pos[1]-20))
 
         if title_position==-1:
             self.bp_title='nothing'
@@ -229,9 +231,10 @@ lead_img=pygame.image.load('images/lead.png').convert_alpha()
 empty_slot_img=pygame.image.load('images/cross.png').convert_alpha()
 #item images
 circuit_img=pygame.image.load('images/circuit.png').convert_alpha()
+ram_img=pygame.image.load('images/ram.png').convert_alpha()
 
 crafter_inv_images={1:empty_slot_img,2:empty_slot_img,3:empty_slot_img,4:empty_slot_img,5:empty_slot_img,6:empty_slot_img,}
-item_imgs={'empty':empty_slot_img,'nothing':empty_slot_img,'copper':copper_img,'iron':iron_img,'gold':gold_img,'aluminium':aluminium_img,'lead':lead_img,'coal':coal_img,'circuit':circuit_img,'motherboard':empty_slot_img, 'cpu':empty_slot_img,'ram':empty_slot_img,'power supply':empty_slot_img,'hdd':empty_slot_img,'battery':empty_slot_img,'engine':empty_slot_img,'super computer':empty_slot_img}
+item_imgs={'empty':empty_slot_img,'nothing':empty_slot_img,'copper':copper_img,'iron':iron_img,'gold':gold_img,'aluminium':aluminium_img,'lead':lead_img,'coal':coal_img,'circuit':circuit_img,'motherboard':empty_slot_img, 'cpu':empty_slot_img,'ram':ram_img,'power supply':empty_slot_img,'hdd':empty_slot_img,'battery':empty_slot_img,'engine':empty_slot_img,'super computer':empty_slot_img}
 blueprints={'circuit':{'copper':3,'gold':1},'motherboard':{'circuit':6,'copper':10},'cpu':{},'ram':{},'power supply':{},'hdd':{},'battery':{},'engine':{},'super computer':{}}
 blueprints_value={'circuit':1,'motherboard':1, 'cpu':1,'ram':1,'power supply':1,'hdd':1,'battery':1,'engine':1,'super computer':1}
 
@@ -780,7 +783,7 @@ while run:
                 if transparent_crafter_popup.rect.collidepoint(co) == False:
                     game_state='play'   
                 elif item_button.rect.collidepoint(co):
-                    game_state='blueprints'
+                    game_state='temp shop'
 
                     for y in range(0,8):
                         bptitles2[y]=bp_ordered_list[y]
@@ -827,25 +830,22 @@ while run:
                         offset_y=slider_button.rect.y-mouse_y    
 
             elif game_state=='blueprints':
-                if transparent_popup.rect.collidepoint(co) == False:
-                    game_state ='play'
-                elif slider_button.rect.collidepoint(co):
+                #if transparent_popup.rect.collidepoint(co) == False:
+                #    game_state ='play'
+                if slider_button.rect.collidepoint(co):
                     if event.button == 1: 
                         slider_drag=True
                         mouse_y=co[1]
                         offset_y=slider_button.rect.y-mouse_y
                 if bp_mode =='selection':
-                    if transparent_popup.rect.collidepoint(co) == False:
-                        game_state ='play'
                     for bp in blueprints_group:
                         if bp.rect.collidepoint(co):
                             selected_bp =bp.bp_title
                             crafter_info[last_selected_crafter][1]=selected_bp
+                        game_state='play'
                     print(crafter_info)
-                    game_state='play'
-                        
+                            
                 
-
             elif game_state=='shop confirm':
                 if transparent_grid_button.rect.collidepoint(co):
                     grid_surface_copy=play_grid_bg
@@ -1103,6 +1103,7 @@ while run:
                     bp_title7=font.render(str(bptitles2[6]),False,(0,0,0))
                     bp_title8=font.render(str(bptitles2[7]),False,(0,0,0))
 
+
                 elif game_state=='shop confirm':
                     print(selected_pos)
                     if transparent_grid_button.rect.collidepoint(co):
@@ -1259,6 +1260,8 @@ while run:
         #copy screen
         play_grid_bg=grid_surface_copy.copy()
         play_bg=screen.copy()
+        #screen.blit(blueprint_surface,(100,150))
+        #shop_bg=screen.copy()
 
     elif game_state=='producer_popup':
         screen.blit(grid_surface_copy,(0,100))
@@ -1310,26 +1313,29 @@ while run:
         slider_button.draw()
 
     elif game_state=='blueprints':
-        screen.blit(play_bg,(0,0))
+        shop_bg_copy=shop_bg.copy()
+        
         draw_money(money)
         transparent_popup.draw()
         scrollbar_button.draw()
         slider_button.draw()
 
+
         blueprint_surface_copy= blueprint_surface.copy()
 
-        blueprint_button1=Buttons(120,300,blueprint_surface_copy,1.5,1.25)
-        blueprint_button2=Buttons(430,300,blueprint_surface_copy,1.5,1.25)
-        blueprint_button3=Buttons(120,425,blueprint_surface_copy,1.5,1.25)
-        blueprint_button4=Buttons(430,425,blueprint_surface_copy,1.5,1.25)
-        blueprint_button5=Buttons(120,550,blueprint_surface_copy,1.5,1.25)
-        blueprint_button6=Buttons(430,550,blueprint_surface_copy,1.5,1.25)
-        blueprint_button7=Buttons(120,675,blueprint_surface_copy,1.5,1.25)
-        blueprint_button8=Buttons(430,675,blueprint_surface_copy,1.5,1.25)
+        
 
-        blueprints_group.draw(blueprint_surface_copy)
-
-        screen.blit(blueprint_surface_copy,(100,150))
+        #screen.blit(blueprint_surface_copy,(100,150))
+        
+        blueprints_group.draw(shop_bg_copy)
+        
+        
+        for bp in blueprints_group:
+            if bp.rect.collidepoint(co):
+                selected_bp =bp.bp_title
+                print(selected_bp)
+        
+        screen.blit(shop_bg_copy,(0,0))
         blueprints_group.update()
 
 
@@ -1372,6 +1378,11 @@ while run:
     elif game_state =='settings':
         back_button.draw()
  
+    elif game_state=='temp shop':
+        screen.blit(play_bg,(0,0))
+        screen.blit(blueprint_surface,(100,150))
+        shop_bg=screen.copy()
+        game_state='blueprints'
     pygame.display.update()
     clock.tick(60)
 
