@@ -1,3 +1,4 @@
+from tkinter import CENTER
 import pygame 
 from sys import exit
 import time
@@ -148,7 +149,7 @@ class Blueprints(pygame.sprite.Sprite):
     def  __init__(self,title_position,y):
         super().__init__()
         self.bp_item_images={0:empty_slot_img,1:empty_slot_img,2:empty_slot_img,3:empty_slot_img,4:empty_slot_img,5:empty_slot_img}
-        print(title_position,'title position')
+        self.bp_component_quantities=[0,0,0,0,0,0]
         self.position=y
 
         self.image=pygame.image.load('images/gui_flat.png').convert_alpha()
@@ -164,20 +165,38 @@ class Blueprints(pygame.sprite.Sprite):
 
             for item in self.bp_items:
                 self.bp_item_images[self.count]=item_imgs[item]
+                self.bp_component_quantities[self.count]=blueprints[self.bp_title][item]
                 self.count+=1
 
-        print(self.bp_title)
-        self.title=font.render(str(self.bp_title),False,(0,0,0))
+        self.title=font_24.render(str(self.bp_title),False,(0,0,0))
+
+        self.amount1=font.render(str(self.bp_component_quantities[0]),False,(0,0,0))
+        self.amount2=font.render(str(self.bp_component_quantities[1]),False,(0,0,0))
+        self.amount3=font.render(str(self.bp_component_quantities[2]),False,(0,0,0))
+        self.amount4=font.render(str(self.bp_component_quantities[3]),False,(0,0,0))
+        self.amount5=font.render(str(self.bp_component_quantities[4]),False,(0,0,0))
+        self.amount6=font.render(str(self.bp_component_quantities[5]),False,(0,0,0))
+
        
     def update(self):
         self.pos = blueprint_title_position[self.position]
         screen.blit(self.title,blueprint_title_position[self.position])
+        screen.blit(item_imgs[self.bp_title],(self.pos[0]+200,self.pos[1]+30))
+
         screen.blit(self.bp_item_images[0],(self.pos[0],self.pos[1]+10))
         screen.blit(self.bp_item_images[1],(self.pos[0]+40,self.pos[1]+10))
         screen.blit(self.bp_item_images[2],(self.pos[0]+80,self.pos[1]+10))
         screen.blit(self.bp_item_images[3],(self.pos[0],self.pos[1]+60))
         screen.blit(self.bp_item_images[4],(self.pos[0]+40,self.pos[1]+60))
         screen.blit(self.bp_item_images[5],(self.pos[0]+80,self.pos[1]+60))
+
+        screen.blit(self.amount1,(self.pos[0]+40,self.pos[1]+50))
+        screen.blit(self.amount2,(self.pos[0]+80,self.pos[1]+50))
+        screen.blit(self.amount3,(self.pos[0]+120,self.pos[1]+50))
+        screen.blit(self.amount4,(self.pos[0]+40,self.pos[1]+100))
+        screen.blit(self.amount5,(self.pos[0]+80,self.pos[1]+100))
+        screen.blit(self.amount6,(self.pos[0]+120,self.pos[1]+100))
+
 
         #self.item_button1.draw()
         #self.item_button2.draw()
@@ -199,6 +218,7 @@ surface=pygame.Surface((900,900))
 white=(255,255,255)
 surface.fill(white)
 font = pygame.font.Font('Pixeltype.ttf',16)
+font_24 = pygame.font.Font('Pixeltype.ttf',24)
 font_50 = pygame.font.Font('Pixeltype.ttf',50)
 #bars images
 copper_img=pygame.image.load('images/copper.png').convert_alpha()
@@ -212,11 +232,11 @@ empty_slot_img=pygame.image.load('images/cross.png').convert_alpha()
 circuit_img=pygame.image.load('images/circuit.png').convert_alpha()
 
 crafter_inv_images={1:empty_slot_img,2:empty_slot_img,3:empty_slot_img,4:empty_slot_img,5:empty_slot_img,6:empty_slot_img,}
-item_imgs={'empty':empty_slot_img,'copper':copper_img,'iron':iron_img,'gold':gold_img,'aluminium':aluminium_img,'lead':lead_img,'coal':coal_img,'circuit':circuit_img}
-blueprints={'circuit':{'copper':3,'gold':1},'motherboard':{'circuit':6,'copper':10},'cpu':{},'ram':{},'power supply':{},'hdd':{},'battery':{},'engine':{},'engine2':{}}
-blueprints_value={'circuit':1,'motherboard':1, 'cpu':1,'ram':1,'power supply':1,'hdd':1,'battery':1,'engine':1}
+item_imgs={'empty':empty_slot_img,'nothing':empty_slot_img,'copper':copper_img,'iron':iron_img,'gold':gold_img,'aluminium':aluminium_img,'lead':lead_img,'coal':coal_img,'circuit':circuit_img,'motherboard':empty_slot_img, 'cpu':empty_slot_img,'ram':empty_slot_img,'power supply':empty_slot_img,'hdd':empty_slot_img,'battery':empty_slot_img,'engine':empty_slot_img,'super computer':empty_slot_img}
+blueprints={'circuit':{'copper':3,'gold':1},'motherboard':{'circuit':6,'copper':10},'cpu':{},'ram':{},'power supply':{},'hdd':{},'battery':{},'engine':{},'super computer':{}}
+blueprints_value={'circuit':1,'motherboard':1, 'cpu':1,'ram':1,'power supply':1,'hdd':1,'battery':1,'engine':1,'super computer':1}
 
-bp_ordered_list=['circuit','motherboard','ram','cpu','power supply','hdd','battery','engine','engine2']#,'item 9','item 10','item 11','item 12']
+bp_ordered_list=['circuit','motherboard','ram','cpu','power supply','hdd','battery','engine','super computer']#,'item 9','item 10','item 11','item 12']
 lists=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
 
 bptitles2=['nothing','nothing','nothing','nothing','nothing','nothing','nothing','nothing']
@@ -595,14 +615,11 @@ while run:
                 elif blueprints_button.rect.collidepoint(co):
                     game_state='blueprints'
 
-                    bp_title1=font.render(str(lists[0]),False,(0,0,0))
-                    bp_title2=font.render(str(lists[1]),False,(0,0,0))
-                    bp_title3=font.render(str(lists[2]),False,(0,0,0))
-                    bp_title4=font.render(str(lists[3]),False,(0,0,0))
-                    bp_title5=font.render(str(lists[4]),False,(0,0,0))
-                    bp_title6=font.render(str(lists[5]),False,(0,0,0))
-                    bp_title7=font.render(str(lists[6]),False,(0,0,0))
-                    bp_title8=font.render(str(lists[7]),False,(0,0,0))
+
+                    for y in range(0,8):
+                        bptitles2[y]=bp_ordered_list[y]
+                        new_bp= Blueprints((y),y)
+                        blueprints_group.add(new_bp)
 
                 elif map_button.rect.collidepoint(co):
                     game_state='map'
