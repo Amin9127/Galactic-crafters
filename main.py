@@ -8,7 +8,7 @@ pygame.init()
 pygame.font.init()
 
 global money
-money=0
+money=250
 
 class Buttons():
     def __init__(self,x,y,image,scale_x,scale_y):
@@ -200,7 +200,7 @@ class Blueprints(pygame.sprite.Sprite):
 
 #screen set up
 screen=pygame.display.set_mode((900,900))
-pygame.display.set_caption('assembly game')
+pygame.display.set_caption('Galactic Crafters')
 clock=pygame.time.Clock()
 game_active = True
 surface=pygame.Surface((900,900))
@@ -382,8 +382,8 @@ transparent_settings=Buttons(225,150,transparent_settings_surface,2.25,5)
 mini_exit_img=pygame.image.load('images/mini_exit.png').convert_alpha()
 gui_flat_img=pygame.image.load('images/gui_flat.png').convert_alpha()
 #shop tabs button instantiation
-machines_button=Buttons(115,172,gui_flat_img,1.05,1.15)
-upgrades_button=Buttons(321,172,gui_flat_img,1.05,1.15)
+machines_button=Buttons(114,172,gui_flat_img,1.05,1.15)
+upgrades_button=Buttons(320,172,gui_flat_img,1.05,1.15)
 supply_button=Buttons(526,172,gui_flat_img,1.05,1.15)
 machines_lable=font_60.render('Machines',False,(0,0,0))
 upgrades_lable=font_60.render('upgrades',False,(0,0,0))
@@ -397,7 +397,31 @@ producer_button=Buttons(130,310,producer_img,0.5,0.5)
 crafter_button=Buttons(230,310,crafter_img,0.5,0.5)
 conveyor_button=Buttons(330,310,conveyor_img,0.5,0.5)
 seller_button=Buttons(430,310,seller_img,0.5,0.5)
+#upgrades
 
+#supply
+materials_supply={'copper':0,'iron':0,'gold':0,'aluminium':0,'lead':0,'coal':0}
+
+copper_supply_button=Buttons(115,297,gui_flat_img,1,0.9)
+iron_supply_button=Buttons(115,387,gui_flat_img,1,0.9)
+gold_supply_button=Buttons(115,477,gui_flat_img,1,0.9)
+aluminium_supply_button=Buttons(115,567,gui_flat_img,1,0.9)
+lead_supply_button=Buttons(115,657,gui_flat_img,1,0.9)
+coal_supply_button=Buttons(115,747,gui_flat_img,1,0.9)
+
+copper_shop_button=Buttons(300,297,copper_img,1,0.9)
+iron_shop_button=Buttons(300,387,iron_img,1,0.9)
+gold_shop_button=Buttons(300,477,gold_img,1,0.9)
+aluminium_shop_button=Buttons(300,567,aluminium_img,1,0.9)
+lead_shop_button=Buttons(300,657,lead_img,1,0.9)
+coal_shop_button=Buttons(300,747,coal_img,1,0.9)
+
+material_buy1=Buttons(530,297,gui_flat_img,1,0.9)
+material_buy10=Buttons(530,387,gui_flat_img,1,0.9)
+material_buy100=Buttons(530,477,gui_flat_img,1,0.9)
+material_buy1000=Buttons(530,567,gui_flat_img,1,0.9)
+
+selected_material='none'
 
 
 #shop confirm button images:
@@ -451,7 +475,13 @@ while run:
                     co = x.split('.')
                     co[0]=int(co[0])
                     co[1]=int(co[1])
-                    material_group.add(Producer.create_material('self',co,producer_info))
+                    created_material=producer_info[x][1]
+                    material_quantity =producer_info[x][2]
+
+                    if materials_supply[created_material]>=material_quantity:
+                        materials_supply[created_material]=materials_supply[created_material]-material_quantity
+                        material_group.add(Producer.create_material('self',co,producer_info))
+
 
         #all keybinds check and what it does in this if elif ladder
         if event.type == pygame.KEYDOWN:
@@ -538,8 +568,9 @@ while run:
                     game_state = 'shop'
                 elif event.key == pygame.K_RETURN:
                     print('enter')
-                    game_state = confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,crafter_img,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout)
+                    money = confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,crafter_img,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout,money)
                     selected_pos=[]
+                    game_state='play'
 
             elif game_state == 'edit':
                 if event.key==pygame.K_BACKSPACE:
@@ -872,6 +903,36 @@ while run:
                     game_state = 'shop upgrades'
                 elif transparent_popup.rect.collidepoint(co) == False:
                     game_state ='play'
+                elif copper_shop_button.rect.collidepoint(co):
+                    selected_material='copper'
+                elif iron_shop_button.rect.collidepoint(co):
+                    selected_material='iron'
+                elif gold_shop_button.rect.collidepoint(co):
+                    selected_material='gold'
+                elif aluminium_shop_button.rect.collidepoint(co):
+                    selected_material='aluminium'
+                elif lead_shop_button.rect.collidepoint(co):
+                    selected_material='lead'
+                elif coal_shop_button.rect.collidepoint(co):
+                    selected_material='coal' 
+                if selected_material!='none':
+
+                    if material_buy1.rect.collidepoint(co):
+                        if money>=10:
+                            money-=10
+                            materials_supply[selected_material]=materials_supply[selected_material]+1
+                    elif material_buy10.rect.collidepoint(co):
+                        if money>=100:
+                            money-=100
+                            materials_supply[selected_material]=materials_supply[selected_material]+10
+                    elif material_buy100.rect.collidepoint(co):
+                        if money>=1000:
+                            money-=1000                        
+                            materials_supply[selected_material]=materials_supply[selected_material]+100
+                    elif material_buy1000.rect.collidepoint(co):
+                        if money>=10000:
+                            money-=10000                        
+                            materials_supply[selected_material]=materials_supply[selected_material]+1000
 
             elif game_state=='blueprints':
                 if slider_button.rect.collidepoint(co):
@@ -912,8 +973,9 @@ while run:
 
 
                 elif confirm_button.rect.collidepoint(co):
-                    game_state = confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,crafter_img,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout)
+                    money = confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,crafter_img,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout,money)
                     selected_pos=[]
+                    game_state = 'play'
                 elif cancel_button.rect.collidepoint(co):
                     game_state='play'
                     selected_pos=[]
@@ -1384,9 +1446,100 @@ while run:
         screen.blit(upgrades_lable,(335,210))
         screen.blit(supply_lable,(570,210))
 
+
+        copper_supply_button.draw()
+        iron_supply_button.draw()
+        gold_supply_button.draw()
+        aluminium_supply_button.draw()
+        lead_supply_button.draw()
+        coal_supply_button.draw()
+
+
+        copper_shop_button.draw()
+        iron_shop_button.draw()
+        gold_shop_button.draw()
+        aluminium_shop_button.draw()
+        lead_shop_button.draw()
+        coal_shop_button.draw()
+
+        material_buy1.draw()
+        material_buy10.draw()
+        material_buy100.draw()
+        material_buy1000.draw()
+
+        #left side text
+        copper_lable1=font_32.render(('Copper remaining:'),False,(0,0,0))
+        copper_lable2=font_50.render(str(materials_supply['copper']),False,(0,0,0)) 
+        copper_lable2_rect=copper_lable2.get_rect(center=(210,350))
+        screen.blit(copper_lable2,copper_lable2_rect)
+        screen.blit(copper_lable1,(130,305))
+
+        iron_lable1=font_32.render(('Iron remaining:'),False,(0,0,0))
+        iron_lable2=font_50.render(str(materials_supply['iron']),False,(0,0,0)) 
+        iron_lable2_rect=iron_lable2.get_rect(center=(210,440))
+        screen.blit(iron_lable2,iron_lable2_rect)
+        screen.blit(iron_lable1,(140,395))
+
+        gold_lable1=font_32.render(('Gold remaining:'),False,(0,0,0))
+        gold_lable2=font_50.render(str(materials_supply['gold']),False,(0,0,0)) 
+        gold_lable2_rect=gold_lable2.get_rect(center=(210,530))
+        screen.blit(gold_lable2,gold_lable2_rect)
+        screen.blit(gold_lable1,(140,485))        
+
+        aluminium_lable1=font_32.render(('Aluminium remaining:'),False,(0,0,0))
+        aluminium_lable2=font_50.render(str(materials_supply['aluminium']),False,(0,0,0)) 
+        aluminium_lable2_rect=aluminium_lable2.get_rect(center=(210,620))
+        screen.blit(aluminium_lable2,aluminium_lable2_rect)
+        screen.blit(aluminium_lable1,(124,575))        
+
+        lead_lable1=font_32.render(('Lead remaining:'),False,(0,0,0))
+        lead_lable2=font_50.render(str(materials_supply['lead']),False,(0,0,0)) 
+        lead_lable2_rect=lead_lable2.get_rect(center=(210,720))
+        screen.blit(lead_lable2,lead_lable2_rect)
+        screen.blit(lead_lable1,(140,675))
+
+        coal_lable1=font_32.render(('Coal remaining:'),False,(0,0,0))
+        coal_lable2=font_50.render(str(materials_supply['coal']),False,(0,0,0)) 
+        coal_lable2_rect=coal_lable2.get_rect(center=(210,810))
+        screen.blit(coal_lable2,coal_lable2_rect)
+        screen.blit(coal_lable1,(140,765))        
+
+        #right side texts
+        if selected_material=='aluminium':
+            material_text ='alum'
+        elif selected_material=='copper':
+            material_text ='copp'
+        else:
+            material_text=selected_material
+
+        buy1_lable1=font_32.render(('Buy 1 '+str(material_text)+' Costs:'),False,(0,0,0))
+        buy1_lable2=font_50.render('10',False,(0,0,0)) 
+        screen.blit(buy1_lable1,(540,305))
+        screen.blit(buy1_lable2,(615,330)) 
+
+        buy10_lable1=font_32.render(('Buy 10 '+str(material_text)+' Costs:'),False,(0,0,0))
+        buy10_lable2=font_50.render('100',False,(0,0,0)) 
+        screen.blit(buy10_lable1,(540,395))
+        screen.blit(buy10_lable2,(610,440))  
+
+        buy100_lable1=font_32.render(('Buy 100 '+str(material_text)+' Costs:'),False,(0,0,0))
+        buy100_lable2=font_50.render('1000',False,(0,0,0)) 
+        screen.blit(buy100_lable1,(540,485))
+        screen.blit(buy100_lable2,(600,530)) 
+         
+        buy1000_lable1=font_32.render(('Buy 1k '+str(material_text)+' Costs:'),False,(0,0,0))
+        buy1000_lable2=font_50.render('10000',False,(0,0,0)) 
+        screen.blit(buy1000_lable1,(540,575))
+        screen.blit(buy1000_lable2,(595,620))  
+
+
+
+
+
+
+
         scrollbar_button.draw()
         slider_button.draw()
-
 
     elif game_state=='blueprints':
         shop_bg_copy=shop_bg.copy()
@@ -1405,7 +1558,17 @@ while run:
         screen.blit(grid_surface_copy,(0,100))
         draw_money(money)
 
+        machines_price_button=Buttons(800,500,gui_flat_img,0.5,1)
+        machines_price_button.draw()
+
+        machine_price_lable1=font_24.render(('Price:'),False,(0,0,0))
+        machine_price_lable2=font_24.render(str(len(selected_pos)*100),False,(0,0,0))
+
+        screen.blit(machine_price_lable1,(805,505))
+        screen.blit(machine_price_lable2,(805,525))
+
         transparent_grid_button.draw()
+
         confirm_button.draw()
         cancel_button.draw()
         green_square_group.update(selected_pos)

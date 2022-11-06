@@ -1,40 +1,43 @@
-def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,crafter_img,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout):
+def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,crafter_img,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout,money):
     game_state='play'
     screen.blit(grid_surface,(0,100))
-    for co in selected_pos:
-        x= co[0]*40
-        y= co[1]*40
-        
-        decimal_co=str(x)+'.'+str(y)
-        str(decimal_co)
-        print(decimal_co,'in function')
-        if selected_machine =='producer':
-            producer_info[decimal_co]=['n','copper',1]
-            new_producer=Producer(x,y,producer_img,producer_info)
-            producer_group.add(new_producer)
-            factory_layout[co[0]][co[1]]=1
-            have_producer=True
-        elif selected_machine=='crafter':
-            crafter_info[decimal_co]=['n','circuit',{}]
-            new_crafter=Crafter(x,y,crafter_img)
-            crafter_group.add(new_crafter)
-            factory_layout[co[0]][co[1]]=1
-            have_crafter=True
-        elif selected_machine=='conveyor':
-            conveyor_info[decimal_co]='n'
-            new_conveyor=Conveyor(x,y,conveyor_img)
-            conveyor_group.add(new_conveyor)
-            factory_layout[co[0]][co[1]]=1
-            have_conveyor=True
-        elif selected_machine=='seller':
-            seller_info[decimal_co]='n'
-            new_seller=Seller(x,y,seller_img)
-            seller_group.add(new_seller)
-            factory_layout[co[0]][co[1]]=1
-            have_seller=True
+    no_of_machines=len(selected_pos)
+    if no_of_machines*100<=money:
+        money-=no_of_machines*100
+        for co in selected_pos:
+            x= co[0]*40
+            y= co[1]*40
+            
+            decimal_co=str(x)+'.'+str(y)
+            str(decimal_co)
+            print(decimal_co,'in function')
+            if selected_machine =='producer':
+                producer_info[decimal_co]=['n','copper',1]
+                new_producer=Producer(x,y,producer_img,producer_info)
+                producer_group.add(new_producer)
+                factory_layout[co[0]][co[1]]=1
+                have_producer=True
+            elif selected_machine=='crafter':
+                crafter_info[decimal_co]=['n','circuit',{}]
+                new_crafter=Crafter(x,y,crafter_img)
+                crafter_group.add(new_crafter)
+                factory_layout[co[0]][co[1]]=1
+                have_crafter=True
+            elif selected_machine=='conveyor':
+                conveyor_info[decimal_co]='n'
+                new_conveyor=Conveyor(x,y,conveyor_img)
+                conveyor_group.add(new_conveyor)
+                factory_layout[co[0]][co[1]]=1
+                have_conveyor=True
+            elif selected_machine=='seller':
+                seller_info[decimal_co]='n'
+                new_seller=Seller(x,y,seller_img)
+                seller_group.add(new_seller)
+                factory_layout[co[0]][co[1]]=1
+                have_seller=True
 
     selected_pos=[]
-    return game_state
+    return money
 
 def rotate(selected_producers,selected_machines,arrows_group,material_group,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,selected_sellers,seller_info,seller_group,grid_surface_copy):
     for pos in selected_producers:
