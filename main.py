@@ -152,8 +152,7 @@ class Blueprints(pygame.sprite.Sprite):
         self.position=y
 
         self.image=pygame.image.load('images/gui_flat.png').convert_alpha()
-        self.image=pygame.transform.scale(self.image,(300,135))
-        print(self.image.get_size())
+        self.image=pygame.transform.scale(self.image,(320,135))
         self.title_pos=blueprint_title_position[y]
         self.rect=self.image.get_rect(topleft=(self.title_pos[0]-30,self.title_pos[1]-20))
 
@@ -197,17 +196,6 @@ class Blueprints(pygame.sprite.Sprite):
         screen.blit(self.amount4,(self.pos[0]+40,self.pos[1]+100))
         screen.blit(self.amount5,(self.pos[0]+80,self.pos[1]+100))
         screen.blit(self.amount6,(self.pos[0]+120,self.pos[1]+100))
-
-
-        #self.item_button1.draw()
-        #self.item_button2.draw()
-        #self.item_button3.draw()
-        #self.item_button4.draw()
-        #self.item_button5.draw()
-        #self.item_button6.draw()
-        
-#new_bp= Blueprints(2)
-#blueprints_group.add(new_bp)
        
 
 #screen set up
@@ -220,7 +208,9 @@ white=(255,255,255)
 surface.fill(white)
 font = pygame.font.Font('Pixeltype.ttf',16)
 font_24 = pygame.font.Font('Pixeltype.ttf',24)
+font_32 = pygame.font.Font('Pixeltype.ttf',32)
 font_50 = pygame.font.Font('Pixeltype.ttf',50)
+font_60 = pygame.font.Font('Pixeltype.ttf',60)
 #bars images
 copper_img=pygame.image.load('images/copper.png').convert_alpha()
 iron_img=pygame.image.load('images/iron.png').convert_alpha()
@@ -246,6 +236,7 @@ bptitles={0:'',1:'',2:'',3:'',4:'',5:'',6:'',7:''}
 factory_layout=[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
 selected_pos=[]
 
+#machine info dictionaries
 #producer_info={'0.0':['n','copper',1],}
 producer_info={}
 #crafter_info={'0.0':['n','circuit',{'input':0}]}
@@ -265,23 +256,23 @@ selected_sellers=[]
 selected_machines=[]
 selection=''
 
+have_producer=False
+have_crafter=False
+have_conveyor=False
+have_seller=False
+
+#sprite groups
 producer_group=pygame.sprite.Group()
 crafter_group=pygame.sprite.Group()
 conveyor_group=pygame.sprite.Group()
 material_group=pygame.sprite.Group()
 item_group=pygame.sprite.Group()
 seller_group=pygame.sprite.Group()
-#processor machines
 smelter_group=pygame.sprite.Group()
 
 green_square_group=pygame.sprite.Group()
 arrows_group=pygame.sprite.Group()
 blueprints_group=pygame.sprite.Group()
-
-have_producer=False
-have_crafter=False
-have_conveyor=False
-have_seller=False
 
 
 #output factory layout
@@ -325,6 +316,7 @@ slider_drag=False
 blueprint_position={0:[20,145],1:[330,145],2:[20,280],3:[330,280],4:[20,415],5:[330,415],6:[20,550 ],7:[330,550]}
 blueprint_title_position={0:[140,310],1:[450,310],2:[140,445],3:[450,445],4:[140,580],5:[450,580],6:[140,715 ],7:[450,715]}
 titles_done_rotation = -1
+been_to_tempshop=False
 
 #money panel
 money_panel_img=pygame.image.load('images/panel3.png').convert_alpha()
@@ -388,13 +380,25 @@ transparent_settings=Buttons(225,150,transparent_settings_surface,2.25,5)
 
 #shop button images:
 mini_exit_img=pygame.image.load('images/mini_exit.png').convert_alpha()
-#shop button instantiation
+gui_flat_img=pygame.image.load('images/gui_flat.png').convert_alpha()
+#shop tabs button instantiation
+machines_button=Buttons(115,172,gui_flat_img,1.05,1.15)
+upgrades_button=Buttons(321,172,gui_flat_img,1.05,1.15)
+supply_button=Buttons(526,172,gui_flat_img,1.05,1.15)
+machines_lable=font_60.render('Machines',False,(0,0,0))
+upgrades_lable=font_60.render('upgrades',False,(0,0,0))
+supply_lable=font_60.render('supply',False,(0,0,0))
+
+
+#machinery shop button instantiation
 mini_exit_button=Buttons(250,400,mini_exit_img,0.5,0.5)
 transparent_popup=Buttons(100,150,transparent_popup,3.5,7)
 producer_button=Buttons(130,310,producer_img,0.5,0.5)
 crafter_button=Buttons(230,310,crafter_img,0.5,0.5)
 conveyor_button=Buttons(330,310,conveyor_img,0.5,0.5)
 seller_button=Buttons(430,310,seller_img,0.5,0.5)
+
+
 
 #shop confirm button images:
 confirm_img=pygame.image.load('images/confirm.png').convert_alpha()
@@ -467,11 +471,11 @@ while run:
                 if event.key == pygame.K_ESCAPE:
                     game_state='ingame_settings'
                 elif event.key == pygame.K_s:
-                    game_state='shop'
+                    game_state='shop machines'
                 elif event.key == pygame.K_e:
                     game_state='edit'
                 elif event.key == pygame.K_b:
-                    game_state='blueprints'
+                    game_state='temp shop'
                 elif event.key == pygame.K_m:
                     game_state='map'
 
@@ -489,9 +493,13 @@ while run:
                 if event.key == pygame.K_ESCAPE:
                     game_state='main menu'
 
-            elif game_state=='shop':
+            elif game_state=='shop machines':
                 if event.key == pygame.K_ESCAPE:
                     game_state = 'play'
+                elif event.key == pygame.K_u:
+                    game_state='shop upgrades'
+                elif event.key == pygame.K_s:
+                    game_state='shop supply'                    
                 elif event.key == pygame.K_1:
                     game_state='shop confirm'
                     selected_machine='producer'
@@ -504,6 +512,22 @@ while run:
                 elif event.key == pygame.K_4:
                     game_state='shop confirm'
                     selected_machine='seller'
+
+            elif game_state=='shop upgrades':
+                if event.key == pygame.K_ESCAPE:
+                    game_state = 'play'
+                elif event.key == pygame.K_m:
+                    game_state='shop machines'
+                elif event.key == pygame.K_s:
+                    game_state='shop supply'  
+
+            elif game_state=='shop supply':
+                if event.key == pygame.K_ESCAPE:
+                    game_state = 'play'
+                elif event.key == pygame.K_u:
+                    game_state='shop upgrades'
+                elif event.key == pygame.K_m:
+                    game_state='shop machines'        
 
             elif game_state == 'blueprints':
                 if event.key == pygame.K_ESCAPE:    
@@ -611,11 +635,11 @@ while run:
                 if settings_mini_button.rect.collidepoint(co):
                     game_state='ingame_settings'
                 elif shop_button.rect.collidepoint(co):
-                    game_state='shop'
+                    game_state='shop machines'
                 elif edit_button.rect.collidepoint(co):
                     game_state='edit'
                 elif blueprints_button.rect.collidepoint(co):
-                    game_state='blueprints'
+                    game_state='temp shop'
 
                     for y in range(0,8):
                         bptitles2[y]=bp_ordered_list[y]
@@ -808,10 +832,14 @@ while run:
                 if back_button.rect.collidepoint(co):
                     game_state='main menu'
 
-            elif game_state=='shop':
+            elif game_state=='shop machines':
                 if producer_button.rect.collidepoint(co):
                     game_state='shop confirm'
                     selected_machine='producer'
+                elif upgrades_button.rect.collidepoint(co):
+                    game_state = 'shop upgrades'
+                elif supply_button.rect.collidepoint(co):
+                    game_state = 'shop supply'
                 elif crafter_button.rect.collidepoint(co):
                     game_state='shop confirm'
                     selected_machine='crafter' 
@@ -827,11 +855,25 @@ while run:
                     if event.button == 1: 
                         slider_drag=True
                         mouse_y=co[1]
-                        offset_y=slider_button.rect.y-mouse_y    
+                        offset_y=slider_button.rect.y-mouse_y
+                        
+            elif game_state=='shop upgrades':
+                if machines_button.rect.collidepoint(co):
+                    game_state = 'shop machines'
+                elif supply_button.rect.collidepoint(co):
+                    game_state = 'shop supply'
+                elif transparent_popup.rect.collidepoint(co) == False:
+                    game_state ='play'
+
+            elif game_state=='shop supply':
+                if machines_button.rect.collidepoint(co):
+                    game_state = 'shop machines'
+                elif upgrades_button.rect.collidepoint(co):
+                    game_state = 'shop upgrades'
+                elif transparent_popup.rect.collidepoint(co) == False:
+                    game_state ='play'
 
             elif game_state=='blueprints':
-                #if transparent_popup.rect.collidepoint(co) == False:
-                #    game_state ='play'
                 if slider_button.rect.collidepoint(co):
                     if event.button == 1: 
                         slider_drag=True
@@ -845,7 +887,6 @@ while run:
                         game_state='play'
                     print(crafter_info)
                             
-                
             elif game_state=='shop confirm':
                 if transparent_grid_button.rect.collidepoint(co):
                     grid_surface_copy=play_grid_bg
@@ -1103,7 +1144,6 @@ while run:
                     bp_title7=font.render(str(bptitles2[6]),False,(0,0,0))
                     bp_title8=font.render(str(bptitles2[7]),False,(0,0,0))
 
-
                 elif game_state=='shop confirm':
                     print(selected_pos)
                     if transparent_grid_button.rect.collidepoint(co):
@@ -1217,7 +1257,6 @@ while run:
     elif game_state=='play':
 
         producer_group.update(producer_info)
-        #material_group.update(producer_info,conveyor_info,conveyor_group,crafter_info,crafter_group,seller_group,money)
         for material in material_group:
             maybe_money = material.update(producer_info,conveyor_info,conveyor_group,crafter_info,crafter_group,seller_group,smelter_group,blueprints_value,money)
             maybe_money=float(maybe_money)
@@ -1230,7 +1269,6 @@ while run:
                 money=maybe_money
         for crafter in crafter_group:
             if crafter.update(crafter_info,blueprints)==True:
-                #crafter_group.update()==True:
                 item_group.add(crafter.create_item(blueprints_value))
 
        
@@ -1260,8 +1298,6 @@ while run:
         #copy screen
         play_grid_bg=grid_surface_copy.copy()
         play_bg=screen.copy()
-        #screen.blit(blueprint_surface,(100,150))
-        #shop_bg=screen.copy()
 
     elif game_state=='producer_popup':
         screen.blit(grid_surface_copy,(0,100))
@@ -1298,19 +1334,59 @@ while run:
         inv_button6.draw()
         item_button.draw()
 
-    elif game_state=='shop':
+    elif game_state=='shop machines':
         screen.blit(play_bg,(0,0))
-        screen.blit(shop_surface,(100,150))
         draw_money(money)
+        shop_surface_copy=shop_surface.copy()
+        screen.blit(shop_surface_copy,(100,150))
 
-        
-        transparent_popup.draw()
+        machines_button.draw()
+        upgrades_button.draw()
+        supply_button.draw()
+        screen.blit(machines_lable,(130,210))
+        screen.blit(upgrades_lable,(335,210))
+        screen.blit(supply_lable,(570,210))
+
+        scrollbar_button.draw()
+        slider_button.draw()
+
         producer_button.draw()
         crafter_button.draw()
         conveyor_button.draw()
         seller_button.draw()
+
+    elif game_state=='shop upgrades':
+        screen.blit(play_bg,(0,0))
+        draw_money(money)
+        shop_surface_copy=shop_surface.copy()
+        screen.blit(shop_surface_copy,(100,150))
+
+        machines_button.draw()
+        upgrades_button.draw()
+        supply_button.draw()
+        screen.blit(machines_lable,(130,210))
+        screen.blit(upgrades_lable,(335,210))
+        screen.blit(supply_lable,(570,210))
+
         scrollbar_button.draw()
         slider_button.draw()
+
+    elif game_state=='shop supply':
+        screen.blit(play_bg,(0,0))
+        draw_money(money)
+        shop_surface_copy=shop_surface.copy()
+        screen.blit(shop_surface_copy,(100,150))
+
+        machines_button.draw()
+        upgrades_button.draw()
+        supply_button.draw()
+        screen.blit(machines_lable,(130,210))
+        screen.blit(upgrades_lable,(335,210))
+        screen.blit(supply_lable,(570,210))
+
+        scrollbar_button.draw()
+        slider_button.draw()
+
 
     elif game_state=='blueprints':
         shop_bg_copy=shop_bg.copy()
@@ -1319,25 +1395,11 @@ while run:
         transparent_popup.draw()
         scrollbar_button.draw()
         slider_button.draw()
-
-
-        blueprint_surface_copy= blueprint_surface.copy()
-
-        
-
-        #screen.blit(blueprint_surface_copy,(100,150))
-        
         blueprints_group.draw(shop_bg_copy)
-        
-        
-        for bp in blueprints_group:
-            if bp.rect.collidepoint(co):
-                selected_bp =bp.bp_title
-                print(selected_bp)
+
         
         screen.blit(shop_bg_copy,(0,0))
         blueprints_group.update()
-
 
     elif game_state=='shop confirm':
         screen.blit(grid_surface_copy,(0,100))
@@ -1383,6 +1445,7 @@ while run:
         screen.blit(blueprint_surface,(100,150))
         shop_bg=screen.copy()
         game_state='blueprints'
+
     pygame.display.update()
     clock.tick(60)
 
