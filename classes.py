@@ -89,7 +89,7 @@ class Material(pygame.sprite.Sprite):
         self.producer_thrust=True
         self.conveyor_thrust=False
         self.previous_conveyor_pos=''  
-        self.worth=1000
+        self.worth=20
    
     def update(self,producer_info,conveyor_info,conveyor_group,crafter_info,crafter_group,seller_group,smelter_group,blueprints_value,money):
         self.this_producer_info=producer_info.get(self.decimal_co)

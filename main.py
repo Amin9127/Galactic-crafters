@@ -8,7 +8,7 @@ pygame.init()
 pygame.font.init()
 
 global money
-money=250
+money=1000
 
 class Buttons():
     def __init__(self,x,y,image,scale_x,scale_y):
@@ -226,7 +226,7 @@ ram_img=pygame.image.load('images/ram.png').convert_alpha()
 crafter_inv_images={1:empty_slot_img,2:empty_slot_img,3:empty_slot_img,4:empty_slot_img,5:empty_slot_img,6:empty_slot_img,}
 item_imgs={'empty':empty_slot_img,'nothing':empty_slot_img,'copper':copper_img,'iron':iron_img,'gold':gold_img,'aluminium':aluminium_img,'lead':lead_img,'coal':coal_img,'circuit':circuit_img,'motherboard':empty_slot_img, 'cpu':empty_slot_img,'ram':ram_img,'power supply':empty_slot_img,'hdd':empty_slot_img,'battery':empty_slot_img,'engine':empty_slot_img,'super computer':empty_slot_img}
 blueprints={'circuit':{'copper':3,'gold':1},'motherboard':{'circuit':6,'copper':10},'cpu':{},'ram':{},'power supply':{},'hdd':{},'battery':{},'engine':{},'super computer':{}}
-blueprints_value={'circuit':1,'motherboard':1, 'cpu':1,'ram':1,'power supply':1,'hdd':1,'battery':1,'engine':1,'super computer':1}
+blueprints_value={'circuit':200,'motherboard':1, 'cpu':1,'ram':1,'power supply':1,'hdd':1,'battery':1,'engine':1,'super computer':1}
 
 bp_ordered_list=['circuit','motherboard','ram','cpu','power supply','hdd','battery','engine','super computer']#,'item 9','item 10','item 11','item 12']
 lists=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
@@ -598,7 +598,7 @@ while run:
                     arrows_group.update(selected_machines)  
                 
                 elif event.key ==pygame.K_r:
-                    rotate(selected_producers,selected_machines,arrows_group,material_group,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,selected_sellers,seller_info,seller_group,grid_surface_copy)
+                    rotate(blueprints,selected_producers,selected_machines,arrows_group,material_group,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,selected_sellers,seller_info,seller_group,grid_surface_copy)
                 elif event.key ==pygame.K_x:
                     #delete(factory_layout,selected_producers,producer_info,producer_group,crafter_info,selected_crafters,crafter_group,selected_conveyors,conveyor_info,conveyor_group,arrows_group,material_group,grid_surface)
                     print(selected_producers,'to delete')
@@ -1071,7 +1071,7 @@ while run:
                         arrows_group.draw(grid_surface_copy)
                     
                 elif rotate_button.rect.collidepoint(co):
-                    rotate(selected_producers,selected_machines,arrows_group,material_group,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,selected_sellers,seller_info,seller_group,grid_surface_copy)
+                    rotate(blueprints,selected_producers,selected_machines,arrows_group,material_group,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,selected_sellers,seller_info,seller_group,grid_surface_copy)
       
                 elif delete_button.rect.collidepoint(co):
                     #delete(factory_layout,selected_producers,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,arrows_group,material_group,grid_surface)

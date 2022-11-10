@@ -39,7 +39,7 @@ def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,pr
     selected_pos=[]
     return money
 
-def rotate(selected_producers,selected_machines,arrows_group,material_group,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,selected_sellers,seller_info,seller_group,grid_surface_copy):
+def rotate(blueprints,selected_producers,selected_machines,arrows_group,material_group,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,selected_sellers,seller_info,seller_group,grid_surface_copy):
     for pos in selected_producers:
         decimal_co=str(pos[0])+'.'+str(pos[1])
         
@@ -91,7 +91,7 @@ def rotate(selected_producers,selected_machines,arrows_group,material_group,prod
 
     #redraw rotated machines
     producer_group.update(producer_info)
-    crafter_group.update()
+    crafter_group.update(crafter_info,blueprints)
     conveyor_group.update(conveyor_info)
     arrows_group.update(selected_machines)
     producer_group.draw(grid_surface_copy)
