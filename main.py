@@ -145,7 +145,7 @@ class Arrow(pygame.sprite.Sprite):
                     self.image=self.image_W
 
 class Blueprints(pygame.sprite.Sprite):
-    def  __init__(self,title_position,y):
+    def  __init__(self,title_position,y,blueprints_value):
         super().__init__()
         self.bp_item_images={0:empty_slot_img,1:empty_slot_img,2:empty_slot_img,3:empty_slot_img,4:empty_slot_img,5:empty_slot_img}
         self.bp_component_quantities=[0,0,0,0,0,0]
@@ -177,25 +177,31 @@ class Blueprints(pygame.sprite.Sprite):
         self.amount5=font.render(str(self.bp_component_quantities[4]),False,(0,0,0))
         self.amount6=font.render(str(self.bp_component_quantities[5]),False,(0,0,0))
 
+        self.price_lable1=font.render('Sell Price:',False,(0,0,0))
+        self.price_lable2=font.render(str(blueprints_value[self.bp_title]),False,(0,0,0))
+
        
     def update(self):
         self.pos = blueprint_title_position[self.position]
         screen.blit(self.title,blueprint_title_position[self.position])
         screen.blit(item_imgs[self.bp_title],(self.pos[0]+200,self.pos[1]+30))
 
-        screen.blit(self.bp_item_images[0],(self.pos[0],self.pos[1]+10))
-        screen.blit(self.bp_item_images[1],(self.pos[0]+40,self.pos[1]+10))
-        screen.blit(self.bp_item_images[2],(self.pos[0]+80,self.pos[1]+10))
+        screen.blit(self.bp_item_images[0],(self.pos[0],self.pos[1]+20))
+        screen.blit(self.bp_item_images[1],(self.pos[0]+40,self.pos[1]+20))
+        screen.blit(self.bp_item_images[2],(self.pos[0]+80,self.pos[1]+20))
         screen.blit(self.bp_item_images[3],(self.pos[0],self.pos[1]+60))
         screen.blit(self.bp_item_images[4],(self.pos[0]+40,self.pos[1]+60))
         screen.blit(self.bp_item_images[5],(self.pos[0]+80,self.pos[1]+60))
 
-        screen.blit(self.amount1,(self.pos[0]+40,self.pos[1]+50))
-        screen.blit(self.amount2,(self.pos[0]+80,self.pos[1]+50))
-        screen.blit(self.amount3,(self.pos[0]+120,self.pos[1]+50))
+        screen.blit(self.amount1,(self.pos[0]+40,self.pos[1]+60))
+        screen.blit(self.amount2,(self.pos[0]+80,self.pos[1]+60))
+        screen.blit(self.amount3,(self.pos[0]+120,self.pos[1]+60))
         screen.blit(self.amount4,(self.pos[0]+40,self.pos[1]+100))
         screen.blit(self.amount5,(self.pos[0]+80,self.pos[1]+100))
         screen.blit(self.amount6,(self.pos[0]+120,self.pos[1]+100))
+
+        screen.blit(self.price_lable1,(self.pos[0]+200,self.pos[1]+80))
+        screen.blit(self.price_lable2,(self.pos[0]+200,self.pos[1]+90))
        
 
 #screen set up
@@ -222,13 +228,52 @@ empty_slot_img=pygame.image.load('images/cross.png').convert_alpha()
 #item images
 circuit_img=pygame.image.load('images/circuit.png').convert_alpha()
 ram_img=pygame.image.load('images/ram.png').convert_alpha()
+cpu_img=pygame.image.load('images/cpu.png').convert_alpha()
+gpu_img=pygame.image.load('images/gpu.png').convert_alpha()
+hdd_img=pygame.image.load('images/hdd.png').convert_alpha()
+computer_img=pygame.image.load('images/pc.png').convert_alpha()
 
 crafter_inv_images={1:empty_slot_img,2:empty_slot_img,3:empty_slot_img,4:empty_slot_img,5:empty_slot_img,6:empty_slot_img,}
-item_imgs={'empty':empty_slot_img,'nothing':empty_slot_img,'copper':copper_img,'iron':iron_img,'gold':gold_img,'aluminium':aluminium_img,'lead':lead_img,'coal':coal_img,'circuit':circuit_img,'motherboard':empty_slot_img, 'cpu':empty_slot_img,'ram':ram_img,'power supply':empty_slot_img,'hdd':empty_slot_img,'battery':empty_slot_img,'engine':empty_slot_img,'super computer':empty_slot_img}
-blueprints={'circuit':{'copper':3,'gold':1},'motherboard':{'circuit':6,'copper':10},'cpu':{},'ram':{},'power supply':{},'hdd':{},'battery':{},'engine':{},'super computer':{}}
-blueprints_value={'circuit':200,'motherboard':1, 'cpu':1,'ram':1,'power supply':1,'hdd':1,'battery':1,'engine':1,'super computer':1}
+item_imgs={'empty':empty_slot_img,
+    'nothing':empty_slot_img,
+    'copper':copper_img,'iron':iron_img,'gold':gold_img,
+    'aluminium':aluminium_img,'lead':lead_img,'coal':coal_img,
+    'circuit':circuit_img,'motherboard':empty_slot_img, 'cpu':cpu_img,
+    'ram':ram_img,'power supply':empty_slot_img,'hdd':hdd_img,
+    'battery':empty_slot_img,'engine':empty_slot_img,'super computer':empty_slot_img,
+    'gpu':gpu_img,'computer':computer_img,
+}
 
-bp_ordered_list=['circuit','motherboard','ram','cpu','power supply','hdd','battery','engine','super computer']#,'item 9','item 10','item 11','item 12']
+blueprints={
+    'circuit':{'copper':3,'gold':1},
+    'motherboard':{'circuit':6,'copper':6},
+    'cpu':{'aluminium':5,'circuit':2,'gold':3},
+    'gpu':{'aluminium':3,'circuit':3,'copper':2},
+    'ram':{'circuit':1,'iron':3},
+    'power supply':{'aluminium':10,'copper':3,'circuit':1,'iron':3},
+    'hdd':{'iron':3,'lead':3,'aluminium':10},
+    'computer':{'motherboard':1,'cpu':1,'ram':2,'power supply':1,'hdd':1,'gpu':1},
+    'battery':{'lead':3,'aluminium':1},
+    'engine':{'aluminium':15,'coal':5},
+    'super computer':{'computer':5,'power supply':10,'gpu':10},
+}
+
+blueprints_value={
+    'nothing':0,
+    'circuit':140,
+    'motherboard':1400,
+    'cpu':600,
+    'gpu':800,
+    'ram':300,
+    'power supply':800,
+    'hdd':500,
+    'computer':8000,
+    'battery':150,
+    'engine':600,
+    'super computer':80000,
+}
+bp_ordered_list=list(blueprints.keys())
+bp_ordered_list.sort()
 lists=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
 
 bptitles2=['nothing','nothing','nothing','nothing','nothing','nothing','nothing','nothing']
@@ -442,7 +487,7 @@ rotate_button=Buttons(800,400,rotate_img,0.5,0.5)
 delete_button=Buttons(800,450,delete_img,0.5,0.5)
 
 current_slider_pos=150
-bp_mode=''
+choose_bp=False
 
 
 #timers
@@ -674,7 +719,7 @@ while run:
 
                     for y in range(0,8):
                         bptitles2[y]=bp_ordered_list[y]
-                        new_bp= Blueprints((y),y)
+                        new_bp= Blueprints((y),y,blueprints_value)
                         blueprints_group.add(new_bp)
 
                 elif map_button.rect.collidepoint(co):
@@ -842,10 +887,10 @@ while run:
 
                     for y in range(0,8):
                         bptitles2[y]=bp_ordered_list[y]
-                        new_bp= Blueprints((y),y)
+                        new_bp= Blueprints((y),y,blueprints_value)
                         blueprints_group.add(new_bp)
 
-                    bp_mode = 'selection'     
+                    choose_bp = 'selection'     
 
             elif game_state=='ingame_settings':
                 if menu_button.rect.collidepoint(co):
@@ -935,17 +980,22 @@ while run:
                             materials_supply[selected_material]=materials_supply[selected_material]+1000
 
             elif game_state=='blueprints':
-                if slider_button.rect.collidepoint(co):
+                if transparent_popup.rect.collidepoint(co) == False:
+                    game_state ='play'
+                elif slider_button.rect.collidepoint(co):
                     if event.button == 1: 
                         slider_drag=True
                         mouse_y=co[1]
                         offset_y=slider_button.rect.y-mouse_y
-                if bp_mode =='selection':
+  
+
+                if choose_bp == True:
                     for bp in blueprints_group:
                         if bp.rect.collidepoint(co):
                             selected_bp =bp.bp_title
                             crafter_info[last_selected_crafter][1]=selected_bp
                         game_state='play'
+                    choose_bp=False
                     print(crafter_info)
                             
             elif game_state=='shop confirm':
@@ -975,12 +1025,13 @@ while run:
                 elif confirm_button.rect.collidepoint(co):
                     money = confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,crafter_img,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout,money)
                     selected_pos=[]
+                    print(crafter_info)
                     game_state = 'play'
                 elif cancel_button.rect.collidepoint(co):
                     game_state='play'
                     selected_pos=[]
 
-            elif game_state=='edit':
+            elif game_state=='edit': 
                 if transparent_grid_button.rect.collidepoint(co):
                     slider_drag=True
                     x= co[0]
@@ -1177,21 +1228,21 @@ while run:
                                 if x == bp_rotations and len(bp_ordered_list)%2 ==1:
                                     for y in range(0,6):
                                         bptitles2[y]=bp_ordered_list[y+bp_position]
-                                        new_bp= Blueprints(y+bp_position,y)
+                                        new_bp= Blueprints(y+bp_position,y,blueprints_value)
                                         blueprints_group.add(new_bp)
                                     
                                         
                                     bptitles2[6]=bp_ordered_list[len(bp_ordered_list)-1]
-                                    new_bp= Blueprints(len(bp_ordered_list)-1,6)
+                                    new_bp= Blueprints(len(bp_ordered_list)-1,6,blueprints_value)
                                     blueprints_group.add(new_bp)
                                     bptitles2[7]='nothing'
-                                    new_bp= Blueprints(-1,7)
+                                    new_bp= Blueprints(-1,7,blueprints_value)
                                     blueprints_group.add(new_bp)
                                 
                                 else:
                                     for y in range(0,8):
                                         bptitles2[y]=bp_ordered_list[y+bp_position]
-                                        new_bp= Blueprints((y+bp_position),y)
+                                        new_bp= Blueprints((y+bp_position),y,blueprints_value)
                                         blueprints_group.add(new_bp)
                                 titles_done_rotation = x
                                 print('done')
@@ -1331,7 +1382,7 @@ while run:
                 money=maybe_money
         for crafter in crafter_group:
             if crafter.update(crafter_info,blueprints)==True:
-                item_group.add(crafter.create_item(blueprints_value))
+                item_group.add(crafter.create_item(blueprints_value,item_imgs))
 
        
         screen.fill((52,78,91))
@@ -1546,12 +1597,13 @@ while run:
         
         draw_money(money)
         transparent_popup.draw()
-        scrollbar_button.draw()
-        slider_button.draw()
+
         blueprints_group.draw(shop_bg_copy)
 
         
         screen.blit(shop_bg_copy,(0,0))
+        scrollbar_button.draw()
+        slider_button.draw()
         blueprints_group.update()
 
     elif game_state=='shop confirm':

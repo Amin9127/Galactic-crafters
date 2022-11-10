@@ -139,7 +139,7 @@ class Material(pygame.sprite.Sprite):
         else:
             self.conveyor_thrust=False
 
-        if pygame.sprite.spritecollideany(self,crafter_group,pygame.sprite.collide_rect_ratio(1)):
+        if pygame.sprite.spritecollideany(self,crafter_group,pygame.sprite.collide_rect_ratio(1)) and self.producer_thrust==False and self.conveyor_thrust==False:
             self.x= ((self.rect.x)//40)*40
             self.y= (((self.rect.y))//40)*40
             self.decimal_co=str(self.x)+'.'+str(self.y)
@@ -181,19 +181,11 @@ class Material(pygame.sprite.Sprite):
 
 
 class Items(pygame.sprite.Sprite):
-    def __init__(self,co,item,blueprints_value):
+    def __init__(self,co,item,blueprints_value,item_imgs):
         super().__init__()
         self.image_circuit=pygame.image.load('images/circuit.png').convert_alpha()
-        if item == 'circuit':
-            self.image=self.image_circuit
-            self.type='circuit'
-        elif item == 'cell':
-            self.image=self.image_cell
-            self.type='cell'
-        elif item == 'ram':
-            self.image=self.image_cell
-            self.type='ram'
-        
+        self.type=item
+        self.image=item_imgs[self.type]        
         self.spawn_co=co
         self.image=pygame.transform.scale(self.image,(20,20))
         self.rect=self.image.get_rect(center=(self.spawn_co[0]+20,self.spawn_co[1]+20))
@@ -330,8 +322,8 @@ class Crafter(Machine):
             else:
                 return False
 
-    def create_item(self,blueprints_value):
-        return Items(self.co,self.item,blueprints_value)
+    def create_item(self,blueprints_value,item_imgs):
+        return Items(self.co,self.item,blueprints_value,item_imgs)
 
 class Smelter(Machine):
     def __init__(self,x,y,img):
