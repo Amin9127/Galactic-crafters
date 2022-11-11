@@ -232,14 +232,16 @@ cpu_img=pygame.image.load('images/cpu.png').convert_alpha()
 gpu_img=pygame.image.load('images/gpu.png').convert_alpha()
 hdd_img=pygame.image.load('images/hdd.png').convert_alpha()
 computer_img=pygame.image.load('images/pc.png').convert_alpha()
+power_supply_img=pygame.image.load('images/power supply.png').convert_alpha()
+motherboard_img=pygame.image.load('images/circuit.png').convert_alpha()
 
 crafter_inv_images={1:empty_slot_img,2:empty_slot_img,3:empty_slot_img,4:empty_slot_img,5:empty_slot_img,6:empty_slot_img,}
 item_imgs={'empty':empty_slot_img,
     'nothing':empty_slot_img,
     'copper':copper_img,'iron':iron_img,'gold':gold_img,
     'aluminium':aluminium_img,'lead':lead_img,'coal':coal_img,
-    'circuit':circuit_img,'motherboard':empty_slot_img, 'cpu':cpu_img,
-    'ram':ram_img,'power supply':empty_slot_img,'hdd':hdd_img,
+    'circuit':circuit_img,'motherboard':motherboard_img, 'cpu':cpu_img,
+    'ram':ram_img,'power supply':power_supply_img,'hdd':hdd_img,
     'battery':empty_slot_img,'engine':empty_slot_img,'super computer':empty_slot_img,
     'gpu':gpu_img,'computer':computer_img,
 }
@@ -260,9 +262,9 @@ blueprints={
 
 blueprints_value={
     'nothing':0,
-    'circuit':140,
+    'circuit':120,
     'motherboard':1400,
-    'cpu':600,
+    'cpu':700,
     'gpu':800,
     'ram':300,
     'power supply':800,
@@ -526,6 +528,10 @@ while run:
                     if materials_supply[created_material]>=material_quantity:
                         materials_supply[created_material]=materials_supply[created_material]-material_quantity
                         material_group.add(Producer.create_material('self',co,producer_info))
+
+            for crafter in crafter_group:
+                if crafter.update(crafter_info,blueprints)==True:
+                    item_group.add(crafter.create_item(blueprints_value,item_imgs))
 
 
         #all keybinds check and what it does in this if elif ladder
@@ -890,7 +896,7 @@ while run:
                         new_bp= Blueprints((y),y,blueprints_value)
                         blueprints_group.add(new_bp)
 
-                    choose_bp = 'selection'     
+                    choose_bp = True     
 
             elif game_state=='ingame_settings':
                 if menu_button.rect.collidepoint(co):
@@ -1158,6 +1164,7 @@ while run:
                     producer_group.update(producer_info)
                     crafter_group.update(crafter_info,blueprints)
                     conveyor_group.update(conveyor_info)
+                    seller_group.update(seller_info)
                     arrows_group.update(selected_machines)
                     producer_group.draw(grid_surface_copy)
                     crafter_group.draw(grid_surface_copy)
@@ -1380,9 +1387,8 @@ while run:
             maybe_money=item.update(crafter_info,conveyor_group,conveyor_info,crafter_group,seller_group,money)
             if maybe_money.is_integer():
                 money=maybe_money
-        for crafter in crafter_group:
-            if crafter.update(crafter_info,blueprints)==True:
-                item_group.add(crafter.create_item(blueprints_value,item_imgs))
+
+
 
        
         screen.fill((52,78,91))
