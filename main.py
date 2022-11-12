@@ -213,6 +213,7 @@ class Blueprints(pygame.sprite.Sprite):
         screen.blit(self.price_lable2,(self.pos[0]+200,self.pos[1]+90))
        
 
+    
 #screen set up
 screen=pygame.display.set_mode((900,900))
 pygame.display.set_caption('Galactic Crafters')
@@ -704,7 +705,9 @@ while run:
                     seller_group.draw(grid_surface_copy)
 
                 elif event.key ==pygame.K_LEFT:
+                    cancel_move=False
                     #change all selected machines move direction to left
+                    print(producer_info,'before')
                     for pos in selected_producers:
                         decimal_co=str(pos[0])+'.'+str(pos[1])
                         producer_info[decimal_co][3] ='left'
@@ -739,40 +742,38 @@ while run:
                     if cancel_move==False:
                         count=0
                         for producer in producer_group:
-                            count+=1
                             combined_info=producer.move(producer_info,temp_info)
-                            producer_info=combined_info[1]
-                            if count==len(selected_producers):
+                            if len(combined_info[0])==len(selected_producers):
                                 producer_info.update(combined_info[0])
                                 temp_info={}
                                 combined_info={}
 
                         count=0
                         for crafter in crafter_group:
-                            count+=1
-                            combined_info=producer.move(crafter_info,temp_info)
-                            crafter_info=combined_info[1]
-                            if count==len(selected_producers):
+                            combined_info=crafter.move(crafter_info,temp_info)
+                            if len(selected_crafters) == len(combined_info[0]): 
+                                count+=1
+                            if count==len(selected_crafters):
                                 crafter_info.update(combined_info[0])
                                 temp_info={}
                                 combined_info={}
 
                         count=0
                         for conveyor in conveyor_group:
-                            count+=1
-                            conveyor_info=producer.move(conveyor_info,temp_info)
-                            conveyor_info=combined_info[1]
-                            if count==len(selected_producers):
+                            conveyor_info=conveyor.move(conveyor_info,temp_info)
+                            if len(selected_conveyors) == len(combined_info[0]): 
+                                count+=1
+                            if count==len(selected_conveyors):
                                 conveyor_info.update(combined_info[0])
                                 temp_info={}
                                 combined_info={}
 
                         count=0
                         for seller in seller_group:
-                            count+=1
-                            combined_info=producer.move(seller_info,temp_info)
-                            seller_info=combined_info[1]
-                            if count==len(selected_producers):
+                            combined_info=seller.move(seller_info,temp_info)
+                            if len(selected_sellers) == len(combined_info[0]): 
+                                count+=1
+                            if count==len(selected_sellers):
                                 seller_info.update(combined_info[0])
                                 temp_info={}
                                 combined_info={}
@@ -802,7 +803,16 @@ while run:
                             pos=selected_machines[i]
                             selected_machines[i]=[pos[0]-40,pos[1]]
                     else:
-                        pass
+                        for pos in selected_machines:
+                            decimal_co=str(pos[0])+'.'+str(pos[1])
+                            if decimal_co in producer_info:
+                                producer_info[decimal_co][3]='none'
+                            elif decimal_co in crafter_info:
+                                crafter_info[decimal_co][3]='none'
+                            elif decimal_co in conveyor_info:
+                                conveyor_info[decimal_co][3]='none'
+                            elif decimal_co in seller_info:
+                                seller_info[decimal_co][3]='none' 
 
                     for arrow in arrows_group:
                         arrow.kill()
@@ -825,11 +835,395 @@ while run:
                     arrows_group.draw(grid_surface_copy)
 
                 elif event.key ==pygame.K_UP:
-                    pass
-                elif event.key ==pygame.K_RIGHT:
-                    pass
+                    cancel_move=False
+                    #change all selected machines move direction to left
+                    for pos in selected_producers:
+                        decimal_co=str(pos[0])+'.'+str(pos[1])
+                        producer_info[decimal_co][3] ='up'
+                    for pos in selected_crafters:
+                        decimal_co=str(pos[0])+'.'+str(pos[1])
+                        crafter_info[decimal_co][3] ='up'
+                    for pos in selected_conveyors:
+                        decimal_co=str(pos[0])+'.'+str(pos[1])
+                        conveyor_info[decimal_co][3] ='up'
+                    for pos in selected_sellers:
+                        decimal_co=str(pos[0])+'.'+str(pos[1])
+                        seller_info[decimal_co][3] ='up'
+
+                    #check if move is possible
+                    for pos in selected_machines:
+                        decimal_co=str(pos[0])+'.'+str(pos[1]-40)
+                        if decimal_co in producer_info:
+                            if producer_info[decimal_co][3] != 'up':
+                                cancel_move =True
+                        elif decimal_co in crafter_info:
+                            if crafter_info[decimal_co][3] != 'up':
+                                cancel_move =True
+                        elif decimal_co in conveyor_info:
+                            if conveyor_info[decimal_co][3] != 'up':
+                                cancel_move =True
+                        elif decimal_co in seller_info:
+                            if seller_info[decimal_co][3] != 'up':
+                                cancel_move =True
+                            
+                    #if machine that is not moving with the others is in the way this will not run
+                    
+                    if cancel_move==False:
+                        count=0
+                        for producer in producer_group:
+                            combined_info=producer.move(producer_info,temp_info)
+                            if len(combined_info[0])==len(selected_producers):
+                                producer_info.update(combined_info[0])
+                                temp_info={}
+                                combined_info={}
+
+                        count=0
+                        for crafter in crafter_group:
+                            combined_info=crafter.move(crafter_info,temp_info)
+                            if len(selected_crafters) == len(combined_info[0]): 
+                                count+=1
+                            if count==len(selected_crafters):
+                                crafter_info.update(combined_info[0])
+                                temp_info={}
+                                combined_info={}
+
+                        count=0
+                        for conveyor in conveyor_group:
+                            conveyor_info=conveyor.move(conveyor_info,temp_info)
+                            if len(selected_conveyors) == len(combined_info[0]): 
+                                count+=1
+                            if count==len(selected_conveyors):
+                                conveyor_info.update(combined_info[0])
+                                temp_info={}
+                                combined_info={}
+
+                        count=0
+                        for seller in seller_group:
+                            combined_info=seller.move(seller_info,temp_info)
+                            if len(selected_sellers) == len(combined_info[0]): 
+                                count+=1
+                            if count==len(selected_sellers):
+                                seller_info.update(combined_info[0])
+                                temp_info={}
+                                combined_info={}
+
+                        #change selected machine variable with their new positions.
+                        for i in range(len(selected_producers)):
+                            pos=selected_producers[i]
+                            selected_producers[i]=[pos[0],pos[1]-40]
+
+                        for i in range(len(selected_crafters)):
+                            pos=selected_crafters[i]
+                            selected_crafters[i]=[pos[0],pos[1]-40]
+
+                        for i in range(len(selected_conveyors)):
+                            pos=selected_conveyors[i]
+                            selected_conveyors[i]=[pos[0],pos[1]-40]
+
+                        for i in range(len(selected_sellers)):
+                            pos=selected_sellers[i]
+                            selected_sellers[i]=[pos[0],pos[1]-40]
+
+                        for pos in selected_machines:
+                            factory_layout[pos[1]//40][pos[0]//40]=0
+                            factory_layout[pos[1]//40-1][pos[0]//40]=1
+
+                        for i in range(len(selected_machines)):
+                            pos=selected_machines[i]
+                            selected_machines[i]=[pos[0],pos[1]-40]
+                    else:
+                        for pos in selected_machines:
+                            decimal_co=str(pos[0])+'.'+str(pos[1])
+                            if decimal_co in producer_info:
+                                producer_info[decimal_co][3]='none'
+                            elif decimal_co in crafter_info:
+                                crafter_info[decimal_co][3]='none'
+                            elif decimal_co in conveyor_info:
+                                conveyor_info[decimal_co][3]='none'
+                            elif decimal_co in seller_info:
+                                seller_info[decimal_co][3]='none' 
+                        cancel_move=False                             
+
+                    for arrow in arrows_group:
+                        arrow.kill()
+
+                    for co in selected_machines:
+                        new_arrow = Arrow(int(co[0]),int(co[1]))
+                        arrows_group.add(new_arrow)
+
+                    grid_surface_copy= grid_surface.copy()
+                    producer_group.update(producer_info)
+                    crafter_group.update(crafter_info,blueprints)
+                    conveyor_group.update(conveyor_info)
+                    seller_group.update(seller_info)
+                    arrows_group.update(selected_machines)
+                    producer_group.draw(grid_surface_copy)
+                    crafter_group.draw(grid_surface_copy)
+                    conveyor_group.draw(grid_surface_copy)
+                    material_group.draw(grid_surface_copy)
+                    seller_group.draw(grid_surface_copy)
+                    arrows_group.draw(grid_surface_copy)
+                
+                elif event.key==pygame.K_RIGHT:
+                    cancel_move=False
+                    #change all selected machines move direction to left
+                    for pos in selected_producers:
+                        decimal_co=str(pos[0])+'.'+str(pos[1])
+                        producer_info[decimal_co][3] ='right'
+                    for pos in selected_crafters:
+                        decimal_co=str(pos[0])+'.'+str(pos[1])
+                        crafter_info[decimal_co][3] ='right'
+                    for pos in selected_conveyors:
+                        decimal_co=str(pos[0])+'.'+str(pos[1])
+                        conveyor_info[decimal_co][3] ='right'
+                    for pos in selected_sellers:
+                        decimal_co=str(pos[0])+'.'+str(pos[1])
+                        seller_info[decimal_co][3] ='right'
+
+                    #check if move is possible
+                    for pos in selected_machines:
+                        decimal_co=str(pos[0]+40)+'.'+str(pos[1])
+                        if decimal_co in producer_info:
+                            if producer_info[decimal_co][3] != 'right':
+                                cancel_move =True
+                        elif decimal_co in crafter_info:
+                            if crafter_info[decimal_co][3] != 'right':
+                                cancel_move =True
+                        elif decimal_co in conveyor_info:
+                            if conveyor_info[decimal_co][3] != 'right':
+                                cancel_move =True
+                        elif decimal_co in seller_info:
+                            if seller_info[decimal_co][3] != 'right':
+                                cancel_move =True
+                            
+                    #if machine that is not moving with the others is in the way this will not run
+                    
+                    if cancel_move==False:
+                        count=0
+                        for producer in producer_group:
+                            combined_info=producer.move(producer_info,temp_info)
+                            if len(combined_info[0])==len(selected_producers):
+                                producer_info.update(combined_info[0])
+                                temp_info={}
+                                combined_info={}
+
+                        count=0
+                        for crafter in crafter_group:
+                            combined_info=crafter.move(crafter_info,temp_info)
+                            if len(selected_crafters) == len(combined_info[0]): 
+                                count+=1
+                            if count==len(selected_crafters):
+                                crafter_info.update(combined_info[0])
+                                temp_info={}
+                                combined_info={}
+
+                        count=0
+                        for conveyor in conveyor_group:
+                            conveyor_info=conveyor.move(conveyor_info,temp_info)
+                            if len(selected_conveyors) == len(combined_info[0]): 
+                                count+=1
+                            if count==len(selected_conveyors):
+                                conveyor_info.update(combined_info[0])
+                                temp_info={}
+                                combined_info={}
+
+                        count=0
+                        for seller in seller_group:
+                            combined_info=seller.move(seller_info,temp_info)
+                            if len(selected_sellers) == len(combined_info[0]): 
+                                count+=1
+                            if count==len(selected_sellers):
+                                seller_info.update(combined_info[0])
+                                temp_info={}
+                                combined_info={}
+
+                        #change selected machine variable with their new positions.
+                        for i in range(len(selected_producers)):
+                            pos=selected_producers[i]
+                            selected_producers[i]=[pos[0]+40,pos[1]]
+
+                        for i in range(len(selected_crafters)):
+                            pos=selected_crafters[i]
+                            selected_crafters[i]=[pos[0]+40,pos[1]]
+
+                        for i in range(len(selected_conveyors)):
+                            pos=selected_conveyors[i]
+                            selected_conveyors[i]=[pos[0]+40,pos[1]]
+
+                        for i in range(len(selected_sellers)):
+                            pos=selected_sellers[i]
+                            selected_sellers[i]=[pos[0]+40,pos[1]]
+
+                        for pos in selected_machines:
+                            factory_layout[pos[1]//40][pos[0]//40]=0
+                            factory_layout[pos[1]//40][(pos[0]//40)+1]=1
+
+                        for i in range(len(selected_machines)):
+                            pos=selected_machines[i]
+                            selected_machines[i]=[pos[0]+40,pos[1]]
+                    else:
+                        for pos in selected_machines:
+                            decimal_co=str(pos[0])+'.'+str(pos[1])
+                            if decimal_co in producer_info:
+                                producer_info[decimal_co][3]='none'
+                            elif decimal_co in crafter_info:
+                                crafter_info[decimal_co][3]='none'
+                            elif decimal_co in conveyor_info:
+                                conveyor_info[decimal_co][3]='none'
+                            elif decimal_co in seller_info:
+                                seller_info[decimal_co][3]='none'
+                        cancel_move=False                              
+
+                    for arrow in arrows_group:
+                        arrow.kill()
+
+                    for co in selected_machines:
+                        new_arrow = Arrow(int(co[0]),int(co[1]))
+                        arrows_group.add(new_arrow)
+
+                    grid_surface_copy= grid_surface.copy()
+                    producer_group.update(producer_info)
+                    crafter_group.update(crafter_info,blueprints)
+                    conveyor_group.update(conveyor_info)
+                    seller_group.update(seller_info)
+                    arrows_group.update(selected_machines)
+                    producer_group.draw(grid_surface_copy)
+                    crafter_group.draw(grid_surface_copy)
+                    conveyor_group.draw(grid_surface_copy)
+                    material_group.draw(grid_surface_copy)
+                    seller_group.draw(grid_surface_copy)
+                    arrows_group.draw(grid_surface_copy)
+
                 elif event.key ==pygame.K_DOWN:
-                    pass            
+
+                    cancel_move=False
+                    #change all selected machines move direction to left
+                    for pos in selected_producers:
+                        decimal_co=str(pos[0])+'.'+str(pos[1])
+                        producer_info[decimal_co][3] ='down'
+                    for pos in selected_crafters:
+                        decimal_co=str(pos[0])+'.'+str(pos[1])
+                        crafter_info[decimal_co][3] ='down'
+                    for pos in selected_conveyors:
+                        decimal_co=str(pos[0])+'.'+str(pos[1])
+                        conveyor_info[decimal_co][3] ='down'
+                    for pos in selected_sellers:
+                        decimal_co=str(pos[0])+'.'+str(pos[1])
+                        seller_info[decimal_co][3] ='down'
+
+                    #check if move is possible
+                    for pos in selected_machines:
+                        decimal_co=str(pos[0])+'.'+str(pos[1]+40)
+                        if decimal_co in producer_info:
+                            if producer_info[decimal_co][3] != 'down':
+                                cancel_move =True
+                        elif decimal_co in crafter_info:
+                            if crafter_info[decimal_co][3] != 'down':
+                                cancel_move =True
+                        elif decimal_co in conveyor_info:
+                            if conveyor_info[decimal_co][3] != 'down':
+                                cancel_move =True
+                        elif decimal_co in seller_info:
+                            if seller_info[decimal_co][3] != 'down':
+                                cancel_move =True
+                            
+                    #if machine that is not moving with the others is in the way this will not run
+                    
+                    if cancel_move==False:
+                        count=0
+                        for producer in producer_group:
+                            combined_info=producer.move(producer_info,temp_info)
+                            if len(combined_info[0])==len(selected_producers):
+                                producer_info.update(combined_info[0])
+                                temp_info={}
+                                combined_info={}
+
+                        count=0
+                        for crafter in crafter_group:
+                            combined_info=crafter.move(crafter_info,temp_info)
+                            if len(selected_crafters) == len(combined_info[0]): 
+                                count+=1
+                            if count==len(selected_crafters):
+                                crafter_info.update(combined_info[0])
+                                temp_info={}
+                                combined_info={}
+
+                        count=0
+                        for conveyor in conveyor_group:
+                            conveyor_info=conveyor.move(conveyor_info,temp_info)
+                            if len(selected_conveyors) == len(combined_info[0]): 
+                                count+=1
+                            if count==len(selected_conveyors):
+                                conveyor_info.update(combined_info[0])
+                                temp_info={}
+                                combined_info={}
+
+                        count=0
+                        for seller in seller_group:
+                            combined_info=seller.move(seller_info,temp_info)
+                            if len(selected_sellers) == len(combined_info[0]): 
+                                count+=1
+                            if count==len(selected_sellers):
+                                seller_info.update(combined_info[0])
+                                temp_info={}
+                                combined_info={}
+
+                        #change selected machine variable with their new positions.
+                        for i in range(len(selected_producers)):
+                            pos=selected_producers[i]
+                            selected_producers[i]=[pos[0],pos[1]+40]
+
+                        for i in range(len(selected_crafters)):
+                            pos=selected_crafters[i]
+                            selected_crafters[i]=[pos[0],pos[1]+40]
+
+                        for i in range(len(selected_conveyors)):
+                            pos=selected_conveyors[i]
+                            selected_conveyors[i]=[pos[0],pos[1]+40]
+
+                        for i in range(len(selected_sellers)):
+                            pos=selected_sellers[i]
+                            selected_sellers[i]=[pos[0],pos[1]+40]
+
+                        for pos in selected_machines:
+                            factory_layout[pos[1]//40][pos[0]//40]=0
+                            factory_layout[pos[1]//40+1][pos[0]//40]=1
+
+                        for i in range(len(selected_machines)):
+                            pos=selected_machines[i]
+                            selected_machines[i]=[pos[0],pos[1]+40]
+                    else:
+                        for pos in selected_machines:
+                            decimal_co=str(pos[0])+'.'+str(pos[1])
+                            if decimal_co in producer_info:
+                                producer_info[decimal_co][3]='none'
+                            elif decimal_co in crafter_info:
+                                crafter_info[decimal_co][3]='none'
+                            elif decimal_co in conveyor_info:
+                                conveyor_info[decimal_co][3]='none'
+                            elif decimal_co in seller_info:
+                                seller_info[decimal_co][3]='none'     
+                        cancel_move=False                         
+
+                    for arrow in arrows_group:
+                        arrow.kill()
+
+                    for co in selected_machines:
+                        new_arrow = Arrow(int(co[0]),int(co[1]))
+                        arrows_group.add(new_arrow)
+
+                    grid_surface_copy= grid_surface.copy()
+                    producer_group.update(producer_info)
+                    crafter_group.update(crafter_info,blueprints)
+                    conveyor_group.update(conveyor_info)
+                    seller_group.update(seller_info)
+                    arrows_group.update(selected_machines)
+                    producer_group.draw(grid_surface_copy)
+                    crafter_group.draw(grid_surface_copy)
+                    conveyor_group.draw(grid_surface_copy)
+                    material_group.draw(grid_surface_copy)
+                    seller_group.draw(grid_surface_copy)
+                    arrows_group.draw(grid_surface_copy)        
             
             elif game_state=='map':
                 if event.key==pygame.K_ESCAPE:
