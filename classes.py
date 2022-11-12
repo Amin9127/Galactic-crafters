@@ -1,6 +1,5 @@
-from platform import machine
+#from platform import machine
 import pygame
-
 class Machine(pygame.sprite.Sprite):
     def __init__(self,x,y,img):
         super().__init__()
@@ -29,6 +28,43 @@ class Machine(pygame.sprite.Sprite):
                 self.image=self.image_S
             elif machine_info[self.decimal_co][0]=='w':
                 self.image=self.image_W
+
+    def move(self,machine_info,temp_info):
+        self.current_co=self.rect.topleft
+        self.decimal_co=str(self.current_co[0])+'.'+str(self.current_co[1])
+
+        self.left_decimal_co=str(self.current_co[0]-40)+'.'+str(self.current_co[1])
+        self.up_decimal_co=str(self.current_co[0])+'.'+str(self.current_co[1]-40)
+        self.right_decimal_co=str(self.current_co[0]+40)+'.'+str(self.current_co[1])
+        self.down_decimal_co=str(self.current_co[0])+'.'+str(self.current_co[1]+40)
+
+
+        if machine_info[self.decimal_co][3] == 'left':
+            temp_info[self.left_decimal_co] = machine_info[self.decimal_co]
+            del machine_info[self.decimal_co]
+            self.rect=self.image.get_rect(topleft=(self.current_co[0]-40,self.current_co[1]))
+            temp_info[self.left_decimal_co][3] ='none'
+
+        elif machine_info[self.decimal_co][3] == 'up':
+            temp_info[self.up_decimal_co] = machine_info[self.decimal_co]
+            del machine_info[self.decimal_co]
+            self.rect=self.image.get_rect(topleft=(self.current_co[0],self.current_co[1]-40))
+            temp_info[self.up_decimal_co][3] ='none'
+
+        elif machine_info[self.decimal_co][3] == 'right':
+            temp_info[self.right_decimal_co] = machine_info[self.decimal_co]
+            del machine_info[self.decimal_co]
+            self.rect=self.image.get_rect(topleft=(self.current_co[0]+40,self.current_co[1]))
+            temp_info[self.right_decimal_co][3] ='none'
+
+        elif machine_info[self.decimal_co][3] == 'down':
+            temp_info[self.down_decimal_co] = machine_info[self.decimal_co]
+            del machine_info[self.decimal_co]
+            self.rect=self.image.get_rect(topleft=(self.current_co[0],self.current_co[1]+40))
+            temp_info[self.down_decimal_co][3] ='none'
+
+        combined_info=[temp_info,machine_info]
+        return combined_info
 
 
 class Conveyor(Machine):

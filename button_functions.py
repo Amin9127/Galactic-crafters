@@ -7,33 +7,34 @@ def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,pr
         for co in selected_pos:
             x= co[0]*40
             y= co[1]*40
+            print(co)
             
             decimal_co=str(x)+'.'+str(y)
             str(decimal_co)
             print(decimal_co,'in function')
             if selected_machine =='producer':
-                producer_info[decimal_co]=['n','copper',1]
+                producer_info[decimal_co]=['n','copper',1,'none']
                 new_producer=Producer(x,y,producer_img,producer_info)
                 producer_group.add(new_producer)
-                factory_layout[co[0]][co[1]]=1
+                factory_layout[co[1]][co[0]]=1
                 have_producer=True
             elif selected_machine=='crafter':
-                crafter_info[decimal_co]=['n','circuit',{}]
+                crafter_info[decimal_co]=['n','circuit',{},'none']
                 new_crafter=Crafter(x,y,crafter_img)
                 crafter_group.add(new_crafter)
-                factory_layout[co[0]][co[1]]=1
+                factory_layout[co[1]][co[0]]=1
                 have_crafter=True
             elif selected_machine=='conveyor':
-                conveyor_info[decimal_co]='n'
+                conveyor_info[decimal_co]=['n','','','none']
                 new_conveyor=Conveyor(x,y,conveyor_img)
                 conveyor_group.add(new_conveyor)
-                factory_layout[co[0]][co[1]]=1
+                factory_layout[co[1]][co[0]]=1
                 have_conveyor=True
             elif selected_machine=='seller':
-                seller_info[decimal_co]='n'
+                seller_info[decimal_co]=['n','','','none']
                 new_seller=Seller(x,y,seller_img)
                 seller_group.add(new_seller)
-                factory_layout[co[0]][co[1]]=1
+                factory_layout[co[1]][co[0]]=1
                 have_seller=True
 
     selected_pos=[]
@@ -67,26 +68,26 @@ def rotate(blueprints,selected_producers,selected_machines,arrows_group,material
     for pos in selected_conveyors:
         decimal_co=str(pos[0])+'.'+str(pos[1])
         
-        if conveyor_info[decimal_co]=='n':
-            conveyor_info[decimal_co]='e'
-        elif conveyor_info[decimal_co]=='e':
-            conveyor_info[decimal_co]='s'
-        elif conveyor_info[decimal_co]=='s':
-            conveyor_info[decimal_co]='w'
-        elif conveyor_info[decimal_co]=='w':
-            conveyor_info[decimal_co]='n'
+        if conveyor_info[decimal_co][0]=='n':
+            conveyor_info[decimal_co][0]='e'
+        elif conveyor_info[decimal_co][0]=='e':
+            conveyor_info[decimal_co][0]='s'
+        elif conveyor_info[decimal_co][0]=='s':
+            conveyor_info[decimal_co][0]='w'
+        elif conveyor_info[decimal_co][0]=='w':
+            conveyor_info[decimal_co][0]='n'
 
     for pos in selected_sellers:
         decimal_co=str(pos[0])+'.'+str(pos[1])
         
-        if seller_info[decimal_co]=='n':
-            seller_info[decimal_co]='e'
-        elif seller_info[decimal_co]=='e':
-            seller_info[decimal_co]='s'
-        elif seller_info[decimal_co]=='s':
-            seller_info[decimal_co]='w'
-        elif seller_info[decimal_co]=='w':
-            seller_info[decimal_co]='n'
+        if seller_info[decimal_co][0]=='n':
+            seller_info[decimal_co][0]='e'
+        elif seller_info[decimal_co][0]=='e':
+            seller_info[decimal_co][0]='s'
+        elif seller_info[decimal_co][0]=='s':
+            seller_info[decimal_co][0]='w'
+        elif seller_info[decimal_co][0]=='w':
+            seller_info[decimal_co][0]='n'
 
 
     #redraw rotated machines
@@ -94,6 +95,7 @@ def rotate(blueprints,selected_producers,selected_machines,arrows_group,material
     crafter_group.update(crafter_info,blueprints)
     conveyor_group.update(conveyor_info)
     arrows_group.update(selected_machines)
+    seller_group.update(seller_info)
     producer_group.draw(grid_surface_copy)
     crafter_group.draw(grid_surface_copy)
     conveyor_group.draw(grid_surface_copy)
