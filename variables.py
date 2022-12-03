@@ -41,6 +41,19 @@ seller_info={}
 temp_info={}
 factory_layout=[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
 
+#sprite groups
+producer_group=pygame.sprite.Group()
+crafter_group=pygame.sprite.Group()
+conveyor_group=pygame.sprite.Group()
+material_group=pygame.sprite.Group()
+item_group=pygame.sprite.Group()
+seller_group=pygame.sprite.Group()
+smelter_group=pygame.sprite.Group()
+
+green_square_group=pygame.sprite.Group()
+arrows_group=pygame.sprite.Group()
+blueprints_group=pygame.sprite.Group()
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #blueprints stuff
 #material images
@@ -103,7 +116,8 @@ bp_ordered_list=list(blueprints.keys())
 bp_ordered_list.sort()
 
 bptitles={0:'',1:'',2:'',3:'',4:'',5:'',6:'',7:''}
-
+bptitles2=['nothing','nothing','nothing','nothing','nothing','nothing','nothing','nothing']
+choose_bp=False
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #button images
 #main menu button images:
@@ -194,8 +208,6 @@ slider_img=pygame.image.load('images/slider.png').convert_alpha()
 scrollbar_button=Buttons(750,150,scrollbar_img,0.25,7)
 slider_button=Buttons(750,150,slider_img,0.25,0.5)
 slider_drag=False
-blueprint_position={0:[20,145],1:[330,145],2:[20,280],3:[330,280],4:[20,415],5:[330,415],6:[20,550 ],7:[330,550]}
-blueprint_title_position={0:[140,310],1:[450,310],2:[140,445],3:[450,445],4:[140,580],5:[450,580],6:[140,715 ],7:[450,715]}
 titles_done_rotation = -1
 been_to_tempshop=False
 

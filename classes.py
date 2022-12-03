@@ -360,3 +360,191 @@ class Smelter(Machine):
 
     def create_item(self,co,item,blueprints_value):
         return Items(co,item,blueprints_value)
+
+class Blueprints(pygame.sprite.Sprite):
+    def  __init__(self,title_position,y,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font):
+        super().__init__()
+        blueprint_position={0:[20,145],1:[330,145],2:[20,280],3:[330,280],4:[20,415],5:[330,415],6:[20,550 ],7:[330,550]}
+        blueprint_title_position={0:[140,310],1:[450,310],2:[140,445],3:[450,445],4:[140,580],5:[450,580],6:[140,715 ],7:[450,715]}
+
+        self.bp_item_images={0:empty_slot_img,1:empty_slot_img,2:empty_slot_img,3:empty_slot_img,4:empty_slot_img,5:empty_slot_img}
+        self.bp_component_quantities=[0,0,0,0,0,0]
+        self.position=y
+
+        self.image=pygame.image.load('images/gui_flat.png').convert_alpha()
+        self.image=pygame.transform.scale(self.image,(320,135))
+        self.title_pos=blueprint_title_position[y]
+        self.rect=self.image.get_rect(topleft=(self.title_pos[0]-30,self.title_pos[1]-20))
+
+        if title_position==-1:
+            self.bp_title='nothing'
+        else:
+            self.bp_title = bp_ordered_list[title_position]
+            self.bp_items=blueprints[self.bp_title].keys()
+            self.count=0
+
+            for item in self.bp_items:
+                self.bp_item_images[self.count]=item_imgs[item]
+                self.bp_component_quantities[self.count]=blueprints[self.bp_title][item]
+                self.count+=1
+
+        self.title=font_24.render(str(self.bp_title),False,(0,0,0))
+
+        self.amount1=font.render(str(self.bp_component_quantities[0]),False,(0,0,0))
+        self.amount2=font.render(str(self.bp_component_quantities[1]),False,(0,0,0))
+        self.amount3=font.render(str(self.bp_component_quantities[2]),False,(0,0,0))
+        self.amount4=font.render(str(self.bp_component_quantities[3]),False,(0,0,0))
+        self.amount5=font.render(str(self.bp_component_quantities[4]),False,(0,0,0))
+        self.amount6=font.render(str(self.bp_component_quantities[5]),False,(0,0,0))
+
+        self.price_lable1=font.render('Sell Price:',False,(0,0,0))
+        self.price_lable2=font.render(str(blueprints_value[self.bp_title]),False,(0,0,0))
+
+       
+    def update(self,screen,item_imgs):
+        blueprint_position={0:[20,145],1:[330,145],2:[20,280],3:[330,280],4:[20,415],5:[330,415],6:[20,550 ],7:[330,550]}
+        blueprint_title_position={0:[140,310],1:[450,310],2:[140,445],3:[450,445],4:[140,580],5:[450,580],6:[140,715 ],7:[450,715]}
+        self.pos = blueprint_title_position[self.position]
+        screen.blit(self.title,blueprint_title_position[self.position])
+        screen.blit(item_imgs[self.bp_title],(self.pos[0]+200,self.pos[1]+30))
+
+        screen.blit(self.bp_item_images[0],(self.pos[0],self.pos[1]+20))
+        screen.blit(self.bp_item_images[1],(self.pos[0]+40,self.pos[1]+20))
+        screen.blit(self.bp_item_images[2],(self.pos[0]+80,self.pos[1]+20))
+        screen.blit(self.bp_item_images[3],(self.pos[0],self.pos[1]+60))
+        screen.blit(self.bp_item_images[4],(self.pos[0]+40,self.pos[1]+60))
+        screen.blit(self.bp_item_images[5],(self.pos[0]+80,self.pos[1]+60))
+
+        screen.blit(self.amount1,(self.pos[0]+40,self.pos[1]+60))
+        screen.blit(self.amount2,(self.pos[0]+80,self.pos[1]+60))
+        screen.blit(self.amount3,(self.pos[0]+120,self.pos[1]+60))
+        screen.blit(self.amount4,(self.pos[0]+40,self.pos[1]+100))
+        screen.blit(self.amount5,(self.pos[0]+80,self.pos[1]+100))
+        screen.blit(self.amount6,(self.pos[0]+120,self.pos[1]+100))
+
+        screen.blit(self.price_lable1,(self.pos[0]+200,self.pos[1]+80))
+        screen.blit(self.price_lable2,(self.pos[0]+200,self.pos[1]+90))
+
+
+class Arrow(pygame.sprite.Sprite):
+    def __init__(self,x,y,producer_info,crafter_info,conveyor_info,seller_info):
+        super().__init__()
+        self.image=pygame.image.load('images/arrow.png').convert_alpha()
+        self.image=pygame.transform.scale(self.image, (40, 40))
+        self.image=pygame.transform.rotate(self.image,90)
+        self.image_N=self.image
+        self.image_E=pygame.transform.rotate(self.image,270)
+        self.image_S=pygame.transform.rotate(self.image,180)
+        self.image_W=pygame.transform.rotate(self.image,90)
+
+        self.decimal_co=str(x)+'.'+str(y) 
+
+        if self.decimal_co in producer_info:
+            if producer_info[self.decimal_co][0]=='n':
+                self.image=self.image_N
+            elif producer_info[self.decimal_co][0]=='e':
+                self.image=self.image_E
+            elif producer_info[self.decimal_co][0]=='s':
+                self.image=self.image_S
+            elif producer_info[self.decimal_co][0]=='w':
+                self.image=self.image_W
+
+        elif self.decimal_co in crafter_info:
+            if crafter_info[self.decimal_co][0]=='n':
+                self.image=self.image_N
+            elif crafter_info[self.decimal_co][0]=='e':
+                self.image=self.image_E
+            elif crafter_info[self.decimal_co][0]=='s':
+                self.image=self.image_S
+            elif crafter_info[self.decimal_co][0]=='w':
+                self.image=self.image_W
+
+        elif self.decimal_co in conveyor_info:
+            if conveyor_info[self.decimal_co][0]=='n':
+                self.image=self.image_N
+            elif conveyor_info[self.decimal_co][0]=='e':
+                self.image=self.image_E
+            elif conveyor_info[self.decimal_co][0]=='s':
+                self.image=self.image_S
+            elif conveyor_info[self.decimal_co][0]=='w':
+                self.image=self.image_W
+        
+        elif self.decimal_co in seller_info:
+            if seller_info[self.decimal_co][0]=='n':
+                self.image=self.image_N
+            elif seller_info[self.decimal_co][0]=='e':
+                self.image=self.image_E
+            elif seller_info[self.decimal_co][0]=='s':
+                self.image=self.image_S
+            elif seller_info[self.decimal_co][0]=='w':
+                self.image=self.image_W
+
+        self.rect=self.image.get_rect(topleft=(x,y))
+
+        self.current_co=self.rect.topleft
+        self.decimal_co=str(self.current_co[0])+'.'+str(self.current_co[1]) 
+    
+    def update(self,selected_machines,producer_info,crafter_info,conveyor_info,seller_info):
+        self.current_co=self.rect.topleft
+        self.layout_x=self.current_co[0]//40
+        self.layout_y=self.current_co[1]//40
+        self.co=[self.layout_x*40,self.layout_y*40]
+        self.decimal_co=str(self.layout_x*40)+'.'+str(self.layout_y*40)
+
+        if self.co not in selected_machines:
+            self.kill()
+        else:
+            if self.decimal_co in producer_info:
+                if producer_info[self.decimal_co][0]=='n':
+                    self.image=self.image_N
+                elif producer_info[self.decimal_co][0]=='e':
+                    self.image=self.image_E
+                elif producer_info[self.decimal_co][0]=='s':
+                    self.image=self.image_S
+                elif producer_info[self.decimal_co][0]=='w':
+                    self.image=self.image_W
+
+            elif self.decimal_co in crafter_info:
+                if crafter_info[self.decimal_co][0]=='n':
+                    self.image=self.image_N
+                elif crafter_info[self.decimal_co][0]=='e':
+                    self.image=self.image_E
+                elif crafter_info[self.decimal_co][0]=='s':
+                    self.image=self.image_S
+                elif crafter_info[self.decimal_co][0]=='w':
+                    self.image=self.image_W
+
+            elif self.decimal_co in conveyor_info:
+                if conveyor_info[self.decimal_co][0]=='n':
+                    self.image=self.image_N
+                elif conveyor_info[self.decimal_co][0]=='e':
+                    self.image=self.image_E
+                elif conveyor_info[self.decimal_co][0]=='s':
+                    self.image=self.image_S
+                elif conveyor_info[self.decimal_co][0]=='w':
+                    self.image=self.image_W
+
+            elif self.decimal_co in seller_info:
+                if seller_info[self.decimal_co][0]=='n':
+                    self.image=self.image_N
+                elif seller_info[self.decimal_co][0]=='e':
+                    self.image=self.image_E
+                elif seller_info[self.decimal_co][0]=='s':
+                    self.image=self.image_S
+                elif seller_info[self.decimal_co][0]=='w':
+                    self.image=self.image_W 
+
+class GreenSquare(pygame.sprite.Sprite):
+    def __init__(self,x,y):
+        super().__init__()
+        self.image=pygame.image.load('images/green_square.png').convert_alpha()
+        self.image=pygame.transform.scale(self.image, (40, 40))
+        self.rect=self.image.get_rect(topleft=(x,y))
+    
+    def update(self,selected_pos):
+        self.current_co=self.rect.topleft
+        self.layout_x=self.current_co[0]//40
+        self.layout_y=self.current_co[1]//40
+        if [self.layout_x,self.layout_y] not in selected_pos:
+            self.kill()   
+            
