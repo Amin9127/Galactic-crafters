@@ -1,4 +1,3 @@
-#from platform import machine
 import pygame
 class Machine(pygame.sprite.Sprite):
     def __init__(self,x,y,img):
@@ -547,4 +546,3 @@ class GreenSquare(pygame.sprite.Sprite):
         self.layout_y=self.current_co[1]//40
         if [self.layout_x,self.layout_y] not in selected_pos:
             self.kill()   
-            

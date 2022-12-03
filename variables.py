@@ -231,6 +231,7 @@ cancel_move=False
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #shop stuff
+prices={'producer':100,'crafter':100,'conveyor':50,'seller':100,}
 #shop button images:
 mini_exit_img=pygame.image.load('images/mini_exit.png').convert_alpha()
 gui_flat_img=pygame.image.load('images/gui_flat.png').convert_alpha()
@@ -246,10 +247,22 @@ supply_lable=font_60.render('supply',False,(0,0,0))
 #machinery shop button instantiation
 mini_exit_button=Buttons(250,400,mini_exit_img,0.5,0.5)
 transparent_popup=Buttons(100,150,transparent_popup,3.5,7)
-producer_button=Buttons(130,310,producer_img,0.5,0.5)
-crafter_button=Buttons(230,310,crafter_img,0.5,0.5)
-conveyor_button=Buttons(330,310,conveyor_img,0.5,0.5)
-seller_button=Buttons(430,310,seller_img,0.5,0.5)
+
+producer_button=Buttons(135,340,producer_img,0.5,0.5)
+crafter_button=Buttons(440,340,crafter_img,0.5,0.5)
+conveyor_button=Buttons(135,470,conveyor_img,0.5,0.5)
+seller_button=Buttons(440,470,seller_img,0.5,0.5)
+
+producer_buy_button=Buttons(115,297,gui_flat_img,1.56,1.34)
+crafter_buy_button=Buttons(422,297,gui_flat_img,1.56,1.34)
+conveyor_buy_button=Buttons(115,431,gui_flat_img,1.56,1.34)
+seller_buy_button=Buttons(422,431,gui_flat_img,1.56,1.34)
+
+machine1_buy_button=Buttons(422,699,gui_flat_img,1.56,1.34)
+machine2_buy_button=Buttons(115,565,gui_flat_img,1.56,1.34)
+machine3_buy_button=Buttons(422,565,gui_flat_img,1.56,1.34)
+machine4_buy_button=Buttons(115,699,gui_flat_img,1.56,1.34)
+
 #upgrades
 
 #supply

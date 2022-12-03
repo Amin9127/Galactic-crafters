@@ -6,35 +6,14 @@ from classes import *
 from variables import *
 pygame.init()
 pygame.font.init()
-
 global money
+#usual start 1000 money
 money=1000
 
-
-
-
-
-def draw_text(text,font,text_colour,x,y):
-    img=font.render(text,True,text_colour)
-    screen.blit(img,(x,y))
-
-
-
-
-
-
-#output factory layout
-'''
-for x in factory_layout:
-    for y in x:
-        print(y,end='')
-    print()
-'''
-
-
 #timers
-change_event=pygame.USEREVENT
-pygame.time.set_timer(change_event,1000)
+#creates a event every second
+seconds_event=pygame.USEREVENT
+pygame.time.set_timer(seconds_event,1000)
 last_time=time.time()
  
 
@@ -51,7 +30,7 @@ while run:
         if event.type==pygame.QUIT:
             pygame.quit()
             exit()          
-        if event.type ==change_event:
+        if event.type ==seconds_event:
             if game_state=='play':
                 screen.blit(grid_surface,(0,100))
                 producer_cos=list(producer_info.keys())
@@ -522,20 +501,20 @@ while run:
                     game_state='main menu'
 
             elif game_state=='shop machines':
-                if producer_button.rect.collidepoint(co):
-                    game_state='shop confirm'
-                    selected_machine='producer'
-                elif upgrades_button.rect.collidepoint(co):
+                if upgrades_button.rect.collidepoint(co):
                     game_state = 'shop upgrades'
                 elif supply_button.rect.collidepoint(co):
                     game_state = 'shop supply'
-                elif crafter_button.rect.collidepoint(co):
+                elif producer_buy_button.rect.collidepoint(co):
+                    game_state='shop confirm'
+                    selected_machine='producer'
+                elif crafter_buy_button.rect.collidepoint(co):
                     game_state='shop confirm'
                     selected_machine='crafter' 
-                elif conveyor_button.rect.collidepoint(co):
+                elif conveyor_buy_button.rect.collidepoint(co):
                     game_state='shop confirm'
                     selected_machine='conveyor'
-                elif seller_button.rect.collidepoint(co):
+                elif seller_buy_button.rect.collidepoint(co):
                     game_state='shop confirm'
                     selected_machine='seller'
                 elif transparent_popup.rect.collidepoint(co) == False:
@@ -1078,10 +1057,36 @@ while run:
         scrollbar_button.draw()
         slider_button.draw()
 
+        producer_buy_button.draw()
+        crafter_buy_button.draw()
+        conveyor_buy_button.draw()
+        seller_buy_button.draw()
+        machine1_buy_button.draw()
+        machine2_buy_button.draw()
+        machine3_buy_button.draw()
+        machine4_buy_button.draw()
+
         producer_button.draw()
         crafter_button.draw()
         conveyor_button.draw()
         seller_button.draw()
+
+        draw_text('Buy Producer',font_32,(0,0,0),245,320,screen)
+        draw_text('Outputs Materials',font_32,(0,0,0),245,350,screen)
+        draw_text('Price: 100 each',font_32,(0,0,0),245,380,screen)
+
+        draw_text('Buy Crafter',font_32,(0,0,0),550,320,screen)
+        draw_text('Crafts Items',font_32,(0,0,0),550,350,screen)
+        draw_text('Price: 100 each',font_32,(0,0,0),550,380,screen)
+
+        draw_text('Buy Conveyor',font_32,(0,0,0),245,450,screen)
+        draw_text('Moves Items',font_32,(0,0,0),245,480,screen)
+        draw_text('Price: 50 each',font_32,(0,0,0),245,510,screen)
+
+        draw_text('Buy Seller',font_32,(0,0,0),550,450,screen)
+        draw_text('Sells Items',font_32,(0,0,0),550,480,screen)
+        draw_text('Price: 100 each',font_32,(0,0,0),550,510,screen)                
+
 
     elif game_state=='shop upgrades':
         screen.blit(play_bg,(0,0))
@@ -1229,7 +1234,7 @@ while run:
         machines_price_button.draw()
 
         machine_price_lable1=font_24.render(('Price:'),False,(0,0,0))
-        machine_price_lable2=font_24.render(str(len(selected_pos)*100),False,(0,0,0))
+        machine_price_lable2=font_24.render(str(len(selected_pos)*prices[selected_machine]),False,(0,0,0))
         screen.blit(machine_price_lable1,(805,505))
         screen.blit(machine_price_lable2,(805,525))
 

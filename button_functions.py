@@ -1,9 +1,15 @@
 def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,crafter_img,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout,money):
     game_state='play'
+    prices={
+        'producer':100,
+        'crafter':100,
+        'conveyor':50,
+        'seller':100,
+    }
     screen.blit(grid_surface,(0,100))
     no_of_machines=len(selected_pos)
-    if no_of_machines*100<=money:
-        money-=no_of_machines*100
+    if no_of_machines*prices[selected_machine]<=money:
+        money-=no_of_machines*prices[selected_machine]
         for co in selected_pos:
             x= co[0]*40
             y= co[1]*40
@@ -239,3 +245,7 @@ def draw_money(money,screen,money_panel_img,font_50):
     money_text=font_50.render(money_msg,None,100)
     money_text_rect=money_text.get_rect(center=(400,38))
     screen.blit(money_text,money_text_rect)
+
+def draw_text(text,font,text_colour,x,y,screen):
+    img=font.render(text,True,text_colour)
+    screen.blit(img,(x,y))
