@@ -66,7 +66,6 @@ class Machine(pygame.sprite.Sprite):
         combined_info=[temp_info,machine_info]
         return combined_info
 
-
 class Conveyor(Machine):
     def __init__(self,x,y,img):
         super().__init__(x,y,img)
@@ -74,9 +73,6 @@ class Conveyor(Machine):
 class Seller(Machine):
     def __init__(self,x,y,img):
         super().__init__(x,y,img)
-
-
-
 
 class Producer(Machine):
     def __init__(self,x,y,img,producer_info):
@@ -140,7 +136,7 @@ class Material(pygame.sprite.Sprite):
                 self.y= (((self.rect.y))//40)*40
                 self.decimal_co=str(self.x)+'.'+str(self.y)
                 if self.decimal_co!=self.previous_conveyor_pos:
-                    self.conveyor_direction=conveyor_info.get(self.decimal_co)
+                    self.conveyor_direction=conveyor_info[self.decimal_co][0]
                     self.conveyor_thrust=True
                     self.producer_thrust=False
                     self.count=0
@@ -213,9 +209,6 @@ class Material(pygame.sprite.Sprite):
             money+=self.worth
         return money
 
-
-
-
 class Items(pygame.sprite.Sprite):
     def __init__(self,co,item,blueprints_value,item_imgs):
         super().__init__()
@@ -241,7 +234,7 @@ class Items(pygame.sprite.Sprite):
                 self.y= (((self.rect.y))//40)*40
                 self.decimal_co=str(self.x)+'.'+str(self.y)
                 if self.decimal_co!=self.previous_conveyor_pos:
-                    self.conveyor_direction=conveyor_info.get(self.decimal_co)
+                    self.conveyor_direction=conveyor_info[self.decimal_co][0]
                     self.conveyor_thrust=True
                     self.crafter_thrust=False
                     self.count=0

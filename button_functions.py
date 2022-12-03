@@ -102,4 +102,3 @@ def rotate(blueprints,selected_producers,selected_machines,arrows_group,material
     seller_group.draw(grid_surface_copy)
     material_group.draw(grid_surface_copy)
     arrows_group.draw(grid_surface_copy)
-
