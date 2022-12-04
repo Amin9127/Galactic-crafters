@@ -24,6 +24,11 @@ game_state='main menu'
 font = pygame.font.Font('Pixeltype.ttf',16)
 font_24 = pygame.font.Font('Pixeltype.ttf',24)
 font_32 = pygame.font.Font('Pixeltype.ttf',32)
+font_34 = pygame.font.Font('Pixeltype.ttf',34)
+font_36 = pygame.font.Font('Pixeltype.ttf',36)
+font_38 = pygame.font.Font('Pixeltype.ttf',38)
+font_40 = pygame.font.Font('Pixeltype.ttf',40)
+font_42 = pygame.font.Font('Pixeltype.ttf',38)
 font_50 = pygame.font.Font('Pixeltype.ttf',50)
 font_60 = pygame.font.Font('Pixeltype.ttf',60)
 
@@ -40,6 +45,36 @@ seller_info={}
 
 temp_info={}
 factory_layout=[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+
+producer_lv =1
+crafter_lv =1
+conveyor_lv =1
+seller_lv =1
+
+producer_upgrades={
+    1:[0,1],
+    2:[50000,3],
+    3:[500000,5],
+    4:[5000000,10],
+}
+crafter_upgrades={
+    1:[0,1],
+    2:[50000,3],
+    3:[500000,5],
+    4:[5000000,10],
+}
+conveyor_upgrades={
+    1:[0,1],
+    2:[50000,1.2],
+    3:[500000,1.4],
+    4:[5000000,1.6],
+}
+seller_upgrades={
+    1:[0,1],
+    2:[50000,1.1],
+    3:[500000,1.2],
+    4:[5000000,1.3],
+}
 
 #sprite groups
 producer_group=pygame.sprite.Group()
@@ -258,12 +293,21 @@ crafter_buy_button=Buttons(422,297,gui_flat_img,1.56,1.34)
 conveyor_buy_button=Buttons(115,431,gui_flat_img,1.56,1.34)
 seller_buy_button=Buttons(422,431,gui_flat_img,1.56,1.34)
 
-machine1_buy_button=Buttons(422,699,gui_flat_img,1.56,1.34)
-machine2_buy_button=Buttons(115,565,gui_flat_img,1.56,1.34)
-machine3_buy_button=Buttons(422,565,gui_flat_img,1.56,1.34)
-machine4_buy_button=Buttons(115,699,gui_flat_img,1.56,1.34)
+machine1_buy_button=Buttons(115,565,gui_flat_img,1.56,1.34)
+machine2_buy_button=Buttons(422,565,gui_flat_img,1.56,1.34)
+machine3_buy_button=Buttons(115,699,gui_flat_img,1.56,1.34)
+machine4_buy_button=Buttons(422,699,gui_flat_img,1.56,1.34)
 
 #upgrades
+producer_upgrade_button=Buttons(115,297,gui_flat_img,1.56,1.34)
+crafter_upgrade_button=Buttons(422,297,gui_flat_img,1.56,1.34)
+conveyor_upgrade_button=Buttons(115,431,gui_flat_img,1.56,1.34)
+seller_upgrade_button=Buttons(422,431,gui_flat_img,1.56,1.34)
+
+machine1_upgrade_button=Buttons(115,565,gui_flat_img,1.56,1.34)
+machine2_upgrade_button=Buttons(422,565,gui_flat_img,1.56,1.34)
+machine3_upgrade_button=Buttons(115,699,gui_flat_img,1.56,1.34)
+machine4_upgrade_button=Buttons(422,699,gui_flat_img,1.56,1.34)
 
 #supply
 materials_supply={'copper':0,'iron':0,'gold':0,'aluminium':0,'lead':0,'coal':0}

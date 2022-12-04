@@ -8,7 +8,7 @@ pygame.init()
 pygame.font.init()
 global money
 #usual start 1000 money
-money=1000
+money=52000
 
 #timers
 #creates a event every second
@@ -46,8 +46,9 @@ while run:
                         material_group.add(Producer.create_material('self',co,producer_info))
 
             for crafter in crafter_group:
-                if crafter.update(crafter_info,blueprints)==True:
-                    item_group.add(crafter.create_item(blueprints_value,item_imgs))
+                amount_maybe=crafter.update(crafter_info,blueprints,crafter_upgrades,crafter_lv)
+                if amount_maybe!=False:
+                    item_group.add(crafter.create_item(blueprints_value,item_imgs,amount_maybe))
 
         #all keybinds check and what it does in this if elif ladder
         if event.type == pygame.KEYDOWN:
@@ -138,7 +139,7 @@ while run:
                     game_state = 'shop'
                 elif event.key == pygame.K_RETURN:
                     print('enter')
-                    money = confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,crafter_img,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout,money)
+                    money = confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_lv,producer_upgrades,crafter_lv,crafter_upgrades,conveyor_lv,conveyor_upgrades,seller_lv,seller_upgrades,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,crafter_img,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout,money)
                     selected_pos=[]
                     game_state='play' 
 
@@ -168,7 +169,7 @@ while run:
                     arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)  
                 
                 elif event.key ==pygame.K_r:
-                    rotate(blueprints,selected_producers,selected_machines,arrows_group,material_group,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,selected_sellers,seller_info,seller_group,grid_surface_copy)
+                    rotate(crafter_upgrades,crafter_lv,blueprints,selected_producers,selected_machines,arrows_group,material_group,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,selected_sellers,seller_info,seller_group,grid_surface_copy)
                 elif event.key ==pygame.K_x:
                     #delete(factory_layout,selected_producers,producer_info,producer_group,crafter_info,selected_crafters,crafter_group,selected_conveyors,conveyor_info,conveyor_group,arrows_group,material_group,grid_surface)
                     print(selected_producers,'to delete')
@@ -530,6 +531,25 @@ while run:
                     game_state = 'shop machines'
                 elif supply_button.rect.collidepoint(co):
                     game_state = 'shop supply'
+                elif producer_upgrade_button.rect.collidepoint(co):
+                    if money>=producer_upgrades[producer_lv+1][0]:
+                        money-=producer_upgrades[producer_lv+1][0]
+                        producer_lv+=1
+                        producer_cos=list(producer_info.keys())
+                        for cos in producer_cos:
+                            producer_info[cos][2]=producer_upgrades[producer_lv][1]
+                elif crafter_upgrade_button.rect.collidepoint(co):
+                    if money>=crafter_upgrades[crafter_lv+1][0]:
+                        money-=crafter_upgrades[crafter_lv+1][0]
+                        crafter_lv+=1
+                elif conveyor_upgrade_button.rect.collidepoint(co):
+                    if money>=conveyor_upgrades[conveyor_lv+1][0]:
+                        money-=conveyor_upgrades[conveyor_lv+1][0]
+                        conveyor_lv+=1
+                elif seller_upgrade_button.rect.collidepoint(co):
+                    if money>=seller_upgrades[seller_lv+1][0]:
+                        money-=seller_upgrades[seller_lv+1][0]
+                        seller_lv+=1
                 elif transparent_popup.rect.collidepoint(co) == False:
                     game_state ='play'
 
@@ -615,7 +635,7 @@ while run:
 
 
                 elif confirm_button.rect.collidepoint(co):
-                    money = confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,crafter_img,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout,money)
+                    money = confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_lv,producer_upgrades,crafter_lv,crafter_upgrades,conveyor_lv,conveyor_upgrades,seller_lv,seller_upgrades,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,crafter_img,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout,money)
                     selected_pos=[]
                     print(crafter_info)
                     game_state = 'play'
@@ -714,7 +734,7 @@ while run:
                         arrows_group.draw(grid_surface_copy)
                     
                 elif rotate_button.rect.collidepoint(co):
-                    rotate(blueprints,selected_producers,selected_machines,arrows_group,material_group,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,selected_sellers,seller_info,seller_group,grid_surface_copy)
+                    rotate(crafter_upgrades,crafter_lv,blueprints,selected_producers,selected_machines,arrows_group,material_group,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,selected_sellers,seller_info,seller_group,grid_surface_copy)
       
                 elif delete_button.rect.collidepoint(co):
                     #delete(factory_layout,selected_producers,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,arrows_group,material_group,grid_surface)
@@ -963,16 +983,17 @@ while run:
         exit_button.draw()
 
     elif game_state=='play':
+        print(crafter_info)
 
         producer_group.update(producer_info)
         for material in material_group:
-            maybe_money = material.update(producer_info,conveyor_info,conveyor_group,crafter_info,crafter_group,seller_group,smelter_group,blueprints_value,money)
+            maybe_money = material.update(seller_lv,seller_upgrades,conveyor_lv,conveyor_upgrades,producer_info,conveyor_info,conveyor_group,crafter_info,crafter_group,seller_group,smelter_group,blueprints_value,money)
             maybe_money=float(maybe_money)
             if maybe_money.is_integer():
                 money=maybe_money
         
         for item in item_group:
-            maybe_money=item.update(crafter_info,conveyor_group,conveyor_info,crafter_group,seller_group,money)
+            maybe_money=item.update(seller_lv,seller_upgrades,conveyor_lv,conveyor_upgrades,crafter_info,conveyor_group,conveyor_info,crafter_group,seller_group,money)
             if maybe_money.is_integer():
                 money=maybe_money
 
@@ -1087,7 +1108,6 @@ while run:
         draw_text('Sells Items',font_32,(0,0,0),550,480,screen)
         draw_text('Price: 100 each',font_32,(0,0,0),550,510,screen)                
 
-
     elif game_state=='shop upgrades':
         screen.blit(play_bg,(0,0))
         draw_money(money,screen,money_panel_img,font_50)
@@ -1100,6 +1120,42 @@ while run:
         screen.blit(machines_lable,(130,210))
         screen.blit(upgrades_lable,(335,210))
         screen.blit(supply_lable,(570,210))
+
+
+        producer_upgrade_button.draw()
+        crafter_upgrade_button.draw()
+        conveyor_upgrade_button.draw()
+        seller_upgrade_button.draw()
+        machine1_upgrade_button.draw()
+        machine2_upgrade_button.draw()
+        machine3_upgrade_button.draw()
+        machine4_upgrade_button.draw()
+
+        producer_button.draw()
+        crafter_button.draw()
+        conveyor_button.draw()
+        seller_button.draw()
+
+
+        draw_text('Producer',font_32,(0,0,0),245,320,screen)
+        draw_text(('Outputs '+str(producer_upgrades[producer_lv+1][1])+' Materials'),font_32,(0,0,0),245,350,screen)
+        draw_text(('Price: '+str(producer_upgrades[producer_lv+1][0])),font_32,(0,0,0),245,380,screen)
+        draw_text('Buy Upgrade',font_36,(0,0,0),245,405,screen)
+
+        draw_text('Crafter',font_32,(0,0,0),550,320,screen)
+        draw_text(('Crafts '+str(crafter_upgrades[crafter_lv+1][1])+' at once'),font_32,(0,0,0),550,350,screen)
+        draw_text(('Price: '+str(crafter_upgrades[crafter_lv+1][0])),font_32,(0,0,0),550,380,screen)
+        draw_text('Buy Upgrade',font_36,(0,0,0),550,405,screen)
+
+        draw_text('Conveyor',font_32,(0,0,0),245,450,screen)
+        draw_text(('Moves Items '+str(round((conveyor_upgrades[conveyor_lv+1][1]-1)*100))+'%'),font_32,(0,0,0),245,480,screen)
+        draw_text(('Price: '+str(conveyor_upgrades[conveyor_lv+1][0])),font_32,(0,0,0),245,510,screen)
+        draw_text('Buy Upgrade',font_36,(0,0,0),245,535,screen)
+
+        draw_text('Seller',font_32,(0,0,0),550,450,screen)
+        draw_text(('Sells Items for +'+str(round(((seller_upgrades[seller_lv+1][1])-1)*100))+'%'),font_32,(0,0,0),550,480,screen)
+        draw_text(('Price: '+str(seller_upgrades[seller_lv+1][0])),font_32,(0,0,0),550,510,screen) 
+        draw_text('Buy Upgrade',font_36,(0,0,0),550,535,screen)  
 
         scrollbar_button.draw()
         slider_button.draw()

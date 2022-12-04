@@ -122,7 +122,7 @@ class Material(pygame.sprite.Sprite):
         self.previous_conveyor_pos=''  
         self.worth=20
    
-    def update(self,producer_info,conveyor_info,conveyor_group,crafter_info,crafter_group,seller_group,smelter_group,blueprints_value,money):
+    def update(self,seller_lv,seller_upgrades,conveyor_lv,conveyor_upgrades,producer_info,conveyor_info,conveyor_group,crafter_info,crafter_group,seller_group,smelter_group,blueprints_value,money):
         self.this_producer_info=producer_info.get(self.decimal_co)
         self.co=self.decimal_co.split('.')
         self.co[0]=int(self.co[0])
@@ -159,13 +159,13 @@ class Material(pygame.sprite.Sprite):
 
         if self.count<16 and self.conveyor_thrust==True:
             if self.conveyor_direction=='n':
-                self.rect.y-=5
+                self.rect.y-=5*conveyor_upgrades[conveyor_lv][1]
             elif self.conveyor_direction=='e':
-                self.rect.x+=5
+                self.rect.x+=5*conveyor_upgrades[conveyor_lv][1]
             elif self.conveyor_direction=='s':
-                self.rect.y+=5
+                self.rect.y+=5*conveyor_upgrades[conveyor_lv][1]
             elif self.conveyor_direction=='w':
-                self.rect.x-=5
+                self.rect.x-=5*conveyor_upgrades[conveyor_lv][1]
             self.count+=1
         else:
             self.conveyor_thrust=False
@@ -205,11 +205,11 @@ class Material(pygame.sprite.Sprite):
             self.y= (((self.rect.y))//40)*40
             self.decimal_co=str(self.x)+'.'+str(self.y)
             self.kill()
-            money+=self.worth
+            money+=(self.worth)*seller_upgrades[seller_lv][1]
         return money
 
 class Items(pygame.sprite.Sprite):
-    def __init__(self,co,item,blueprints_value,item_imgs):
+    def __init__(self,co,item,blueprints_value,item_imgs,amount):
         super().__init__()
         self.image_circuit=pygame.image.load('images/circuit.png').convert_alpha()
         self.type=item
@@ -217,7 +217,7 @@ class Items(pygame.sprite.Sprite):
         self.spawn_co=co
         self.image=pygame.transform.scale(self.image,(20,20))
         self.rect=self.image.get_rect(center=(self.spawn_co[0]+20,self.spawn_co[1]+20))
-        self.amount= 1
+        self.amount= amount
         self.count=0
         self.crafter_thrust=True
         self.conveyor_thrust=False
@@ -225,7 +225,7 @@ class Items(pygame.sprite.Sprite):
         self.decimal_co=str(co[0])+'.'+str(co[1])
         self.worth=blueprints_value[self.type]
 
-    def update(self,crafter_info,conveyor_group,conveyor_info,crafter_group,seller_group,money):
+    def update(self,seller_lv,seller_upgrades,conveyor_lv,conveyor_upgrades,crafter_info,conveyor_group,conveyor_info,crafter_group,seller_group,money):
         self.this_crafter_info=crafter_info.get(self.decimal_co)
         if self.conveyor_thrust==False and self.crafter_thrust==False:
             if pygame.sprite.spritecollideany(self,conveyor_group,pygame.sprite.collide_rect_ratio(1)):
@@ -257,13 +257,13 @@ class Items(pygame.sprite.Sprite):
 
         if self.count<16 and self.conveyor_thrust==True:
             if self.conveyor_direction=='n':
-                self.rect.y-=5
+                self.rect.y-=5*conveyor_upgrades[conveyor_lv][1]
             elif self.conveyor_direction=='e':
-                self.rect.x+=5
+                self.rect.x+=5*conveyor_upgrades[conveyor_lv][1]
             elif self.conveyor_direction=='s':
-                self.rect.y+=5
+                self.rect.y+=5*conveyor_upgrades[conveyor_lv][1]
             elif self.conveyor_direction=='w':
-                self.rect.x-=5
+                self.rect.x-=5*conveyor_upgrades[conveyor_lv][1]
             self.count+=1
         else:
             self.conveyor_thrust=False
@@ -295,14 +295,14 @@ class Items(pygame.sprite.Sprite):
             self.y= (((self.rect.y))//40)*40
             self.decimal_co=str(self.x)+'.'+str(self.y)
             self.kill()
-            money+=self.worth
+            money+=(self.worth)*seller_upgrades[seller_lv][1]
         return money
 
 class Crafter(Machine):
     def __init__(self,x,y,img):
         super().__init__(x,y,img)
 
-    def update(self,crafter_info,blueprints):
+    def update(self,crafter_info,blueprints,crafter_upgrades,crafter_lv):
         
         self.current_co=self.rect.topleft
         self.decimal_co=str(self.current_co[0])+'.'+str(self.current_co[1])
@@ -321,6 +321,7 @@ class Crafter(Machine):
 
             self.item=crafter_info[self.decimal_co][1]
             self.item_bp=list(blueprints[self.item].keys())
+            self.starting_item= self.item_bp[0]
 
             self.item_bp_components=len(self.item_bp)
             self.components_fulfilled=0
@@ -329,6 +330,11 @@ class Crafter(Machine):
             for x in self.item_bp:
                 if crafter_info[self.decimal_co][2].get(x)is not None:
                     if crafter_info[self.decimal_co][2].get(x)>=blueprints[self.item][x]:
+                        self.crafts_possible_temp=crafter_info[self.decimal_co][2].get(x)//blueprints[self.item][x]
+                        if x == self.starting_item:
+                            self.crafts_possible=self.crafts_possible_temp
+                        elif self.crafts_possible<=self.crafts_possible_temp:
+                            self.crafts_possible=self.crafts_possible_temp
                         self.components_fulfilled +=1
                 else:
                     self.components_fulfilled=0
@@ -337,21 +343,25 @@ class Crafter(Machine):
                 self.craft=True
             else:
                 return False
-
+ 
             if self.craft==True:
+                if self.crafts_possible>=crafter_upgrades[crafter_lv][1]:
+                    self.crafts_multiple=crafter_upgrades[crafter_lv][1]
+                else:
+                    self.crafts_multiple=self.crafts_possible
                 for x in self.item_bp:
-                    crafter_info[self.decimal_co][2][x]-=blueprints[self.item][x]
+                    crafter_info[self.decimal_co][2][x]-=blueprints[self.item][x]*self.crafts_multiple
                     self.co=self.decimal_co.split('.')
                     self.co[0]=int(self.co[0])
                     self.co[1]=int(self.co[1])
                 self.craft=False
                 print('crafted')
-                return True
+                return self.crafts_multiple
             else:
                 return False
 
-    def create_item(self,blueprints_value,item_imgs):
-        return Items(self.co,self.item,blueprints_value,item_imgs)
+    def create_item(self,blueprints_value,item_imgs,amount):
+        return Items(self.co,self.item,blueprints_value,item_imgs,amount)
 
 class Smelter(Machine):
     def __init__(self,x,y,img):

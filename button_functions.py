@@ -1,4 +1,4 @@
-def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,crafter_img,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout,money):
+def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_lv,producer_upgrades,crafter_lv,crafter_upgrades,conveyor_lv,conveyor_upgrades,seller_lv,seller_upgrades,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,crafter_img,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout,money):
     game_state='play'
     prices={
         'producer':100,
@@ -19,7 +19,7 @@ def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,pr
             str(decimal_co)
             print(decimal_co,'in function')
             if selected_machine =='producer':
-                producer_info[decimal_co]=['n','copper',1,'none']
+                producer_info[decimal_co]=['n','copper',producer_upgrades[producer_lv][1],'none']
                 new_producer=Producer(x,y,producer_img,producer_info)
                 producer_group.add(new_producer)
                 factory_layout[co[1]][co[0]]=1
@@ -46,7 +46,7 @@ def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,pr
     selected_pos=[]
     return money
 
-def rotate(blueprints,selected_producers,selected_machines,arrows_group,material_group,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,selected_sellers,seller_info,seller_group,grid_surface_copy):
+def rotate(crafter_upgrades,crafter_lv,blueprints,selected_producers,selected_machines,arrows_group,material_group,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,selected_sellers,seller_info,seller_group,grid_surface_copy):
     for pos in selected_producers:
         decimal_co=str(pos[0])+'.'+str(pos[1])
         
@@ -98,7 +98,7 @@ def rotate(blueprints,selected_producers,selected_machines,arrows_group,material
 
     #redraw rotated machines
     producer_group.update(producer_info)
-    crafter_group.update(crafter_info,blueprints)
+    crafter_group.update(crafter_info,blueprints,crafter_upgrades,crafter_lv)
     conveyor_group.update(conveyor_info)
     arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
     seller_group.update(seller_info)
