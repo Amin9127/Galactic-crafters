@@ -8,7 +8,7 @@ pygame.init()
 pygame.font.init()
 global money
 #usual start 1000 money
-money=52000
+money=1000
 
 #timers
 #creates a event every second
@@ -202,7 +202,7 @@ while run:
 
                     grid_surface_copy= grid_surface.copy()
                     producer_group.update(producer_info)
-                    crafter_group.update(crafter_info,blueprints)
+                    crafter_group.update(crafter_info,blueprints,crafter_upgrades,crafter_lv)
                     conveyor_group.update(conveyor_info)
                     seller_group.update(seller_info)
                     arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
@@ -217,7 +217,7 @@ while run:
 
                     grid_surface_copy= grid_surface.copy()
                     producer_group.update(producer_info)
-                    crafter_group.update(crafter_info,blueprints)
+                    crafter_group.update(crafter_info,blueprints,crafter_upgrades,crafter_lv)
                     conveyor_group.update(conveyor_info)
                     seller_group.update(seller_info)
                     arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
@@ -234,7 +234,7 @@ while run:
 
                     grid_surface_copy= grid_surface.copy()
                     producer_group.update(producer_info)
-                    crafter_group.update(crafter_info,blueprints)
+                    crafter_group.update(crafter_info,blueprints,crafter_upgrades,crafter_lv)
                     conveyor_group.update(conveyor_info)
                     seller_group.update(seller_info)
                     arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
@@ -251,7 +251,7 @@ while run:
 
                     grid_surface_copy= grid_surface.copy()
                     producer_group.update(producer_info)
-                    crafter_group.update(crafter_info,blueprints)
+                    crafter_group.update(crafter_info,blueprints,crafter_upgrades,crafter_lv)
                     conveyor_group.update(conveyor_info)
                     seller_group.update(seller_info)
                     arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
@@ -268,7 +268,7 @@ while run:
 
                     grid_surface_copy= grid_surface.copy()
                     producer_group.update(producer_info)
-                    crafter_group.update(crafter_info,blueprints)
+                    crafter_group.update(crafter_info,blueprints,crafter_upgrades,crafter_lv)
                     conveyor_group.update(conveyor_info)
                     seller_group.update(seller_info)
                     arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
@@ -532,23 +532,23 @@ while run:
                 elif supply_button.rect.collidepoint(co):
                     game_state = 'shop supply'
                 elif producer_upgrade_button.rect.collidepoint(co):
-                    if money>=producer_upgrades[producer_lv+1][0]:
-                        money-=producer_upgrades[producer_lv+1][0]
+                    if money>=producer_upgrades[producer_lv+1][0]*10**abreviations[producer_upgrades[producer_lv+1][1]]:
+                        money-=producer_upgrades[producer_lv+1][0]*10**abreviations[producer_upgrades[producer_lv+1][1]]
                         producer_lv+=1
                         producer_cos=list(producer_info.keys())
                         for cos in producer_cos:
-                            producer_info[cos][2]=producer_upgrades[producer_lv][1]
+                            producer_info[cos][2]=producer_upgrades[producer_lv][2]
                 elif crafter_upgrade_button.rect.collidepoint(co):
-                    if money>=crafter_upgrades[crafter_lv+1][0]:
-                        money-=crafter_upgrades[crafter_lv+1][0]
+                    if money>=crafter_upgrades[crafter_lv+1][0]*10**abreviations[crafter_upgrades[crafter_lv+1][1]]:
+                        money-=crafter_upgrades[crafter_lv+1][0]*10**abreviations[crafter_upgrades[crafter_lv+1][1]]
                         crafter_lv+=1
                 elif conveyor_upgrade_button.rect.collidepoint(co):
-                    if money>=conveyor_upgrades[conveyor_lv+1][0]:
-                        money-=conveyor_upgrades[conveyor_lv+1][0]
+                    if money>=conveyor_upgrades[conveyor_lv+1][0]*10**abreviations[conveyor_upgrades[conveyor_lv+1][1]]:
+                        money-=conveyor_upgrades[conveyor_lv+1][0]*10**abreviations[conveyor_upgrades[conveyor_lv+1][1]]
                         conveyor_lv+=1
                 elif seller_upgrade_button.rect.collidepoint(co):
-                    if money>=seller_upgrades[seller_lv+1][0]:
-                        money-=seller_upgrades[seller_lv+1][0]
+                    if money>=seller_upgrades[seller_lv+1][0]*10**abreviations[seller_upgrades[seller_lv+1][1]]:
+                        money-=seller_upgrades[seller_lv+1][0]*10**abreviations[seller_upgrades[seller_lv+1][1]]
                         seller_lv+=1
                 elif transparent_popup.rect.collidepoint(co) == False:
                     game_state ='play'
@@ -767,7 +767,7 @@ while run:
 
                     grid_surface_copy= grid_surface.copy()
                     producer_group.update(producer_info)
-                    crafter_group.update(crafter_info,blueprints)
+                    crafter_group.update(crafter_info,blueprints,crafter_upgrades,crafter_lv)
                     conveyor_group.update(conveyor_info)
                     seller_group.update(seller_info)
                     arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
@@ -983,7 +983,6 @@ while run:
         exit_button.draw()
 
     elif game_state=='play':
-        print(crafter_info)
 
         producer_group.update(producer_info)
         for material in material_group:
@@ -1138,23 +1137,23 @@ while run:
 
 
         draw_text('Producer',font_32,(0,0,0),245,320,screen)
-        draw_text(('Outputs '+str(producer_upgrades[producer_lv+1][1])+' Materials'),font_32,(0,0,0),245,350,screen)
-        draw_text(('Price: '+str(producer_upgrades[producer_lv+1][0])),font_32,(0,0,0),245,380,screen)
+        draw_text(('Output '+str(producer_upgrades[producer_lv+1][2])+' Materials'),font_32,(0,0,0),245,350,screen)
+        draw_text(('Price: '+str(producer_upgrades[producer_lv+1][0])+producer_upgrades[producer_lv+1][1]),font_32,(0,0,0),245,380,screen)
         draw_text('Buy Upgrade',font_36,(0,0,0),245,405,screen)
 
         draw_text('Crafter',font_32,(0,0,0),550,320,screen)
-        draw_text(('Crafts '+str(crafter_upgrades[crafter_lv+1][1])+' at once'),font_32,(0,0,0),550,350,screen)
-        draw_text(('Price: '+str(crafter_upgrades[crafter_lv+1][0])),font_32,(0,0,0),550,380,screen)
+        draw_text(('Craft '+str(crafter_upgrades[crafter_lv+1][2])+' at once'),font_32,(0,0,0),550,350,screen)
+        draw_text(('Price: '+str(crafter_upgrades[crafter_lv+1][0])+crafter_upgrades[crafter_lv+1][1]),font_32,(0,0,0),550,380,screen)
         draw_text('Buy Upgrade',font_36,(0,0,0),550,405,screen)
 
         draw_text('Conveyor',font_32,(0,0,0),245,450,screen)
-        draw_text(('Moves Items '+str(round((conveyor_upgrades[conveyor_lv+1][1]-1)*100))+'%'),font_32,(0,0,0),245,480,screen)
-        draw_text(('Price: '+str(conveyor_upgrades[conveyor_lv+1][0])),font_32,(0,0,0),245,510,screen)
+        draw_text(('Move Items +'+str(round((conveyor_upgrades[conveyor_lv+1][2]-1)*100))+'%'),font_32,(0,0,0),245,480,screen)
+        draw_text(('Price: '+str(conveyor_upgrades[conveyor_lv+1][0])+conveyor_upgrades[conveyor_lv+1][1]),font_32,(0,0,0),245,510,screen)
         draw_text('Buy Upgrade',font_36,(0,0,0),245,535,screen)
 
         draw_text('Seller',font_32,(0,0,0),550,450,screen)
-        draw_text(('Sells Items for +'+str(round(((seller_upgrades[seller_lv+1][1])-1)*100))+'%'),font_32,(0,0,0),550,480,screen)
-        draw_text(('Price: '+str(seller_upgrades[seller_lv+1][0])),font_32,(0,0,0),550,510,screen) 
+        draw_text(('Sell Items for +'+str(round(((seller_upgrades[seller_lv+1][2])-1)*100))+'%'),font_32,(0,0,0),550,480,screen)
+        draw_text(('Price: '+str(seller_upgrades[seller_lv+1][0])+seller_upgrades[seller_lv+1][1]),font_32,(0,0,0),550,510,screen) 
         draw_text('Buy Upgrade',font_36,(0,0,0),550,535,screen)  
 
         scrollbar_button.draw()

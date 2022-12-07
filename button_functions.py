@@ -19,7 +19,7 @@ def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,pr
             str(decimal_co)
             print(decimal_co,'in function')
             if selected_machine =='producer':
-                producer_info[decimal_co]=['n','copper',producer_upgrades[producer_lv][1],'none']
+                producer_info[decimal_co]=['n','copper',producer_upgrades[producer_lv][2],'none']
                 new_producer=Producer(x,y,producer_img,producer_info)
                 producer_group.add(new_producer)
                 factory_layout[co[1]][co[0]]=1

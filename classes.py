@@ -159,13 +159,13 @@ class Material(pygame.sprite.Sprite):
 
         if self.count<16 and self.conveyor_thrust==True:
             if self.conveyor_direction=='n':
-                self.rect.y-=5*conveyor_upgrades[conveyor_lv][1]
+                self.rect.y-=5*conveyor_upgrades[conveyor_lv][2]
             elif self.conveyor_direction=='e':
-                self.rect.x+=5*conveyor_upgrades[conveyor_lv][1]
+                self.rect.x+=5*conveyor_upgrades[conveyor_lv][2]
             elif self.conveyor_direction=='s':
-                self.rect.y+=5*conveyor_upgrades[conveyor_lv][1]
+                self.rect.y+=5*conveyor_upgrades[conveyor_lv][2]
             elif self.conveyor_direction=='w':
-                self.rect.x-=5*conveyor_upgrades[conveyor_lv][1]
+                self.rect.x-=5*conveyor_upgrades[conveyor_lv][2]
             self.count+=1
         else:
             self.conveyor_thrust=False
@@ -205,7 +205,7 @@ class Material(pygame.sprite.Sprite):
             self.y= (((self.rect.y))//40)*40
             self.decimal_co=str(self.x)+'.'+str(self.y)
             self.kill()
-            money+=(self.worth)*seller_upgrades[seller_lv][1]
+            money+=(self.worth)*seller_upgrades[seller_lv][2]
         return money
 
 class Items(pygame.sprite.Sprite):
@@ -257,13 +257,13 @@ class Items(pygame.sprite.Sprite):
 
         if self.count<16 and self.conveyor_thrust==True:
             if self.conveyor_direction=='n':
-                self.rect.y-=5*conveyor_upgrades[conveyor_lv][1]
+                self.rect.y-=5*conveyor_upgrades[conveyor_lv][2]
             elif self.conveyor_direction=='e':
-                self.rect.x+=5*conveyor_upgrades[conveyor_lv][1]
+                self.rect.x+=5*conveyor_upgrades[conveyor_lv][2]
             elif self.conveyor_direction=='s':
-                self.rect.y+=5*conveyor_upgrades[conveyor_lv][1]
+                self.rect.y+=5*conveyor_upgrades[conveyor_lv][2]
             elif self.conveyor_direction=='w':
-                self.rect.x-=5*conveyor_upgrades[conveyor_lv][1]
+                self.rect.x-=5*conveyor_upgrades[conveyor_lv][2]
             self.count+=1
         else:
             self.conveyor_thrust=False
@@ -295,7 +295,7 @@ class Items(pygame.sprite.Sprite):
             self.y= (((self.rect.y))//40)*40
             self.decimal_co=str(self.x)+'.'+str(self.y)
             self.kill()
-            money+=(self.worth)*seller_upgrades[seller_lv][1]
+            money+=(self.worth)*seller_upgrades[seller_lv][2]
         return money
 
 class Crafter(Machine):
@@ -345,8 +345,8 @@ class Crafter(Machine):
                 return False
  
             if self.craft==True:
-                if self.crafts_possible>=crafter_upgrades[crafter_lv][1]:
-                    self.crafts_multiple=crafter_upgrades[crafter_lv][1]
+                if self.crafts_possible>=crafter_upgrades[crafter_lv][2]:
+                    self.crafts_multiple=crafter_upgrades[crafter_lv][2]
                 else:
                     self.crafts_multiple=self.crafts_possible
                 for x in self.item_bp:
