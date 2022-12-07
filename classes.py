@@ -268,7 +268,7 @@ class Items(pygame.sprite.Sprite):
         else:
             self.conveyor_thrust=False
 
-        if pygame.sprite.spritecollideany(self,crafter_group,pygame.sprite.collide_rect_ratio(1)) and self.crafter_thrust==False:
+        if pygame.sprite.spritecollideany(self,crafter_group,pygame.sprite.collide_rect_ratio(1)) and self.crafter_thrust==False and self.conveyor_thrust==False:
             self.x= ((self.rect.x)//40)*40
             self.y= (((self.rect.y))//40)*40
             self.decimal_co=str(self.x)+'.'+str(self.y)
@@ -327,6 +327,7 @@ class Crafter(Machine):
             self.components_fulfilled=0
             self.craft=False
 
+            self.crafts_possible=0
             for x in self.item_bp:
                 if crafter_info[self.decimal_co][2].get(x)is not None:
                     if crafter_info[self.decimal_co][2].get(x)>=blueprints[self.item][x]:

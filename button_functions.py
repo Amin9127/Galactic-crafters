@@ -46,7 +46,7 @@ def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,pr
     selected_pos=[]
     return money
 
-def rotate(crafter_upgrades,crafter_lv,blueprints,selected_producers,selected_machines,arrows_group,material_group,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,selected_sellers,seller_info,seller_group,grid_surface_copy):
+def rotate(crafter_upgrades,crafter_lv,blueprints,selected_producers,selected_machines,arrows_group,material_group,item_group,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,selected_sellers,seller_info,seller_group,grid_surface_copy):
     for pos in selected_producers:
         decimal_co=str(pos[0])+'.'+str(pos[1])
         
@@ -107,6 +107,7 @@ def rotate(crafter_upgrades,crafter_lv,blueprints,selected_producers,selected_ma
     conveyor_group.draw(grid_surface_copy)
     seller_group.draw(grid_surface_copy)
     material_group.draw(grid_surface_copy)
+    item_group.draw(grid_surface_copy)
     arrows_group.draw(grid_surface_copy)
 
 def move(direction,selected_producers,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,selected_sellers,seller_info,seller_group,selected_machines,factory_layout,arrows_group,Arrow):
@@ -151,7 +152,6 @@ def move(direction,selected_producers,producer_info,producer_group,selected_craf
     #if machine that is not moving with the others is in the way this will not run
 
     if cancel_move==False:
-        count=0
         for producer in producer_group:
             combined_info=producer.move(producer_info,temp_info)
             if len(combined_info[0])==len(selected_producers):
@@ -159,7 +159,6 @@ def move(direction,selected_producers,producer_info,producer_group,selected_craf
                 temp_info={}
                 combined_info={}
 
-        count=0
         for crafter in crafter_group:
             combined_info=crafter.move(crafter_info,temp_info)
             if len(combined_info[0])==len(selected_crafters):
@@ -167,7 +166,6 @@ def move(direction,selected_producers,producer_info,producer_group,selected_craf
                 temp_info={}
                 combined_info={}
 
-        count=0
         for conveyor in conveyor_group:
             combined_info=conveyor.move(conveyor_info,temp_info)
             if len(combined_info[0])==len(selected_conveyors):
@@ -175,7 +173,6 @@ def move(direction,selected_producers,producer_info,producer_group,selected_craf
                 temp_info={}
                 combined_info={}
 
-        count=0
         for seller in seller_group:
             combined_info=seller.move(seller_info,temp_info)
             if len(combined_info[0])==len(selected_sellers):

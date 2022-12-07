@@ -169,7 +169,7 @@ while run:
                     arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)  
                 
                 elif event.key ==pygame.K_r:
-                    rotate(crafter_upgrades,crafter_lv,blueprints,selected_producers,selected_machines,arrows_group,material_group,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,selected_sellers,seller_info,seller_group,grid_surface_copy)
+                    rotate(crafter_upgrades,crafter_lv,blueprints,selected_producers,selected_machines,arrows_group,material_group,item_group,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,selected_sellers,seller_info,seller_group,grid_surface_copy)
                 elif event.key ==pygame.K_x:
                     #delete(factory_layout,selected_producers,producer_info,producer_group,crafter_info,selected_crafters,crafter_group,selected_conveyors,conveyor_info,conveyor_group,arrows_group,material_group,grid_surface)
                     print(selected_producers,'to delete')
@@ -734,7 +734,7 @@ while run:
                         arrows_group.draw(grid_surface_copy)
                     
                 elif rotate_button.rect.collidepoint(co):
-                    rotate(crafter_upgrades,crafter_lv,blueprints,selected_producers,selected_machines,arrows_group,material_group,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,selected_sellers,seller_info,seller_group,grid_surface_copy)
+                    rotate(crafter_upgrades,crafter_lv,blueprints,selected_producers,selected_machines,arrows_group,material_group,item_group,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,selected_sellers,seller_info,seller_group,grid_surface_copy)
       
                 elif delete_button.rect.collidepoint(co):
                     #delete(factory_layout,selected_producers,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,arrows_group,material_group,grid_surface)
@@ -775,6 +775,7 @@ while run:
                     crafter_group.draw(grid_surface_copy)
                     conveyor_group.draw(grid_surface_copy)
                     material_group.draw(grid_surface_copy)
+                    item_group.draw(grid_surface_copy)
                     seller_group.draw(grid_surface_copy)
 
                 elif confirm_button.rect.collidepoint(co):
@@ -1310,6 +1311,7 @@ while run:
         screen.blit(grid_surface_copy,(0,100))
         
     elif game_state=='edit':
+        print(list(producer_info.keys()))
         draw_money(money,screen,money_panel_img,font_50)
 
         screen.blit(grid_surface_copy,(0,100))
