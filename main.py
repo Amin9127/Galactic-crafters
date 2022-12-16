@@ -9,7 +9,7 @@ pygame.font.init()
 
 global money
 #usual start 1000 money
-money=1000
+money=50000
 
 #timers
 #creates a event every second
@@ -338,8 +338,29 @@ while run:
                         x*=40
                         y*=40
                         decimal_co=str(x)+'.'+str(y)
+                        co = [x+40,y+100]
                         if decimal_co in producer_cos:
-                            co = [x+40,y+100]
+
+                            if x==680:
+                                co = [co[0]-240,co[1]]
+                            elif x==720:
+                                co = [co[0]-240,co[1]]
+                            elif x==760:
+                                co = [co[0]-240,co[1]]
+                            
+                            if y==600:
+                                co = [co[0],co[1]-180]
+                            elif y==640:
+                                co = [co[0],co[1]-180]
+                            elif y==680:
+                                co = [co[0],co[1]-180]
+                            elif y==720:
+                                co = [co[0],co[1]-180]
+                            elif y==760:
+                                co = [co[0],co[1]-180]
+                            elif y==800:
+                                co = [co[0],co[1]-180]
+
                             selected_co=co
                             transparent_producer_popup=Buttons(co[0],co[1],transparent_producer_popup_surface,1,2.25)
                             copper_button=Buttons(co[0],co[1],copper_img,0.5,0.5)
@@ -351,7 +372,26 @@ while run:
                             game_state='producer_popup'
 
                         elif decimal_co in crafter_cos:
-                            co=[x+40,y+100]
+                            if x==680:
+                                co = [co[0]-240,co[1]]
+                            elif x==720:
+                                co = [co[0]-240,co[1]]
+                            elif x==760:
+                                co = [co[0]-240,co[1]]
+                            
+                            if y==600:
+                                co = [co[0],co[1]-180]
+                            elif y==640:
+                                co = [co[0],co[1]-180]
+                            elif y==680:
+                                co = [co[0],co[1]-180]
+                            elif y==720:
+                                co = [co[0],co[1]-180]
+                            elif y==760:
+                                co = [co[0],co[1]-180]
+                            elif y==800:
+                                co = [co[0],co[1]-180]
+
                             for item in crafter_info[decimal_co][2]:
                                 quantity = crafter_info[decimal_co][2][item]
                             
@@ -449,7 +489,6 @@ while run:
 
                             item_button=Buttons(co[0]+140,co[1]+30,item_imgs[crafter_info[decimal_co][1]],0.15,0.15)
 
-                            co = [x+40,y+100]
                             selected_co=co
                             transparent_crafter_popup=Buttons(co[0],co[1],transparent_producer_popup_surface,1,2.25)
                             last_selected_crafter = decimal_co
