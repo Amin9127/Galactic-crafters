@@ -205,7 +205,7 @@ class Material(pygame.sprite.Sprite):
             self.y= (((self.rect.y))//40)*40
             self.decimal_co=str(self.x)+'.'+str(self.y)
             self.kill()
-            money+=(self.worth)*seller_upgrades[seller_lv][2]
+            money+=(self.worth)*seller_upgrades[seller_lv][2]*self.amount
         return money
 
 class Items(pygame.sprite.Sprite):
@@ -295,7 +295,7 @@ class Items(pygame.sprite.Sprite):
             self.y= (((self.rect.y))//40)*40
             self.decimal_co=str(self.x)+'.'+str(self.y)
             self.kill()
-            money+=(self.worth)*seller_upgrades[seller_lv][2]
+            money+=(self.worth)*seller_upgrades[seller_lv][2]*self.amount
         return money
 
 class Crafter(Machine):

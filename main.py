@@ -6,6 +6,7 @@ from classes import *
 from variables import *
 pygame.init()
 pygame.font.init()
+
 global money
 #usual start 1000 money
 money=1000
@@ -72,10 +73,15 @@ while run:
                     game_state='edit'
                 elif event.key == pygame.K_b:
                     game_state='temp shop'
+                    slider_button.rect.top=150
+                    for blueprint in blueprints_group:
+                        blueprint.kill()
+
                     for y in range(0,8):
                         bptitles2[y]=bp_ordered_list[y]
                         new_bp= Blueprints((y),y,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font)
                         blueprints_group.add(new_bp)
+
                         
                 elif event.key == pygame.K_m:
                     game_state='map'
@@ -133,7 +139,8 @@ while run:
             elif game_state == 'blueprints':
                 if event.key == pygame.K_ESCAPE:    
                     game_state= 'play'
-            
+                    slider_button.rect.top=150
+     
             elif game_state == 'shop confirm':
                 if event.key == pygame.K_ESCAPE:
                     game_state = 'shop'
@@ -309,6 +316,9 @@ while run:
                     game_state='edit'
                 elif blueprints_button.rect.collidepoint(co):
                     game_state='temp shop'
+                    slider_button.rect.top=150
+                    for blueprint in blueprints_group:
+                        blueprint.kill()
 
                     for y in range(0,8):
                         bptitles2[y]=bp_ordered_list[y]
@@ -477,6 +487,9 @@ while run:
                     game_state='play'   
                 elif item_button.rect.collidepoint(co):
                     game_state='temp shop'
+                    slider_button.rect.top=150
+                    for blueprint in blueprints_group:
+                        blueprint.kill()
 
                     for y in range(0,8):
                         bptitles2[y]=bp_ordered_list[y]
@@ -730,6 +743,7 @@ while run:
                         crafter_group.draw(grid_surface_copy)
                         conveyor_group.draw(grid_surface_copy)
                         seller_group.draw(grid_surface_copy)
+                        item_group.draw(grid_surface_copy)
                         material_group.draw(grid_surface_copy) 
                         arrows_group.draw(grid_surface_copy)
                     
@@ -969,6 +983,7 @@ while run:
                                         producer_group.draw(grid_surface_copy)
                                         crafter_group.draw(grid_surface_copy)
                                         conveyor_group.draw(grid_surface_copy)
+                                        item_group.draw(grid_surface_copy) 
                                         material_group.draw(grid_surface_copy) 
                                         seller_group.draw(grid_surface_copy)
                                         arrows_group.draw(grid_surface_copy)      
@@ -1349,4 +1364,3 @@ while run:
 
     pygame.display.update()
     clock.tick(60)
-
