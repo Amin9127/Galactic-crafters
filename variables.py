@@ -10,6 +10,10 @@ class Buttons():
     def draw(self):
         screen.blit(self.image,(self.rect.x,self.rect.y))
 
+revenue =0
+previous_revenue=0
+money_per_min=0
+
 
 #screen set up
 screen=pygame.display.set_mode((900,900))
@@ -200,17 +204,19 @@ back_button=Buttons(0,0,back_img,1,1)
 #play mode
 #play button images:
 settings_mini_img=pygame.image.load('images/settings_mini.png').convert_alpha()
-blank_popup_img=pygame.image.load('images/button4.png').convert_alpha()
+blank_button_img=pygame.image.load('images/button4.png').convert_alpha()
 shop_img=pygame.image.load('images/shop.png').convert_alpha()
 edit_img=pygame.image.load('images/edit.png').convert_alpha()
 blueprints_img=pygame.image.load('images/blueprints.png').convert_alpha()
 map_img=pygame.image.load('images/button4.png').convert_alpha()
+gui_flat_img=pygame.image.load('images/gui_flat.png').convert_alpha()
 #play screen button instantiation
 settings_mini_button=Buttons(0,0,settings_mini_img,0.5,0.5)
 shop_button = Buttons(800,250,shop_img,0.5,0.5)
 edit_button = Buttons(800,300,edit_img,0.5,0.5)
 blueprints_button = Buttons(800,350,blueprints_img,0.5,0.5)
 map_button = Buttons(800,400,map_img,0.5,0.5)
+stats_button= Buttons(780,0,blank_button_img,0.6,0.6)
 
 have_producer=False
 have_crafter=False
@@ -262,6 +268,10 @@ shop_surface=pygame.transform.scale(blank_popup_img,(650,700))
 blueprint_surface=pygame.transform.scale(blank_popup_img,(650,700))
 transparent_popup = pygame.transform.scale(blank_popup_img,(650,700))
 transparent_popup.set_alpha(50)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#stats
+stats_surface=Buttons(200,200,blank_popup_img,2,4)
 
 #scrollbar images
 scrollbar_img=pygame.image.load('images/scrollbar.png').convert_alpha()

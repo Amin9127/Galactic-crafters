@@ -11,10 +11,18 @@ global money
 #usual start 1000 money
 money=50000
 
+
+
+
 #timers
 #creates a event every second
 seconds_event=pygame.USEREVENT
 pygame.time.set_timer(seconds_event,1000)
+
+#creates event every minute
+minute_event=pygame.USEREVENT+1
+pygame.time.set_timer(minute_event,60000)
+
 last_time=time.time()
  
 
@@ -45,10 +53,14 @@ while run:
                         materials_supply[created_material]=materials_supply[created_material]-material_quantity
                         material_group.add(Producer.create_material('self',co,producer_info))
 
-            for crafter in crafter_group:
-                amount_maybe=crafter.update(crafter_info,blueprints,crafter_upgrades,crafter_lv)
-                if amount_maybe!=False:
-                    item_group.add(crafter.create_item(blueprints_value,item_imgs,amount_maybe))
+                for crafter in crafter_group:
+                    amount_maybe=crafter.update(crafter_info,blueprints,crafter_upgrades,crafter_lv)
+                    if amount_maybe!=False:
+                        item_group.add(crafter.create_item(blueprints_value,item_imgs,amount_maybe))
+
+        if event.type==minute_event:
+            money_per_min=revenue-previous_revenue
+            previous_revenue=revenue
 
         #all keybinds check and what it does in this if elif ladder
         if event.type == pygame.KEYDOWN:
@@ -288,7 +300,10 @@ while run:
             elif game_state=='map':
                 if event.key==pygame.K_ESCAPE:
                     game_state='play'
- 
+
+            elif game_state=='stats':
+                if event.key==pygame.K_ESCAPE:
+                    game_state='play'
  
  #¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬           
         #all button check and what the button does in this if elif ladder
@@ -495,6 +510,9 @@ while run:
                             game_state='crafter_popup'
                         elif decimal_co in conveyor_cos:
                             pass
+                elif stats_button.rect.collidepoint(co):
+                    game_state='stats'
+                
                 else:
                     pass 
             
@@ -852,6 +870,10 @@ while run:
                     selected_machines=[]
                     arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
 
+            elif game_state=='stats':
+                if stats_surface.rect.collidepoint(co) == False:
+                    game_state='play'
+        
         elif event.type==pygame.MOUSEBUTTONUP:
             if event.button == 1: 
                 slider_drag=False
@@ -1037,17 +1059,18 @@ while run:
         exit_button.draw()
 
     elif game_state=='play':
-
         producer_group.update(producer_info)
         for material in material_group:
             maybe_money = material.update(seller_lv,seller_upgrades,conveyor_lv,conveyor_upgrades,producer_info,conveyor_info,conveyor_group,crafter_info,crafter_group,seller_group,smelter_group,blueprints_value,money)
             maybe_money=float(maybe_money)
             if maybe_money.is_integer():
+                revenue+=(maybe_money-money)
                 money=maybe_money
         
         for item in item_group:
             maybe_money=item.update(seller_lv,seller_upgrades,conveyor_lv,conveyor_upgrades,crafter_info,conveyor_group,conveyor_info,crafter_group,seller_group,money)
             if maybe_money.is_integer():
+                revenue+=(maybe_money-money)
                 money=maybe_money
 
 
@@ -1056,6 +1079,7 @@ while run:
         screen.fill((52,78,91))
         #buttons
         settings_mini_button.draw()
+        stats_button.draw()
         shop_button.draw()
         edit_button.draw()
         blueprints_button.draw()
@@ -1073,7 +1097,7 @@ while run:
         item_group.draw(grid_surface_copy)
 
 
-        draw_money(money,screen,money_panel_img,font_50)
+        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24)
 
         screen.blit(grid_surface_copy,(0,100))
         #copy screen
@@ -1082,7 +1106,7 @@ while run:
 
     elif game_state=='producer_popup':
         screen.blit(grid_surface_copy,(0,100))
-        draw_money(money,screen,money_panel_img,font_50)
+        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24)
 
 
         screen.blit(producer_popup_surface,selected_co)
@@ -1096,7 +1120,7 @@ while run:
     
     elif game_state=='crafter_popup':
         screen.blit(grid_surface_copy,(0,100))
-        draw_money(money,screen,money_panel_img,font_50)
+        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24)
 
         screen.blit(producer_popup_surface,selected_co)
         transparent_crafter_popup.draw()
@@ -1117,7 +1141,7 @@ while run:
 
     elif game_state=='shop machines':
         screen.blit(play_bg,(0,0))
-        draw_money(money,screen,money_panel_img,font_50)
+        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24)
         shop_surface_copy=shop_surface.copy()
         screen.blit(shop_surface_copy,(100,150))
 
@@ -1163,7 +1187,7 @@ while run:
 
     elif game_state=='shop upgrades':
         screen.blit(play_bg,(0,0))
-        draw_money(money,screen,money_panel_img,font_50)
+        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24)
         shop_surface_copy=shop_surface.copy()
         screen.blit(shop_surface_copy,(100,150))
 
@@ -1228,7 +1252,7 @@ while run:
 
 
         screen.blit(play_bg,(0,0))
-        draw_money(money,screen,money_panel_img,font_50)
+        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24)
         shop_surface_copy=shop_surface.copy()
         screen.blit(shop_surface_copy,(100,150))
 
@@ -1337,7 +1361,7 @@ while run:
     elif game_state=='blueprints':
         shop_bg_copy=shop_bg.copy()
         
-        draw_money(money,screen,money_panel_img,font_50)
+        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24)
         transparent_popup.draw()
 
         blueprints_group.draw(shop_bg_copy)
@@ -1351,7 +1375,7 @@ while run:
     elif game_state=='shop confirm':
         grid_surface_copy=grid_surface.copy()
         
-        draw_money(money,screen,money_panel_img,font_50)
+        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24)
         machines_price_button=Buttons(800,500,gui_flat_img,0.5,1)
         machines_price_button.draw()
 
@@ -1378,9 +1402,9 @@ while run:
         
     elif game_state=='edit':
         print(list(producer_info.keys()))
-        draw_money(money,screen,money_panel_img,font_50)
-
         screen.blit(grid_surface_copy,(0,100))
+        stats_button.draw()
+        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24)
         rotate_button.draw()
         delete_button.draw()
         confirm_button.draw()
@@ -1412,6 +1436,39 @@ while run:
         screen.blit(blueprint_surface,(100,150))
         shop_bg=screen.copy()
         game_state='blueprints'
+
+    elif game_state=='stats':
+        screen.blit(grid_surface_copy,(0,100))
+        stats_surface.draw()
+        current_time=pygame.time.get_ticks()
+        current_time =current_time//1000
+        total_m =current_time//60
+        total_h =current_time//3600
+        total_d =current_time//(3600*24)
+        current_d=total_d
+        current_h=(current_time-((current_time//(3600*24))*3600*24))//3600
+        current_m=(current_time-((current_time//(3600))*3600))//60
+        current_s=(current_time-((current_time//(60))*60))
+
+
+        counter=0
+        revenue1=revenue
+        abbreviation={0:'',1:'K',2:'M',3:'B',4:'T',5:'q',6:'Q'}
+        allowed=True
+        while allowed:
+            revenue1=revenue1//1000
+            if revenue1 >=10:
+                counter+=1
+            else:
+                allowed=False
+
+        draw_text('Statistics',font_60,(0,0,0),310,230,screen)
+        draw_text('Revenue: '+ str(round(revenue/(1000**(counter)),1))+str(abbreviation[counter]),font_40,(255,255,255),210,300,screen)
+        draw_text('Total play time: '+str(current_d)+'d '+str(current_h)+'h '+str(current_m)+'m '+str(current_s)+'s',font_40,(255,255,255),210,350,screen)
+        draw_text('Skill level: Garbage ',font_40,(255,255,255),210,400,screen)
+
+
+
 
     pygame.display.update()
     clock.tick(60)

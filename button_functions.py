@@ -224,7 +224,7 @@ def move(direction,selected_producers,producer_info,producer_group,selected_craf
         new_arrow = Arrow(int(co[0]),int(co[1]),producer_info,crafter_info,conveyor_info,seller_info)
         arrows_group.add(new_arrow)
 
-def draw_money(money,screen,money_panel_img,font_50):
+def draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24):
     screen.blit(money_panel_img,(200,0))
     counter=0
     money1=money
@@ -242,6 +242,19 @@ def draw_money(money,screen,money_panel_img,font_50):
     money_text=font_50.render(money_msg,None,100)
     money_text_rect=money_text.get_rect(center=(400,38))
     screen.blit(money_text,money_text_rect)
+
+    counter=0
+    money_per_min1=money_per_min
+    allowed=True
+    while allowed:
+        money_per_min1=money_per_min1//1000
+        if money_per_min1 >=10:
+            counter+=1
+        else:
+            allowed=False
+
+    draw_text('Money/min:',font_24,(0,0,0),800,10,screen)
+    draw_text((str(round(money_per_min/(1000**(counter)),1))+str(abbreviation[counter])),font_24,(0,0,0),800,25,screen)
 
 def draw_text(text,font,text_colour,x,y,screen):
     img=font.render(text,True,text_colour)
