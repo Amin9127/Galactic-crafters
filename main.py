@@ -1465,7 +1465,7 @@ while run:
         draw_text('Statistics',font_60,(0,0,0),310,230,screen)
         draw_text('Revenue: '+ str(round(revenue/(1000**(counter)),1))+str(abbreviation[counter]),font_40,(255,255,255),210,300,screen)
         draw_text('Total play time: '+str(current_d)+'d '+str(current_h)+'h '+str(current_m)+'m '+str(current_s)+'s',font_40,(255,255,255),210,350,screen)
-        draw_text('Skill level: Garbage ',font_40,(255,255,255),210,400,screen)
+        draw_text('Skill level: Trash ',font_40,(255,255,255),210,400,screen)
 
 
 
