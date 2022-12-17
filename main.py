@@ -32,7 +32,7 @@ while run:
             pygame.quit()
             exit()          
         if event.type ==seconds_event:
-            if game_state=='play':
+            if game_state in ('play','shop supply'):
                 screen.blit(grid_surface,(0,100))
                 producer_cos=list(producer_info.keys())
                 for x in producer_cos:
@@ -41,7 +41,6 @@ while run:
                     co[1]=int(co[1])
                     created_material=producer_info[x][1]
                     material_quantity =producer_info[x][2]
-
                     if materials_supply[created_material]>=material_quantity:
                         materials_supply[created_material]=materials_supply[created_material]-material_quantity
                         material_group.add(Producer.create_material('self',co,producer_info))
@@ -1215,6 +1214,19 @@ while run:
         slider_button.draw()
 
     elif game_state=='shop supply':
+        producer_group.update(producer_info)
+        for material in material_group:
+            maybe_money = material.update(seller_lv,seller_upgrades,conveyor_lv,conveyor_upgrades,producer_info,conveyor_info,conveyor_group,crafter_info,crafter_group,seller_group,smelter_group,blueprints_value,money)
+            maybe_money=float(maybe_money)
+            if maybe_money.is_integer():
+                money=maybe_money
+        
+        for item in item_group:
+            maybe_money=item.update(seller_lv,seller_upgrades,conveyor_lv,conveyor_upgrades,crafter_info,conveyor_group,conveyor_info,crafter_group,seller_group,money)
+            if maybe_money.is_integer():
+                money=maybe_money
+
+
         screen.blit(play_bg,(0,0))
         draw_money(money,screen,money_panel_img,font_50)
         shop_surface_copy=shop_surface.copy()
