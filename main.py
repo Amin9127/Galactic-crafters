@@ -338,7 +338,9 @@ while run:
                             consise_layout[layout_co[1]][layout_co[0]]={'producer':producer_info[decimal_co]}
                             print(consise_layout[layout_co[1]][layout_co[0]])
                         elif cos in selected_crafters:
-                            consise_layout[layout_co[1]][layout_co[0]]={'crafter':crafter_info[decimal_co]}
+                            copied_c_info=crafter_info[decimal_co]
+                            copied_c_info[2]={}
+                            consise_layout[layout_co[1]][layout_co[0]]={'crafter':copied_c_info}
                         elif cos in selected_conveyors:
                             consise_layout[layout_co[1]][layout_co[0]]={'conveyor':conveyor_info[decimal_co]}
                         elif cos in selected_sellers:
@@ -355,6 +357,11 @@ while run:
             elif game_state=='edit paste':
                 if event.key==pygame.K_ESCAPE:
                     game_state='edit'
+                    producer_group.draw(grid_surface_copy)
+                    crafter_group.draw(grid_surface_copy)
+                    conveyor_group.draw(grid_surface_copy)
+                    seller_group.draw(grid_surface_copy)
+
                 elif event.key==pygame.K_RETURN:
                     print('pasted')
                     copy_price = copied_producers*prices['producer']+copied_crafters*prices['crafter']+copied_conveyors*prices['conveyor']+copied_sellers*prices['seller']
@@ -1537,6 +1544,8 @@ while run:
 
     elif game_state=='edit paste':
         grid_surface_copy2=grid_surface_copy.copy()
+        stats_button.draw()
+        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24)
         green_square_group.draw(grid_surface_copy2)
         producer_group.draw(grid_surface_copy2)
         crafter_group.draw(grid_surface_copy2)
