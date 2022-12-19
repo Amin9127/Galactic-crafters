@@ -302,6 +302,12 @@ while run:
                     maximum_co_x =0
                     minimum_co_y =400
                     maximum_co_y =0
+                    copied_machines=selected_machines
+                    consise_copied_machines=[]
+                    copied_producers=len(selected_producers)
+                    copied_crafters=len(selected_crafters)
+                    copied_conveyors=len(selected_conveyors)
+                    copied_sellers=len(selected_sellers)
 
                     for co in selected_machines:
                         if co[0] < minimum_co_x:
@@ -313,36 +319,70 @@ while run:
                             minimum_co_y =co[1]
                         if co[1] > maximum_co_y:
                             maximum_co_y =co[1]
+                    
                     x_range=maximum_co_x-minimum_co_x+40
                     y_range=maximum_co_y-minimum_co_y+40
-                    print(minimum_co_x,minimum_co_y,maximum_co_x,maximum_co_y,'min maxes.')
-                    print(x_range,y_range,'ranges.')
+
+                    #create 2d array of the minimum size
                     consise_layout = [[0 for x in range(x_range//40)] for y in range(y_range//40)] 
 
                     for cos in selected_machines:
                         decimal_co=str(cos[0])+'.'+str(cos[1])
+
+                        #store consise positions which are only relative to consise layout.
+                        consise_co=[(cos[0]-minimum_co_x)//40,(cos[1]-minimum_co_y)//40]
+                        consise_copied_machines.append(consise_co)
+
                         layout_co=[(cos[0]-minimum_co_x)//40,(cos[1]-minimum_co_y)//40]
                         if cos in selected_producers:
-                            consise_layout[layout_co[1]][layout_co[0]]=producer_info[decimal_co]
+                            consise_layout[layout_co[1]][layout_co[0]]={'producer':producer_info[decimal_co]}
+                            print(consise_layout[layout_co[1]][layout_co[0]])
                         elif cos in selected_crafters:
-                            consise_layout[layout_co[1]][layout_co[0]]=crafter_info[decimal_co]
+                            consise_layout[layout_co[1]][layout_co[0]]={'crafter':crafter_info[decimal_co]}
                         elif cos in selected_conveyors:
-                            consise_layout[layout_co[1]][layout_co[0]]=conveyor_info[decimal_co]
+                            consise_layout[layout_co[1]][layout_co[0]]={'conveyor':conveyor_info[decimal_co]}
                         elif cos in selected_sellers:
-                            consise_layout[layout_co[1]][layout_co[0]]=seller_info[decimal_co]
-                    
-                        #consise_layout[layout_co[1]][layout_co[0]]=1
+                            consise_layout[layout_co[1]][layout_co[0]]={'seller':seller_info[decimal_co]}
                 
                     for x in consise_layout:
                         for y in x:
                             print(y,end = " ")
                         print()
                     
-
-
                 elif event.key==pygame.K_v:
-                    pass
+                    game_state='edit paste'
 
+            elif game_state=='edit paste':
+                if event.key==pygame.K_ESCAPE:
+                    game_state='edit'
+                elif event.key==pygame.K_RETURN:
+                    print('pasted')
+                    copy_price = copied_producers*prices['producer']+copied_crafters*prices['crafter']+copied_conveyors*prices['conveyor']+copied_sellers*prices['seller']
+                    if paste_possible==True and money>=copy_price:
+                        print('this',producer_info)
+                        for cos in consise_copied_machines:
+                            pos=[cos[0]*40,cos[1]*40]
+
+                            copied_info=consise_layout[cos[1]][cos[0]]
+                            copied_keys=list(copied_info.keys())
+                            copied_machine=copied_keys[0]
+
+                            if copied_machine=='producer':
+                                decimal_co=str(paste_start[0]*40+pos[0])+'.'+str(paste_start[1]*40+pos[1])
+                                producer_info[decimal_co]=copied_info[copied_keys[0]]
+                                new_producer=Producer(paste_start[0]*40+pos[0],paste_start[1]*40+pos[1],producer_img,producer_info)
+                                producer_group.add(new_producer)
+                                factory_layout[paste_start[1]+cos[1]][paste_start[0]+cos[0]]=1
+                                print('producer copied.')
+                            elif copied_machine=='crafter':
+                                pass
+                            elif copied_machine=='conveyor':
+                                pass
+                            elif copied_machine=='seller': 
+                                pass
+                        paste_possible=False
+                        print('this',producer_info)                            
+                            
             elif game_state=='map':
                 if event.key==pygame.K_ESCAPE:
                     game_state='play'
@@ -757,6 +797,32 @@ while run:
                 elif cancel_button.rect.collidepoint(co):
                     game_state='play'
                     selected_pos=[]
+
+            elif game_state=='edit paste':
+                if transparent_grid_button.rect.collidepoint(co):
+                    for sprite in green_square_group:
+                        sprite.kill()
+                    x= co[0]
+                    y= co[1]                      
+                    layout_x=(x//40)   
+                    layout_y=(y-100)//40
+                    paste_start=[layout_x,layout_y]
+                    paste_possible=True
+
+
+
+                    print(layout_x,layout_y)
+
+                    #check if paste in position allowed.
+                    for cos in consise_copied_machines:
+                        new_GreenSquare=GreenSquare((cos[0]+layout_x)*40,(cos[1]+layout_y)*40)
+                        green_square_group.add(new_GreenSquare)
+
+                        if cos[1]+layout_y <0 or cos[1]+layout_y >19 or cos[0]+layout_x<0 or cos[0]+layout_x >19:
+                            paste_possible=False
+                        elif factory_layout[cos[1]+layout_y][cos[0]+layout_x]==1:
+                            paste_possible =False
+                    print(paste_possible)
 
             elif game_state=='edit': 
                 if transparent_grid_button.rect.collidepoint(co):
@@ -1458,6 +1524,15 @@ while run:
         arrows_group.draw(grid_surface_copy)
         if have_producer: 
             producer_group.update(producer_info)
+
+    elif game_state=='edit paste':
+        grid_surface_copy2=grid_surface_copy.copy()
+        green_square_group.draw(grid_surface_copy2)
+        producer_group.draw(grid_surface_copy2)
+        crafter_group.draw(grid_surface_copy2)
+        conveyor_group.draw(grid_surface_copy2)
+        seller_group.draw(grid_surface_copy2)
+        screen.blit(grid_surface_copy2,(0,100))
 
     elif game_state=='ingame_settings':
         screen.blit(money_panel_img,(200,0))
