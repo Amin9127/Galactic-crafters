@@ -296,7 +296,53 @@ while run:
                     material_group.draw(grid_surface_copy)
                     seller_group.draw(grid_surface_copy)
                     arrows_group.draw(grid_surface_copy)        
-            
+
+                elif event.key==pygame.K_c:
+                    minimum_co_x =400
+                    maximum_co_x =0
+                    minimum_co_y =400
+                    maximum_co_y =0
+
+                    for co in selected_machines:
+                        if co[0] < minimum_co_x:
+                            minimum_co_x =co[0]
+                        if co[0] > maximum_co_x:
+                            maximum_co_x =co[0]
+
+                        if co[1] < minimum_co_y:
+                            minimum_co_y =co[1]
+                        if co[1] > maximum_co_y:
+                            maximum_co_y =co[1]
+                    x_range=maximum_co_x-minimum_co_x+40
+                    y_range=maximum_co_y-minimum_co_y+40
+                    print(minimum_co_x,minimum_co_y,maximum_co_x,maximum_co_y,'min maxes.')
+                    print(x_range,y_range,'ranges.')
+                    consise_layout = [[0 for x in range(x_range//40)] for y in range(y_range//40)] 
+
+                    for cos in selected_machines:
+                        decimal_co=str(cos[0])+'.'+str(cos[1])
+                        layout_co=[(cos[0]-minimum_co_x)//40,(cos[1]-minimum_co_y)//40]
+                        if cos in selected_producers:
+                            consise_layout[layout_co[1]][layout_co[0]]=producer_info[decimal_co]
+                        elif cos in selected_crafters:
+                            consise_layout[layout_co[1]][layout_co[0]]=crafter_info[decimal_co]
+                        elif cos in selected_conveyors:
+                            consise_layout[layout_co[1]][layout_co[0]]=conveyor_info[decimal_co]
+                        elif cos in selected_sellers:
+                            consise_layout[layout_co[1]][layout_co[0]]=seller_info[decimal_co]
+                    
+                        #consise_layout[layout_co[1]][layout_co[0]]=1
+                
+                    for x in consise_layout:
+                        for y in x:
+                            print(y,end = " ")
+                        print()
+                    
+
+
+                elif event.key==pygame.K_v:
+                    pass
+
             elif game_state=='map':
                 if event.key==pygame.K_ESCAPE:
                     game_state='play'
@@ -1401,7 +1447,6 @@ while run:
         screen.blit(grid_surface_copy,(0,100))
         
     elif game_state=='edit':
-        print(list(producer_info.keys()))
         screen.blit(grid_surface_copy,(0,100))
         stats_button.draw()
         draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24)
@@ -1466,9 +1511,6 @@ while run:
         draw_text('Revenue: '+ str(round(revenue/(1000**(counter)),1))+str(abbreviation[counter]),font_40,(255,255,255),210,300,screen)
         draw_text('Total play time: '+str(current_d)+'d '+str(current_h)+'h '+str(current_m)+'m '+str(current_s)+'s',font_40,(255,255,255),210,350,screen)
         draw_text('Skill level: Trash ',font_40,(255,255,255),210,400,screen)
-
-
-
-
+        
     pygame.display.update()
     clock.tick(60)
