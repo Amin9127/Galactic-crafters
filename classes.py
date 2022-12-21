@@ -415,9 +415,13 @@ class Blueprints(pygame.sprite.Sprite):
         blueprint_position={0:[20,145],1:[330,145],2:[20,280],3:[330,280],4:[20,415],5:[330,415],6:[20,550 ],7:[330,550]}
         blueprint_title_position={0:[140,310],1:[450,310],2:[140,445],3:[450,445],4:[140,580],5:[450,580],6:[140,715 ],7:[450,715]}
         self.pos = blueprint_title_position[self.position]
+
+        #bp title
         screen.blit(self.title,blueprint_title_position[self.position])
+        #bp main item img
         screen.blit(item_imgs[self.bp_title],(self.pos[0]+200,self.pos[1]+30))
 
+        #bp component images
         screen.blit(self.bp_item_images[0],(self.pos[0],self.pos[1]+20))
         screen.blit(self.bp_item_images[1],(self.pos[0]+40,self.pos[1]+20))
         screen.blit(self.bp_item_images[2],(self.pos[0]+80,self.pos[1]+20))
@@ -425,6 +429,7 @@ class Blueprints(pygame.sprite.Sprite):
         screen.blit(self.bp_item_images[4],(self.pos[0]+40,self.pos[1]+60))
         screen.blit(self.bp_item_images[5],(self.pos[0]+80,self.pos[1]+60))
 
+        #bp component quantitiy 
         screen.blit(self.amount1,(self.pos[0]+40,self.pos[1]+60))
         screen.blit(self.amount2,(self.pos[0]+80,self.pos[1]+60))
         screen.blit(self.amount3,(self.pos[0]+120,self.pos[1]+60))
@@ -432,6 +437,7 @@ class Blueprints(pygame.sprite.Sprite):
         screen.blit(self.amount5,(self.pos[0]+80,self.pos[1]+100))
         screen.blit(self.amount6,(self.pos[0]+120,self.pos[1]+100))
 
+        #bp price text
         screen.blit(self.price_lable1,(self.pos[0]+200,self.pos[1]+80))
         screen.blit(self.price_lable2,(self.pos[0]+200,self.pos[1]+90))
 

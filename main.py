@@ -647,13 +647,7 @@ while run:
                 elif item_button.rect.collidepoint(co):
                     game_state='temp shop'
                     slider_button.rect.top=150
-                    for blueprint in blueprints_group:
-                        blueprint.kill()
 
-                    for y in range(0,8):
-                        bptitles2[y]=bp_ordered_list[y]
-                        new_bp= Blueprints((y),y,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font)
-                        blueprints_group.add(new_bp)
 
                     choose_bp = True     
 
@@ -690,7 +684,7 @@ while run:
                 elif seller_buy_button.rect.collidepoint(co):
                     game_state='shop confirm'
                     selected_machine='seller'
-                elif transparent_popup.rect.collidepoint(co) == False:
+                elif transparent_popup_button.rect.collidepoint(co) == False:
                     game_state ='play'
                 elif slider_button.rect.collidepoint(co):
                     if event.button == 1: 
@@ -722,7 +716,7 @@ while run:
                     if money>=seller_upgrades[seller_lv+1][0]*10**abreviations[seller_upgrades[seller_lv+1][1]]:
                         money-=seller_upgrades[seller_lv+1][0]*10**abreviations[seller_upgrades[seller_lv+1][1]]
                         seller_lv+=1
-                elif transparent_popup.rect.collidepoint(co) == False:
+                elif transparent_popup_button.rect.collidepoint(co) == False:
                     game_state ='play'
 
             elif game_state=='shop supply':
@@ -730,7 +724,7 @@ while run:
                     game_state = 'shop machines'
                 elif upgrades_button.rect.collidepoint(co):
                     game_state = 'shop upgrades'
-                elif transparent_popup.rect.collidepoint(co) == False:
+                elif transparent_popup_button.rect.collidepoint(co) == False:
                     game_state ='play'
                 elif copper_shop_button.rect.collidepoint(co):
                     selected_material='copper'
@@ -764,9 +758,11 @@ while run:
                             materials_supply[selected_material]=materials_supply[selected_material]+1000
 
             elif game_state=='blueprints':
-                if transparent_popup.rect.collidepoint(co) == False:
+                if transparent_popup_button.rect.collidepoint(co) == False:
                     game_state ='play'
-                elif slider_button.rect.collidepoint(co):
+                    print('click',scrollbar_button.rect.collidepoint(co))
+                if slider_button.rect.collidepoint(co):
+                    print('click slider')
                     if event.button == 1: 
                         slider_drag=True
                         mouse_y=co[1]
@@ -778,9 +774,10 @@ while run:
                         if bp.rect.collidepoint(co):
                             selected_bp =bp.bp_title
                             crafter_info[last_selected_crafter][1]=selected_bp
-                        game_state='play'
+                            game_state='play'
+                            print(crafter_info,'new bp selected')
                     choose_bp=False
-                    print(crafter_info)
+                    
                             
             elif game_state=='shop confirm':
                 if transparent_grid_button.rect.collidepoint(co):
@@ -1491,12 +1488,13 @@ while run:
         shop_bg_copy=shop_bg.copy()
         
         draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24)
-        transparent_popup.draw()
+
 
         blueprints_group.draw(shop_bg_copy)
 
         
         screen.blit(shop_bg_copy,(0,0))
+        transparent_popup_button.draw()
         scrollbar_button.draw()
         slider_button.draw()
         blueprints_group.update(screen,item_imgs)
@@ -1574,6 +1572,13 @@ while run:
         screen.blit(play_bg,(0,0))
         screen.blit(blueprint_surface,(100,150))
         shop_bg=screen.copy()
+        for blueprint in blueprints_group:
+            blueprint.kill()
+
+        for y in range(0,8):
+            bptitles2[y]=bp_ordered_list[y]
+            new_bp= Blueprints((y),y,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font)
+            blueprints_group.add(new_bp)
         game_state='blueprints'
 
     elif game_state=='stats':

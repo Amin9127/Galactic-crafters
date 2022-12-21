@@ -326,7 +326,7 @@ supply_lable=font_60.render('supply',False,(0,0,0))
 
 #machinery shop button instantiation
 mini_exit_button=Buttons(250,400,mini_exit_img,0.5,0.5)
-transparent_popup=Buttons(100,150,transparent_popup,3.5,7)
+transparent_popup_button=Buttons(100,150,transparent_popup,3.5,7)
 
 producer_button=Buttons(135,340,producer_img,0.5,0.5)
 crafter_button=Buttons(440,340,crafter_img,0.5,0.5)
