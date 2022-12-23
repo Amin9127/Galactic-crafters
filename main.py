@@ -9,7 +9,7 @@ pygame.font.init()
 
 global money
 #usual start 1000 money
-money=50000
+money=5000000
 
 
 
@@ -363,7 +363,7 @@ while run:
                     seller_group.draw(grid_surface_copy)
 
                 elif event.key==pygame.K_RETURN:
-                    print('pasted')
+                    print('return pressed')
                     copy_price = copied_producers*prices['producer']+copied_crafters*prices['crafter']+copied_conveyors*prices['conveyor']+copied_sellers*prices['seller']
                     if paste_possible==True and money>=copy_price:
                         print('this',producer_info)
@@ -399,6 +399,8 @@ while run:
                                 seller_group.add(new_seller)
                                 factory_layout[paste_start[1]+cos[1]][paste_start[0]+cos[0]]=1
                         paste_possible=False
+                        print(producer_info)
+
                             
             elif game_state=='map':
                 if event.key==pygame.K_ESCAPE:

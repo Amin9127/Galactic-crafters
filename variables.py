@@ -89,10 +89,11 @@ seller_upgrades={
 abreviations={
     '':0,
     'K':3,
-    'B':6,
-    'T':9,
-    'q':12,
-    'Q':15,
+    'M':6,
+    'B':9,
+    'T':12,
+    'q':15,
+    'Q':18,
 }
 #sprite groups
 producer_group=pygame.sprite.Group()

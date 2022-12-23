@@ -121,8 +121,11 @@ def move(direction,selected_producers,producer_info,producer_group,selected_craf
     cancel_move=False
     #change all selected machines move direction to left
     for pos in selected_producers:
+        print(producer_info)
         decimal_co=str(pos[0])+'.'+str(pos[1])
         producer_info[decimal_co][3] =direction
+        print(producer_info)
+
     for pos in selected_crafters:
         decimal_co=str(pos[0])+'.'+str(pos[1])
         crafter_info[decimal_co][3] =direction
