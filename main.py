@@ -427,10 +427,13 @@ while run:
             elif game_state=='play':
                 if settings_mini_button.rect.collidepoint(co):
                     game_state='ingame_settings'
+                
                 elif shop_button.rect.collidepoint(co):
                     game_state='shop machines'
+                
                 elif edit_button.rect.collidepoint(co):
                     game_state='edit'
+                
                 elif blueprints_button.rect.collidepoint(co):
                     game_state='temp shop'
                     slider_button.rect.top=150
@@ -444,6 +447,7 @@ while run:
 
                 elif map_button.rect.collidepoint(co):
                     game_state='map'
+                
                 elif transparent_grid_button.rect.collidepoint(co):
                     x,y=co[0],co[1]
                     x=(x//40)
@@ -480,12 +484,15 @@ while run:
 
                             selected_co=co
                             transparent_producer_popup=Buttons(co[0],co[1],transparent_producer_popup_surface,1,2.25)
-                            copper_button=Buttons(co[0],co[1],copper_img,0.5,0.5)
-                            iron_button=Buttons(co[0]+90,co[1],iron_img,0.5,0.5)
-                            gold_button=Buttons(co[0],co[1]+40,gold_img,0.5,0.5)
-                            aluminium_button=Buttons(co[0]+90,co[1]+40,aluminium_img,0.5,0.5)
-                            coal_button=Buttons(co[0],co[1]+80,coal_img,0.5,0.5)
-                            lead_button=Buttons(co[0]+90,co[1]+80,lead_img,0.5,0.5)
+                            selected_material_button=Buttons(co[0]+45,co[1]+20,item_imgs[producer_info[decimal_co][1]],0.5,0.5)
+                            current_output_txt=font_24.render('Current Output: ',False,(0,0,0))
+                            
+                            copper_button=Buttons(co[0],co[1]+90,copper_img,0.5,0.5)
+                            iron_button=Buttons(co[0]+90,co[1]+90,iron_img,0.5,0.5)
+                            gold_button=Buttons(co[0],co[1]+130,gold_img,0.5,0.5)
+                            aluminium_button=Buttons(co[0]+90,co[1]+130,aluminium_img,0.5,0.5)
+                            coal_button=Buttons(co[0],co[1]+170,coal_img,0.5,0.5)
+                            lead_button=Buttons(co[0]+90,co[1]+170,lead_img,0.5,0.5)
                             game_state='producer_popup'
 
                         elif decimal_co in crafter_cos:
@@ -509,102 +516,45 @@ while run:
                             elif y==800:
                                 co = [co[0],co[1]-180]
 
-                            for item in crafter_info[decimal_co][2]:
-                                quantity = crafter_info[decimal_co][2][item]
                             
                             item_types=len(crafter_info[decimal_co][2].keys())
                             item_types_list=list(crafter_info[decimal_co][2].keys())
+                        
 
-                            crafter_inv_item1='empty'
-                            crafter_inv_item2='empty'
-                            crafter_inv_item3='empty'
-                            crafter_inv_item4='empty'
-                            crafter_inv_item5='empty'
-                            crafter_inv_item6='empty'
-                            text1msg=0
-                            text2msg=0
-                            text3msg=0                                                                                                                    
-                            text4msg=0
-                            text5msg=0
-                            text6msg=0
+                            crafter_inv_items=['empty','empty','empty','empty','empty','empty']
+                            crafter_inv_quantities=['0','0','0','0','0','0']
 
-
-                            if item_types==0:
-                                pass
-                            elif item_types==1:
-                                crafter_inv_item1=item_types_list[0]
-                            elif item_types==2:
-                                crafter_inv_item1=item_types_list[0]
-                                crafter_inv_item2=item_types_list[1] 
-                            elif item_types==3:
-                                crafter_inv_item1=item_types_list[0]
-                                crafter_inv_item2=item_types_list[1]
-                                crafter_inv_item3=item_types_list[2]
-                            elif item_types==4:
-                                crafter_inv_item1=item_types_list[0]
-                                crafter_inv_item2=item_types_list[1]
-                                crafter_inv_item3=item_types_list[2]
-                                crafter_inv_item4=item_types_list[3]
-                            elif item_types==5:
-                                crafter_inv_item1=item_types_list[0]
-                                crafter_inv_item2=item_types_list[1]
-                                crafter_inv_item3=item_types_list[2]
-                                crafter_inv_item4=item_types_list[3]
-                                crafter_inv_item5=item_types_list[4]
-                            elif item_types==6:
-                                crafter_inv_item1=item_types_list[0]
-                                crafter_inv_item2=item_types_list[1]
-                                crafter_inv_item3=item_types_list[2]
-                                crafter_inv_item4=item_types_list[3]
-                                crafter_inv_item5=item_types_list[4]
-                                crafter_inv_item6=item_types_list[5]
-
-                            if crafter_inv_item1=='empty':
-                                text1msg=0
-                            else:
-                                text1msg=crafter_info[decimal_co][2][crafter_inv_item1]
-
-                            if crafter_inv_item2=='empty':
-                                text2msg=0
-                            else:
-                                text2msg=crafter_info[decimal_co][2][crafter_inv_item2]
-
-                            if crafter_inv_item3=='empty':
-                                text3msg=0
-                            else:
-                                text3msg=crafter_info[decimal_co][2][crafter_inv_item3]
-
-                            if crafter_inv_item4=='empty':
-                                text4msg=0
-                            else:
-                                text4msg=crafter_info[decimal_co][2][crafter_inv_item4]
-
-                            if crafter_inv_item5=='empty':
-                                text5msg=0
-                            else:
-                                text5msg=crafter_info[decimal_co][2][crafter_inv_item5]
-
-                            if crafter_inv_item6=='empty':
-                                text6msg=0
-                            else:
-                                text6msg=crafter_info[decimal_co][2][crafter_inv_item6]
-                            
-                            text1=font.render(str(text1msg),False,(0,0,0))
-                            text2=font.render(str(text2msg),False,(0,0,0))
-                            text3=font.render(str(text3msg),False,(0,0,0))
-                            text4=font.render(str(text4msg),False,(0,0,0))
-                            text5=font.render(str(text5msg),False,(0,0,0))
-                            text6=font.render(str(text6msg),False,(0,0,0))
-                            
+                            for i in range(item_types):
+                                crafter_inv_items[i]=item_types_list[i]
+                                crafter_inv_quantities[i]=str(crafter_info[decimal_co][2][item_types_list[i]])
                                 
-                            inv_button1=Buttons(co[0],co[1],item_imgs[crafter_inv_item1],0.25,0.25)
-                            inv_button2=Buttons(co[0]+40,co[1],item_imgs[crafter_inv_item2],0.25,0.25)
-                            inv_button3=Buttons(co[0]+80,co[1],item_imgs[crafter_inv_item3],0.25,0.25)
-                            inv_button4=Buttons(co[0],co[1]+40,item_imgs[crafter_inv_item4],0.25,0.25)
-                            inv_button5=Buttons(co[0]+40,co[1]+40,item_imgs[crafter_inv_item5],0.25,0.25)
-                            inv_button6=Buttons(co[0]+80,co[1]+40,item_imgs[crafter_inv_item6],0.25,0.25)
+                            inv_button1=Buttons(co[0],co[1]+30,item_imgs[crafter_inv_items[0]],0.25,0.25)
+                            inv_button2=Buttons(co[0]+40,co[1]+30,item_imgs[crafter_inv_items[1]],0.25,0.25)
+                            inv_button3=Buttons(co[0]+80,co[1]+30,item_imgs[crafter_inv_items[2]],0.25,0.25)
+                            inv_button4=Buttons(co[0],co[1]+70,item_imgs[crafter_inv_items[3]],0.25,0.25)
+                            inv_button5=Buttons(co[0]+40,co[1]+70,item_imgs[crafter_inv_items[4]],0.25,0.25)
+                            inv_button6=Buttons(co[0]+80,co[1]+70,item_imgs[crafter_inv_items[5]],0.25,0.25)
 
-                            item_button=Buttons(co[0]+140,co[1]+30,item_imgs[crafter_info[decimal_co][1]],0.15,0.15)
+
+                            bp_item_types=len(blueprints[crafter_info[decimal_co][1]].keys())
+                            bp_items_list=list(blueprints[crafter_info[decimal_co][1]].keys())
+
+                            bp_items=['empty','empty','empty','empty','empty','empty']
+                            bp_item_quantities=['0','0','0','0','0','0']
+
+                            for i in range (bp_item_types):
+                                bp_items[i]=bp_items_list[i]
+                                bp_item_quantities[i]=str(blueprints[crafter_info[decimal_co][1]][bp_items_list[i]])
+
+                            bp_item_button1=Buttons(co[0],co[1]+140,item_imgs[bp_items[0]],0.25,0.25)
+                            bp_item_button2=Buttons(co[0]+40,co[1]+140,item_imgs[bp_items[1]],0.25,0.25)
+                            bp_item_button3=Buttons(co[0]+80,co[1]+140,item_imgs[bp_items[2]],0.25,0.25)
+                            bp_item_button4=Buttons(co[0],co[1]+180,item_imgs[bp_items[3]],0.25,0.25)
+                            bp_item_button5=Buttons(co[0]+40,co[1]+180,item_imgs[bp_items[4]],0.25,0.25)
+                            bp_item_button6=Buttons(co[0]+80,co[1]+180,item_imgs[bp_items[5]],0.25,0.25)
+
+                            item_button=Buttons(co[0]+140,co[1]+165,item_imgs[crafter_info[decimal_co][1]],0.15,0.15)
+
 
                             selected_co=co
                             transparent_crafter_popup=Buttons(co[0],co[1],transparent_producer_popup_surface,1,2.25)
@@ -613,6 +563,7 @@ while run:
                             game_state='crafter_popup'
                         elif decimal_co in conveyor_cos:
                             pass
+                
                 elif stats_button.rect.collidepoint(co):
                     game_state='stats'
                 
@@ -777,8 +728,7 @@ while run:
                             game_state='play'
                             print(crafter_info,'new bp selected')
                     choose_bp=False
-                    
-                            
+                                 
             elif game_state=='shop confirm':
                 if transparent_grid_button.rect.collidepoint(co):
                     grid_surface_copy=play_grid_bg
@@ -1237,6 +1187,11 @@ while run:
 
         screen.blit(producer_popup_surface,selected_co)
         transparent_producer_popup.draw()
+        draw_text('Current Output: ',font_24,(0,0,0),selected_co[0]+10,selected_co[1]+10,screen)
+        draw_text('Select New Output: ',font_24,(0,0,0),selected_co[0]+10,selected_co[1]+80,screen)
+
+
+        selected_material_button.draw()
         copper_button.draw()
         iron_button.draw()
         gold_button.draw()
@@ -1250,20 +1205,43 @@ while run:
 
         screen.blit(producer_popup_surface,selected_co)
         transparent_crafter_popup.draw()
-        screen.blit(text1,(selected_co[0]+40,selected_co[1]+20))
-        screen.blit(text2,(selected_co[0]+80,selected_co[1]+20))
-        screen.blit(text3,(selected_co[0]+120,selected_co[1]+20))
-        screen.blit(text4,(selected_co[0]+40,selected_co[1]+60))
-        screen.blit(text5,(selected_co[0]+80,selected_co[1]+60))
-        screen.blit(text6,(selected_co[0]+120,selected_co[1]+60))
-        
+
+        draw_text('Inventory: ',font_24,(0,0,0),selected_co[0]+10,selected_co[1]+10,screen)
+        draw_text('Selected Blueprint: ',font_24,(0,0,0),selected_co[0]+10,selected_co[1]+110,screen)
+        draw_text(crafter_info[decimal_co][1],font_24,(0,0,0),selected_co[0]+10,selected_co[1]+125,screen)
+
+
+        draw_text(crafter_inv_quantities[0],font,(0,0,0),selected_co[0]+40,selected_co[1]+50,screen)
+        draw_text(crafter_inv_quantities[1],font,(0,0,0),selected_co[0]+80,selected_co[1]+50,screen)
+        draw_text(crafter_inv_quantities[2],font,(0,0,0),selected_co[0]+120,selected_co[1]+50,screen)
+        draw_text(crafter_inv_quantities[3],font,(0,0,0),selected_co[0]+40,selected_co[1]+90,screen)
+        draw_text(crafter_inv_quantities[4],font,(0,0,0),selected_co[0]+80,selected_co[1]+90,screen)
+        draw_text(crafter_inv_quantities[5],font,(0,0,0),selected_co[0]+120,selected_co[1]+90,screen)
+
         inv_button1.draw()
         inv_button2.draw()
         inv_button3.draw()
         inv_button4.draw()
         inv_button5.draw()
         inv_button6.draw()
+
+
+        #blueprint components
+        bp_item_button1.draw()
+        bp_item_button2.draw()
+        bp_item_button3.draw()
+        bp_item_button4.draw()
+        bp_item_button5.draw()
+        bp_item_button6.draw()
+
         item_button.draw()
+
+        draw_text(bp_item_quantities[0],font,(0,0,0),selected_co[0]+40,selected_co[1]+160,screen)
+        draw_text(bp_item_quantities[1],font,(0,0,0),selected_co[0]+80,selected_co[1]+160,screen)
+        draw_text(bp_item_quantities[2],font,(0,0,0),selected_co[0]+120,selected_co[1]+160,screen)
+        draw_text(bp_item_quantities[3],font,(0,0,0),selected_co[0]+40,selected_co[1]+200,screen)
+        draw_text(bp_item_quantities[4],font,(0,0,0),selected_co[0]+80,selected_co[1]+200,screen)
+        draw_text(bp_item_quantities[5],font,(0,0,0),selected_co[0]+120,selected_co[1]+200,screen)
 
     elif game_state=='shop machines':
         screen.blit(play_bg,(0,0))
