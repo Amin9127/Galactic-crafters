@@ -16,7 +16,6 @@ def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,pr
             print(co)
             
             decimal_co=str(x)+'.'+str(y)
-            str(decimal_co)
             print(decimal_co,'in function')
             if selected_machine =='producer':
                 producer_info[decimal_co]=['n','copper',producer_upgrades[producer_lv][2],'none']
@@ -119,13 +118,11 @@ def move(direction,selected_producers,producer_info,producer_group,selected_craf
     }
     temp_info={}
     cancel_move=False
-    #change all selected machines move direction to left
+    #change all selected machines move direction to left 
+    decimal_co=''
     for pos in selected_producers:
-        print(producer_info)
         decimal_co=str(pos[0])+'.'+str(pos[1])
         producer_info[decimal_co][3] =direction
-        print(producer_info)
-
     for pos in selected_crafters:
         decimal_co=str(pos[0])+'.'+str(pos[1])
         crafter_info[decimal_co][3] =direction

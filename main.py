@@ -356,11 +356,13 @@ while run:
 
             elif game_state=='edit paste':
                 if event.key==pygame.K_ESCAPE:
-                    game_state='edit'
-                    producer_group.draw(grid_surface_copy)
-                    crafter_group.draw(grid_surface_copy)
-                    conveyor_group.draw(grid_surface_copy)
-                    seller_group.draw(grid_surface_copy)
+                    game_state='play'
+                    selected_producers=[]
+                    selected_crafters=[]
+                    selected_conveyors=[] 
+                    selected_sellers=[]
+                    selected_machines=[]
+                    arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info) 
 
                 elif event.key==pygame.K_RETURN:
                     print('return pressed')
@@ -399,8 +401,6 @@ while run:
                                 seller_group.add(new_seller)
                                 factory_layout[paste_start[1]+cos[1]][paste_start[0]+cos[0]]=1
                         paste_possible=False
-                        print(producer_info)
-
                             
             elif game_state=='map':
                 if event.key==pygame.K_ESCAPE:
@@ -732,27 +732,35 @@ while run:
                     choose_bp=False
                                  
             elif game_state=='shop confirm':
-                if transparent_grid_button.rect.collidepoint(co):
-                    grid_surface_copy=play_grid_bg
-                    slider_drag=True
-                    y=(y-100)//40
-                    x=(x//40)
+                if event.button==3:
+                    money = confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_lv,producer_upgrades,crafter_lv,crafter_upgrades,conveyor_lv,conveyor_upgrades,seller_lv,seller_upgrades,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,crafter_img,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout,money)
+                    selected_pos=[]
+                    print(crafter_info)
+                    game_state = 'play'
 
-                    if factory_layout[y][x]==0:
-                        if [x,y] in selected_pos:
-                            selected_pos.remove([x,y])
-                            selection='delete'
-                            green_square_group.update(selected_pos)
+                elif transparent_grid_button.rect.collidepoint(co):
+                    if event.button ==1:
+                        grid_surface_copy=play_grid_bg
+                        slider_drag=True
+                        y=(y-100)//40
+                        x=(x//40)
 
-                        else:
-                            selected_pos.append([x,y])
-                            new_GreenSquare=GreenSquare(x*40,y*40)
-                            green_square_group.add(new_GreenSquare)
-                            selection='place'
+                        if factory_layout[y][x]==0:
+                            if [x,y] in selected_pos:
+                                selected_pos.remove([x,y])
+                                selection='delete'
+                                green_square_group.update(selected_pos)
 
-                    grid_surface_copy= grid_surface.copy()
-                    green_square_group.draw(grid_surface_copy)
-                    print('selected pos',selected_pos)
+                            else:
+                                selected_pos.append([x,y])
+                                new_GreenSquare=GreenSquare(x*40,y*40)
+                                green_square_group.add(new_GreenSquare)
+                                selection='place'
+
+                        grid_surface_copy= grid_surface.copy()
+                        green_square_group.draw(grid_surface_copy)
+                        print('selected pos',selected_pos)
+
 
 
                 elif confirm_button.rect.collidepoint(co):
@@ -765,122 +773,180 @@ while run:
                     selected_pos=[]
 
             elif game_state=='edit paste':
-                if transparent_grid_button.rect.collidepoint(co):
-                    for sprite in green_square_group:
-                        sprite.kill()
-                    x= co[0]
-                    y= co[1]                      
-                    layout_x=(x//40)   
-                    layout_y=(y-100)//40
-                    paste_start=[layout_x,layout_y]
-                    paste_possible=True
+                if event.button==3:
+                    copy_price = copied_producers*prices['producer']+copied_crafters*prices['crafter']+copied_conveyors*prices['conveyor']+copied_sellers*prices['seller']
+                    if paste_possible==True and money>=copy_price:
+                        print('this',producer_info)
+                        for cos in consise_copied_machines:
+                            pos=[cos[0]*40,cos[1]*40]
 
+                            copied_info=consise_layout[cos[1]][cos[0]]
+                            copied_keys=list(copied_info.keys())
+                            copied_machine=copied_keys[0]
 
+                            if copied_machine=='producer':
+                                decimal_co=str(paste_start[0]*40+pos[0])+'.'+str(paste_start[1]*40+pos[1])
+                                producer_info[decimal_co]=copied_info[copied_keys[0]]
+                                new_producer=Producer(paste_start[0]*40+pos[0],paste_start[1]*40+pos[1],producer_img,producer_info)
+                                producer_group.add(new_producer)
+                                factory_layout[paste_start[1]+cos[1]][paste_start[0]+cos[0]]=1
+                            elif copied_machine=='crafter':
+                                decimal_co=str(paste_start[0]*40+pos[0])+'.'+str(paste_start[1]*40+pos[1])
+                                crafter_info[decimal_co]=copied_info[copied_keys[0]]
+                                new_crafter=Crafter(paste_start[0]*40+pos[0],paste_start[1]*40+pos[1],crafter_img)
+                                crafter_group.add(new_crafter)
+                                factory_layout[paste_start[1]+cos[1]][paste_start[0]+cos[0]]=1
+                            elif copied_machine=='conveyor':
+                                decimal_co=str(paste_start[0]*40+pos[0])+'.'+str(paste_start[1]*40+pos[1])
+                                conveyor_info[decimal_co]=copied_info[copied_keys[0]]
+                                new_conveyor=Conveyor(paste_start[0]*40+pos[0],paste_start[1]*40+pos[1],conveyor_img)
+                                conveyor_group.add(new_conveyor)
+                                factory_layout[paste_start[1]+cos[1]][paste_start[0]+cos[0]]=1
+                            elif copied_machine=='seller':
+                                decimal_co=str(paste_start[0]*40+pos[0])+'.'+str(paste_start[1]*40+pos[1])
+                                seller_info[decimal_co]=copied_info[copied_keys[0]]
+                                new_seller=Seller(paste_start[0]*40+pos[0],paste_start[1]*40+pos[1],seller_img)
+                                seller_group.add(new_seller)
+                                factory_layout[paste_start[1]+cos[1]][paste_start[0]+cos[0]]=1
+                        paste_possible=False
 
-                    print(layout_x,layout_y)
+                elif event.button==2:
+                    game_state='play'
+                    selected_producers=[]
+                    selected_crafters=[]
+                    selected_conveyors=[] 
+                    selected_sellers=[]
+                    selected_machines=[]
+                    arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
 
-                    #check if paste in position allowed.
-                    for cos in consise_copied_machines:
-                        new_GreenSquare=GreenSquare((cos[0]+layout_x)*40,(cos[1]+layout_y)*40)
-                        green_square_group.add(new_GreenSquare)
+                elif transparent_grid_button.rect.collidepoint(co):
+                    if event.button==1:
+                        for sprite in green_square_group:
+                            sprite.kill()
 
-                        if cos[1]+layout_y <0 or cos[1]+layout_y >19 or cos[0]+layout_x<0 or cos[0]+layout_x >19:
-                            paste_possible=False
-                        elif factory_layout[cos[1]+layout_y][cos[0]+layout_x]==1:
-                            paste_possible =False
-                    print(paste_possible)
+                        x= co[0]
+                        y= co[1]                      
+                        layout_x=(x//40)   
+                        layout_y=(y-100)//40
+                        paste_start=[layout_x,layout_y]
+                        paste_possible=True
+
+                        #check if paste in position allowed.
+                        for cos in consise_copied_machines:
+                            new_GreenSquare=GreenSquare((cos[0]+layout_x)*40,(cos[1]+layout_y)*40)
+                            green_square_group.add(new_GreenSquare)
+
+                            if cos[1]+layout_y <0 or cos[1]+layout_y >19 or cos[0]+layout_x<0 or cos[0]+layout_x >19:
+                                paste_possible=False
+                            elif factory_layout[cos[1]+layout_y][cos[0]+layout_x]==1:
+                                paste_possible =False
+                        print(paste_possible)
 
             elif game_state=='edit': 
-                if transparent_grid_button.rect.collidepoint(co):
-                    slider_drag=True
-                    x= co[0]
-                    y= co[1]
-                    layout_y=(y-100)//40
-                    layout_x=(x//40)
-                    decimal_co=str(layout_x)+'.'+str(layout_y)
-                    x=layout_x*40
-                    y=layout_y*40
-                    co =[x,y]
-                    decimal_co=str(x)+'.'+str(y)
-                    print(decimal_co,'selected')
-                    producer_cos=list(producer_info.keys())
-                    crafter_cos=list(crafter_info.keys())
-                    conveyor_cos=list(conveyor_info.keys())
-                    seller_cos=list(seller_info.keys())
+                if event.button==3:
+                    grid_surface_copy= grid_surface.copy()
+                    producer_group.draw(grid_surface_copy)
+                    crafter_group.draw(grid_surface_copy)
+                    conveyor_group.draw(grid_surface_copy)
+                    material_group.draw(grid_surface_copy)
+                    selected_producers=[]
+                    selected_crafters=[]
+                    selected_conveyors=[]
+                    selected_machines=[]
+                    arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)         
 
-                    if factory_layout[layout_y][layout_x]==1:
-                        if decimal_co in producer_cos:
-                            if co in selected_producers:
-                                selected_producers.remove(co)
-                                selected_machines.remove(co)
-                                arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
-                                print(selected_machines)
-                                selection='remove'
-                                print(selected_producers,'selected producers')
-                            else:
-                                selected_producers.append(co)
-                                selected_machines.append(co)
-                                new_arrow = Arrow(int(co[0]),int(co[1]),producer_info,crafter_info,conveyor_info,seller_info)
-                                arrows_group.add(new_arrow)
-                                selection='select'
-                                print(selected_producers,'selected producers')
+                elif transparent_grid_button.rect.collidepoint(co):
+                    if event.button==1:
 
-                        elif decimal_co in crafter_cos:
-                            if co in selected_crafters:
-                                selected_crafters.remove(co)
-                                selected_machines.remove(co)
-                                arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
-                                selection='remove'
-                            else:
-                                selected_crafters.append(co)
-                                selected_machines.append(co)
-                                new_arrow = Arrow(int(co[0]),int(co[1]),producer_info,crafter_info,conveyor_info,seller_info)
-                                arrows_group.add(new_arrow)
-                                selection='select'
-                                print(selected_crafters,'selected crafters')
+                        slider_drag=True
+                        x= co[0]
+                        y= co[1]
+                        layout_y=(y-100)//40
+                        layout_x=(x//40)
+                        decimal_co=str(layout_x)+'.'+str(layout_y)
+                        x=layout_x*40
+                        y=layout_y*40
+                        co =[x,y]
+                        decimal_co=str(x)+'.'+str(y)
+                        print(decimal_co,'selected')
+                        producer_cos=list(producer_info.keys())
+                        crafter_cos=list(crafter_info.keys())
+                        conveyor_cos=list(conveyor_info.keys())
+                        seller_cos=list(seller_info.keys())
 
-                        elif decimal_co in conveyor_cos:
-                            if co in selected_conveyors:
-                                selected_conveyors.remove(co) 
-                                selected_machines.remove(co)
-                                arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
-                                selection='remove'
-                            else:
-                                selected_conveyors.append(co)
-                                selected_machines.append(co)
-                                new_arrow = Arrow(int(co[0]),int(co[1]),producer_info,crafter_info,conveyor_info,seller_info)
-                                arrows_group.add(new_arrow)
-                                selection='select'
-                                print(selected_conveyors,'selected connveyors')
+                        if factory_layout[layout_y][layout_x]==1:
+                            if decimal_co in producer_cos:
+                                if co in selected_producers:
+                                    selected_producers.remove(co)
+                                    selected_machines.remove(co)
+                                    arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
+                                    print(selected_machines)
+                                    selection='remove'
+                                    print(selected_producers,'selected producers')
+                                else:
+                                    selected_producers.append(co)
+                                    selected_machines.append(co)
+                                    new_arrow = Arrow(int(co[0]),int(co[1]),producer_info,crafter_info,conveyor_info,seller_info)
+                                    arrows_group.add(new_arrow)
+                                    selection='select'
+                                    print(selected_producers,'selected producers')
 
-                        elif decimal_co in seller_cos:
-                            if co in selected_sellers:
-                                selected_sellers.remove(co) 
-                                selected_machines.remove(co)
-                                arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
-                                selection='remove'
-                            else:
-                                selected_sellers.append(co)
-                                selected_machines.append(co)
-                                new_arrow = Arrow(int(co[0]),int(co[1]),producer_info,crafter_info,conveyor_info,seller_info)
-                                arrows_group.add(new_arrow)
-                                selection='select'
-                                print(selected_sellers,'selected sellers')
+                            elif decimal_co in crafter_cos:
+                                if co in selected_crafters:
+                                    selected_crafters.remove(co)
+                                    selected_machines.remove(co)
+                                    arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
+                                    selection='remove'
+                                else:
+                                    selected_crafters.append(co)
+                                    selected_machines.append(co)
+                                    new_arrow = Arrow(int(co[0]),int(co[1]),producer_info,crafter_info,conveyor_info,seller_info)
+                                    arrows_group.add(new_arrow)
+                                    selection='select'
+                                    print(selected_crafters,'selected crafters')
+
+                            elif decimal_co in conveyor_cos:
+                                if co in selected_conveyors:
+                                    selected_conveyors.remove(co) 
+                                    selected_machines.remove(co)
+                                    arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
+                                    selection='remove'
+                                else:
+                                    selected_conveyors.append(co)
+                                    selected_machines.append(co)
+                                    new_arrow = Arrow(int(co[0]),int(co[1]),producer_info,crafter_info,conveyor_info,seller_info)
+                                    arrows_group.add(new_arrow)
+                                    selection='select'
+                                    print(selected_conveyors,'selected connveyors')
+
+                            elif decimal_co in seller_cos:
+                                if co in selected_sellers:
+                                    selected_sellers.remove(co) 
+                                    selected_machines.remove(co)
+                                    arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
+                                    selection='remove'
+                                else:
+                                    selected_sellers.append(co)
+                                    selected_machines.append(co)
+                                    new_arrow = Arrow(int(co[0]),int(co[1]),producer_info,crafter_info,conveyor_info,seller_info)
+                                    arrows_group.add(new_arrow)
+                                    selection='select'
+                                    print(selected_sellers,'selected sellers')
+                            
+                            grid_surface_copy= grid_surface.copy()
+                            screen.blit(grid_surface_copy,(0,100))
+                            rotate_button.draw()
+                            delete_button.draw()
+                            confirm_button.draw()
+                            cancel_button.draw()
+                            producer_group.draw(grid_surface_copy)
+                            crafter_group.draw(grid_surface_copy)
+                            conveyor_group.draw(grid_surface_copy)
+                            seller_group.draw(grid_surface_copy)
+                            item_group.draw(grid_surface_copy)
+                            material_group.draw(grid_surface_copy) 
+                            arrows_group.draw(grid_surface_copy)
                         
-                        grid_surface_copy= grid_surface.copy()
-                        screen.blit(grid_surface_copy,(0,100))
-                        rotate_button.draw()
-                        delete_button.draw()
-                        confirm_button.draw()
-                        cancel_button.draw()
-                        producer_group.draw(grid_surface_copy)
-                        crafter_group.draw(grid_surface_copy)
-                        conveyor_group.draw(grid_surface_copy)
-                        seller_group.draw(grid_surface_copy)
-                        item_group.draw(grid_surface_copy)
-                        material_group.draw(grid_surface_copy) 
-                        arrows_group.draw(grid_surface_copy)
-                    
                 elif rotate_button.rect.collidepoint(co):
                     rotate(crafter_upgrades,crafter_lv,blueprints,selected_producers,selected_machines,arrows_group,material_group,item_group,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,selected_sellers,seller_info,seller_group,grid_surface_copy)
       
@@ -1190,7 +1256,10 @@ while run:
         screen.blit(producer_popup_surface,selected_co)
         transparent_producer_popup.draw()
         draw_text('Current Output: ',font_24,(0,0,0),selected_co[0]+10,selected_co[1]+10,screen)
+        draw_text(str(producer_info[decimal_co][2]),font_24,(0,0,0),selected_co[0]+135,selected_co[1]+50,screen)
+
         draw_text('Select New Output: ',font_24,(0,0,0),selected_co[0]+10,selected_co[1]+80,screen)
+
 
 
         selected_material_button.draw()

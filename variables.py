@@ -276,7 +276,7 @@ shop_surface=pygame.transform.scale(blank_popup_img,(650,700))
 blueprint_surface=pygame.transform.scale(blank_popup_img,(650,700))
 transparent_popup = pygame.transform.scale(blank_popup_img,(650,700))
 transparent_popup.set_alpha(50)
-
+paste_possible=False
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #stats
 stats_surface=Buttons(200,200,blank_popup_img,2,4)
