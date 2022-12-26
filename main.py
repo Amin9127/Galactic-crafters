@@ -378,25 +378,25 @@ while run:
 
                             if copied_machine=='producer':
                                 decimal_co=str(paste_start[0]*40+pos[0])+'.'+str(paste_start[1]*40+pos[1])
-                                producer_info[decimal_co]=copied_info[copied_keys[0]]
+                                producer_info[decimal_co]=copied_info[copied_keys[0]].copy()
                                 new_producer=Producer(paste_start[0]*40+pos[0],paste_start[1]*40+pos[1],producer_img,producer_info)
                                 producer_group.add(new_producer)
                                 factory_layout[paste_start[1]+cos[1]][paste_start[0]+cos[0]]=1
                             elif copied_machine=='crafter':
                                 decimal_co=str(paste_start[0]*40+pos[0])+'.'+str(paste_start[1]*40+pos[1])
-                                crafter_info[decimal_co]=copied_info[copied_keys[0]]
+                                crafter_info[decimal_co]=copied_info[copied_keys[0]].copy()
                                 new_crafter=Crafter(paste_start[0]*40+pos[0],paste_start[1]*40+pos[1],crafter_img)
                                 crafter_group.add(new_crafter)
                                 factory_layout[paste_start[1]+cos[1]][paste_start[0]+cos[0]]=1
                             elif copied_machine=='conveyor':
                                 decimal_co=str(paste_start[0]*40+pos[0])+'.'+str(paste_start[1]*40+pos[1])
-                                conveyor_info[decimal_co]=copied_info[copied_keys[0]]
+                                conveyor_info[decimal_co]=copied_info[copied_keys[0]].copy()
                                 new_conveyor=Conveyor(paste_start[0]*40+pos[0],paste_start[1]*40+pos[1],conveyor_img)
                                 conveyor_group.add(new_conveyor)
                                 factory_layout[paste_start[1]+cos[1]][paste_start[0]+cos[0]]=1
                             elif copied_machine=='seller':
                                 decimal_co=str(paste_start[0]*40+pos[0])+'.'+str(paste_start[1]*40+pos[1])
-                                seller_info[decimal_co]=copied_info[copied_keys[0]]
+                                seller_info[decimal_co]=copied_info[copied_keys[0]].copy()
                                 new_seller=Seller(paste_start[0]*40+pos[0],paste_start[1]*40+pos[1],seller_img)
                                 seller_group.add(new_seller)
                                 factory_layout[paste_start[1]+cos[1]][paste_start[0]+cos[0]]=1
@@ -792,19 +792,19 @@ while run:
                                 factory_layout[paste_start[1]+cos[1]][paste_start[0]+cos[0]]=1
                             elif copied_machine=='crafter':
                                 decimal_co=str(paste_start[0]*40+pos[0])+'.'+str(paste_start[1]*40+pos[1])
-                                crafter_info[decimal_co]=copied_info[copied_keys[0]]
+                                crafter_info[decimal_co]=copied_info[copied_keys[0]].copy()
                                 new_crafter=Crafter(paste_start[0]*40+pos[0],paste_start[1]*40+pos[1],crafter_img)
                                 crafter_group.add(new_crafter)
                                 factory_layout[paste_start[1]+cos[1]][paste_start[0]+cos[0]]=1
                             elif copied_machine=='conveyor':
                                 decimal_co=str(paste_start[0]*40+pos[0])+'.'+str(paste_start[1]*40+pos[1])
-                                conveyor_info[decimal_co]=copied_info[copied_keys[0]]
+                                conveyor_info[decimal_co]=copied_info[copied_keys[0]].copy()
                                 new_conveyor=Conveyor(paste_start[0]*40+pos[0],paste_start[1]*40+pos[1],conveyor_img)
                                 conveyor_group.add(new_conveyor)
                                 factory_layout[paste_start[1]+cos[1]][paste_start[0]+cos[0]]=1
                             elif copied_machine=='seller':
                                 decimal_co=str(paste_start[0]*40+pos[0])+'.'+str(paste_start[1]*40+pos[1])
-                                seller_info[decimal_co]=copied_info[copied_keys[0]]
+                                seller_info[decimal_co]=copied_info[copied_keys[0]].copy()
                                 new_seller=Seller(paste_start[0]*40+pos[0],paste_start[1]*40+pos[1],seller_img)
                                 seller_group.add(new_seller)
                                 factory_layout[paste_start[1]+cos[1]][paste_start[0]+cos[0]]=1
