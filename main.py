@@ -786,7 +786,7 @@ while run:
 
                             if copied_machine=='producer':
                                 decimal_co=str(paste_start[0]*40+pos[0])+'.'+str(paste_start[1]*40+pos[1])
-                                producer_info[decimal_co]=copied_info[copied_keys[0]]
+                                producer_info[decimal_co]=copied_info[copied_keys[0]].copy()
                                 new_producer=Producer(paste_start[0]*40+pos[0],paste_start[1]*40+pos[1],producer_img,producer_info)
                                 producer_group.add(new_producer)
                                 factory_layout[paste_start[1]+cos[1]][paste_start[0]+cos[0]]=1
