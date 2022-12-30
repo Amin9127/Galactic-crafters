@@ -9,7 +9,7 @@ pygame.font.init()
 
 global money
 #usual start 1000 money
-money=5000000
+money=1000
 
 
 
@@ -401,6 +401,7 @@ while run:
                                 seller_group.add(new_seller)
                                 factory_layout[paste_start[1]+cos[1]][paste_start[0]+cos[0]]=1
                         paste_possible=False
+                        money-=copy_price
                             
             elif game_state=='map':
                 if event.key==pygame.K_ESCAPE:
@@ -848,10 +849,12 @@ while run:
                     producer_group.draw(grid_surface_copy)
                     crafter_group.draw(grid_surface_copy)
                     conveyor_group.draw(grid_surface_copy)
+                    seller_group.draw(grid_surface_copy)
                     material_group.draw(grid_surface_copy)
                     selected_producers=[]
                     selected_crafters=[]
                     selected_conveyors=[]
+                    selected_sellers=[]
                     selected_machines=[]
                     arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)         
 
@@ -1007,10 +1010,12 @@ while run:
                     producer_group.draw(grid_surface_copy)
                     crafter_group.draw(grid_surface_copy)
                     conveyor_group.draw(grid_surface_copy)
+                    seller_group.group(grid_surface_copy)
                     material_group.draw(grid_surface_copy)
                     selected_producers=[]
                     selected_crafters=[]
                     selected_conveyors=[]
+                    selected_sellers=[]
                     selected_machines=[]
                     arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
 
