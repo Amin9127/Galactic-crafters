@@ -10,11 +10,47 @@ class Buttons():
     def draw(self):
         screen.blit(self.image,(self.rect.x,self.rect.y))
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#machine info dictionaries
+#changeable variables
+
+#producer_info={'0.0':['n','copper',1,'right'],}
+producer_info={}
+#crafter_info={'0.0':['n','circuit',{'input':0},'right']}
+crafter_info={}
+#conveyor_info={'0.0':['n','','','right]}
+conveyor_info={}
+#seller_info={'0.0':['n','','','right']}
+seller_info={}
+
+temp_info={}
+factory_layout=[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+
+producer_lv =1
+crafter_lv =1
+conveyor_lv =1
+seller_lv =1
+
 revenue =0
 previous_revenue=0
 money_per_min=0
 
+materials_supply={'copper':0,'iron':0,'gold':0,'aluminium':0,'lead':0,'coal':0}
 
+#sprite groups
+producer_group=pygame.sprite.Group()
+crafter_group=pygame.sprite.Group()
+conveyor_group=pygame.sprite.Group()
+material_group=pygame.sprite.Group()
+item_group=pygame.sprite.Group()
+seller_group=pygame.sprite.Group()
+smelter_group=pygame.sprite.Group()
+
+green_square_group=pygame.sprite.Group()
+arrows_group=pygame.sprite.Group()
+blueprints_group=pygame.sprite.Group()
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #screen set up
 screen=pygame.display.set_mode((900,900))
 pygame.display.set_caption('Galactic Crafters')
@@ -36,19 +72,6 @@ font_42 = pygame.font.Font('Pixeltype.ttf',38)
 font_50 = pygame.font.Font('Pixeltype.ttf',50)
 font_60 = pygame.font.Font('Pixeltype.ttf',60)
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#machine info dictionaries
-#producer_info={'0.0':['n','copper',1,'right'],}
-producer_info={}
-#crafter_info={'0.0':['n','circuit',{'input':0},'right']}
-crafter_info={}
-#conveyor_info={'0.0':['n','','','right]}
-conveyor_info={}
-#seller_info={'0.0':['n','','','right']}
-seller_info={}
-
-temp_info={}
-factory_layout=[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
 
 prices={
     'producer':100,
@@ -57,10 +80,6 @@ prices={
     'seller':100,
 }
 
-producer_lv =1
-crafter_lv =1
-conveyor_lv =1
-seller_lv =1
 
 producer_upgrades={
     1:[0,'',1],
@@ -95,18 +114,7 @@ abreviations={
     'q':15,
     'Q':18,
 }
-#sprite groups
-producer_group=pygame.sprite.Group()
-crafter_group=pygame.sprite.Group()
-conveyor_group=pygame.sprite.Group()
-material_group=pygame.sprite.Group()
-item_group=pygame.sprite.Group()
-seller_group=pygame.sprite.Group()
-smelter_group=pygame.sprite.Group()
 
-green_square_group=pygame.sprite.Group()
-arrows_group=pygame.sprite.Group()
-blueprints_group=pygame.sprite.Group()
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #blueprints stuff
@@ -356,7 +364,6 @@ machine3_upgrade_button=Buttons(115,699,gui_flat_img,1.56,1.34)
 machine4_upgrade_button=Buttons(422,699,gui_flat_img,1.56,1.34)
 
 #supply
-materials_supply={'copper':0,'iron':0,'gold':0,'aluminium':0,'lead':0,'coal':0}
 
 copper_supply_button=Buttons(115,297,gui_flat_img,1,0.9)
 iron_supply_button=Buttons(115,387,gui_flat_img,1,0.9)

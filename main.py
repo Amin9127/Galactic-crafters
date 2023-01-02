@@ -1,4 +1,6 @@
 import pygame 
+import os
+import pickle
 from sys import exit
 import time
 from button_functions import *
@@ -11,6 +13,13 @@ global money
 #usual start 1000 money
 money=1000
 
+file_exists = os.path.exists("Galactic_Crafters.txt")
+
+if file_exists == True:
+    data_load = open("Galactic_Crafters.txt", "r")
+    data1 = pickle.load(game_data)
+else:
+    game_data = open("Galactic_Crafters.txt", "w")
 
 
 
