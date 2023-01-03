@@ -13,13 +13,62 @@ global money
 #usual start 1000 money
 money=1000
 
+def save_data():
+    data_file = open("Galactic_Crafters.txt", "wb")
+    data_dict={'producer_info':producer_info,
+                'crafter_info':crafter_info,
+                'conveyor_info':conveyor_info,
+                'seller_info':seller_info,
+                'factory_layout':factory_layout,
+                'producer_lv':producer_lv,
+                'crafter_lv':crafter_lv,
+                'conveyor_lv':conveyor_lv,
+                'seller_lv':seller_lv,
+                'revenue':revenue,
+                'previous_revenue':previous_revenue,
+                'money_per_min':money_per_min,
+                'materials_supply':materials_supply,
+                #'producer_group':producer_group,
+                #'crafter_group':crafter_group,
+                #'conveyor_group':conveyor_group,
+                #'item_group':item_group,
+                #'seller_group':seller_group,
+}
+
+    pickle.dump(data_dict,data_file,pickle.HIGHEST_PROTOCOL)
+    data_file.close()
+
+
 file_exists = os.path.exists("Galactic_Crafters.txt")
 
 if file_exists == True:
-    data_load = open("Galactic_Crafters.txt", "r")
-    data1 = pickle.load(game_data)
+    data_file = open("Galactic_Crafters.txt", "rb")
+    data_dict = pickle.load(data_file)
+    data_file.close()
+
+    producer_info = data_dict.get('producer_info')
+    crafter_info = data_dict.get('crafter_info')
+    conveyor_info = data_dict.get('conveyor_info')
+    seller_info = data_dict.get('seller_info')
+    factory_layout = data_dict.get('factory_layout')
+    producer_lv = data_dict.get('producer_lv')
+    crafter_lv = data_dict.get('crafter_lv')
+    conveyor_lv = data_dict.get('conveyor_lv')
+    seller_lv = data_dict.get('seller_lv')
+    revenue = data_dict.get('revenue')
+    previous_revenue = data_dict.get('previous_revenue')
+    money_per_min = data_dict.get('money_per_min')
+    materials_supply = data_dict.get('materials_supply')
+    #producer_group = data_dict.get('producer_group')
+    #crafter_group = data_dict.get('crafter_group')
+    #conveyor_group = data_dict.get('conveyor_group')
+    #item_group = data_dict.get('item_group')
+    #seller_group = data_dict.get('seller_group')
+
+    
+
 else:
-    game_data = open("Galactic_Crafters.txt", "w")
+    save_data()
 
 
 
@@ -420,6 +469,7 @@ while run:
                 if event.key==pygame.K_ESCAPE:
                     game_state='play'
  
+            save_data()
  #¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬           
         #all button check and what the button does in this if elif ladder
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -1029,10 +1079,11 @@ while run:
                     selected_machines=[]
                     arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
 
+
             elif game_state=='stats':
                 if stats_surface.rect.collidepoint(co) == False:
                     game_state='play'
-        
+            save_data()
         elif event.type==pygame.MOUSEBUTTONUP:
             if event.button == 1: 
                 slider_drag=False

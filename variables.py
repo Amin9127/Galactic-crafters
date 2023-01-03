@@ -14,6 +14,26 @@ class Buttons():
 #machine info dictionaries
 #changeable variables
 
+#data_dict={'producer_info':producer_info,
+#            'crafter_info':crafter_info,
+#            'conveyor_info':conveyor_info,
+#            'seller_info':seller_info,
+#            'factory_layout':factory_layout,
+#            'producer_lv':producer_lv,
+#            'crafter_lv':crafter_lv,
+#            'conveyor_lv':conveyor_lv
+#            'seller_lv':seller_lv,
+#            'revenue':revenue,
+#            'previous_revenue':previous_revenue,
+#            'money_per_min':money_per_min
+#            'materials_supply':materials_supply,
+#            'producer_group':producer_group,
+#            'crafter_group':crafter_group
+#            'conveyor_group':conveyor_group,
+#            'item_group':item_group,
+#            'seller_group':seller_group}
+
+
 #producer_info={'0.0':['n','copper',1,'right'],}
 producer_info={}
 #crafter_info={'0.0':['n','circuit',{'input':0},'right']}
@@ -143,6 +163,8 @@ compressed_coal_img=pygame.image.load('images/cross.png').convert_alpha()
 fuel_tank_img=pygame.image.load('images/cross.png').convert_alpha()
 rocket_img=pygame.image.load('images/cross.png').convert_alpha()
 
+
+
 item_imgs={'empty':empty_slot_img,
     'nothing':empty_slot_img,
     'copper':copper_img,'iron':iron_img,'gold':gold_img,
@@ -261,6 +283,13 @@ producer_img=pygame.image.load('images/producer.png').convert_alpha()
 crafter_img=pygame.image.load('images/crafter.png').convert_alpha()
 conveyor_img=pygame.image.load('images/conveyor.png').convert_alpha()
 seller_img=pygame.image.load('images/seller.png').convert_alpha()
+
+machine_imgs={
+    'producer':producer_img,
+    'crafter':crafter_img,
+    'conveyor':conveyor_img,
+    'seller':seller_img,
+}
 
 #producer popup images:
 producer_popup_img=pygame.image.load('images/gui_flat.png').convert_alpha()
