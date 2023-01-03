@@ -211,7 +211,6 @@ class Material(pygame.sprite.Sprite):
 class Items(pygame.sprite.Sprite):
     def __init__(self,co,item,blueprints_value,item_imgs,amount):
         super().__init__()
-        self.image_circuit=pygame.image.load('images/circuit.png').convert_alpha()
         self.type=item
         self.image=item_imgs[self.type]        
         self.spawn_co=co

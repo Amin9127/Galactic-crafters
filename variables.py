@@ -30,6 +30,7 @@ class Buttons():
 #            'producer_group':producer_group,
 #            'crafter_group':crafter_group
 #            'conveyor_group':conveyor_group,
+#            'material_group':material_group,
 #            'item_group':item_group,
 #            'seller_group':seller_group}
 
@@ -54,6 +55,7 @@ seller_lv =1
 revenue =0
 previous_revenue=0
 money_per_min=0
+saved_time=0
 
 materials_supply={'copper':0,'iron':0,'gold':0,'aluminium':0,'lead':0,'coal':0}
 

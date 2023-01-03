@@ -15,6 +15,8 @@ money=1000
 
 def save_data():
     data_file = open("Galactic_Crafters.txt", "wb")
+    saved_time=pygame.time.get_ticks()
+
     data_dict={'producer_info':producer_info,
                 'crafter_info':crafter_info,
                 'conveyor_info':conveyor_info,
@@ -24,15 +26,18 @@ def save_data():
                 'crafter_lv':crafter_lv,
                 'conveyor_lv':conveyor_lv,
                 'seller_lv':seller_lv,
+                'money':money,
                 'revenue':revenue,
                 'previous_revenue':previous_revenue,
                 'money_per_min':money_per_min,
                 'materials_supply':materials_supply,
+                'saved_time':saved_time,
                 #'producer_group':producer_group,
                 #'crafter_group':crafter_group,
                 #'conveyor_group':conveyor_group,
-                #'item_group':item_group,
                 #'seller_group':seller_group,
+                #'material_group':material_group,
+                #'item_group':item_group,
 }
 
     pickle.dump(data_dict,data_file,pickle.HIGHEST_PROTOCOL)
@@ -55,15 +60,41 @@ if file_exists == True:
     crafter_lv = data_dict.get('crafter_lv')
     conveyor_lv = data_dict.get('conveyor_lv')
     seller_lv = data_dict.get('seller_lv')
+    money=data_dict.get('money')
     revenue = data_dict.get('revenue')
     previous_revenue = data_dict.get('previous_revenue')
     money_per_min = data_dict.get('money_per_min')
     materials_supply = data_dict.get('materials_supply')
-    #producer_group = data_dict.get('producer_group')
-    #crafter_group = data_dict.get('crafter_group')
-    #conveyor_group = data_dict.get('conveyor_group')
+    saved_time=data_dict.get('saved_time')
+    #recreate machine sprites
+    for decimal_co in list(producer_info.keys()):
+        co = decimal_co.split('.')
+        co[0]=int(co[0])
+        co[1]=int(co[1])
+        new_producer=Producer(co[0],co[1],producer_img,producer_info)
+        producer_group.add(new_producer)
+    for decimal_co in list(crafter_info.keys()):
+        co = decimal_co.split('.')
+        co[0]=int(co[0])
+        co[1]=int(co[1])
+        new_crafter=Crafter(co[0],co[1],crafter_img)
+        crafter_group.add(new_crafter)
+    for decimal_co in list(conveyor_info.keys()):
+        co = decimal_co.split('.')
+        co[0]=int(co[0])
+        co[1]=int(co[1])
+        new_conveyor=Conveyor(co[0],co[1],conveyor_img)
+        conveyor_group.add(new_conveyor)
+    for decimal_co in list(seller_info.keys()):
+        co = decimal_co.split('.')
+        co[0]=int(co[0])
+        co[1]=int(co[1])
+        new_seller=Seller(co[0],co[1],seller_img)
+        seller_group.add(new_seller)
+
+
     #item_group = data_dict.get('item_group')
-    #seller_group = data_dict.get('seller_group')
+    #material_group=data_dict.get('material_group')
 
     
 
@@ -1289,7 +1320,6 @@ while run:
         screen.fill((52,78,91))
         #buttons
         settings_mini_button.draw()
-        stats_button.draw()
         shop_button.draw()
         edit_button.draw()
         blueprints_button.draw()
@@ -1307,7 +1337,7 @@ while run:
         item_group.draw(grid_surface_copy)
 
 
-        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24)
+        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24,stats_button)
 
         screen.blit(grid_surface_copy,(0,100))
         #copy screen
@@ -1316,7 +1346,7 @@ while run:
 
     elif game_state=='producer_popup':
         screen.blit(grid_surface_copy,(0,100))
-        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24)
+        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24,stats_button)
 
 
         screen.blit(producer_popup_surface,selected_co)
@@ -1338,7 +1368,7 @@ while run:
     
     elif game_state=='crafter_popup':
         screen.blit(grid_surface_copy,(0,100))
-        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24)
+        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24,stats_button)
 
         screen.blit(producer_popup_surface,selected_co)
         transparent_crafter_popup.draw()
@@ -1382,7 +1412,7 @@ while run:
 
     elif game_state=='shop machines':
         screen.blit(play_bg,(0,0))
-        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24)
+        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24,stats_button)
         shop_surface_copy=shop_surface.copy()
         screen.blit(shop_surface_copy,(100,150))
 
@@ -1428,7 +1458,7 @@ while run:
 
     elif game_state=='shop upgrades':
         screen.blit(play_bg,(0,0))
-        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24)
+        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24,stats_button)
         shop_surface_copy=shop_surface.copy()
         screen.blit(shop_surface_copy,(100,150))
 
@@ -1493,7 +1523,7 @@ while run:
 
 
         screen.blit(play_bg,(0,0))
-        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24)
+        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24,stats_button)
         shop_surface_copy=shop_surface.copy()
         screen.blit(shop_surface_copy,(100,150))
 
@@ -1602,7 +1632,7 @@ while run:
     elif game_state=='blueprints':
         shop_bg_copy=shop_bg.copy()
         
-        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24)
+        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24,stats_button)
 
 
         blueprints_group.draw(shop_bg_copy)
@@ -1617,7 +1647,7 @@ while run:
     elif game_state=='shop confirm':
         grid_surface_copy=grid_surface.copy()
         
-        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24)
+        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24,stats_button)
         machines_price_button=Buttons(800,500,gui_flat_img,0.5,1)
         machines_price_button.draw()
 
@@ -1644,8 +1674,7 @@ while run:
         
     elif game_state=='edit':
         screen.blit(grid_surface_copy,(0,100))
-        stats_button.draw()
-        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24)
+        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24,stats_button)
         rotate_button.draw()
         delete_button.draw()
         confirm_button.draw()
@@ -1657,8 +1686,7 @@ while run:
 
     elif game_state=='edit paste':
         grid_surface_copy2=grid_surface_copy.copy()
-        stats_button.draw()
-        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24)
+        draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24,stats_button)
         green_square_group.draw(grid_surface_copy2)
         producer_group.draw(grid_surface_copy2)
         crafter_group.draw(grid_surface_copy2)
@@ -1699,7 +1727,7 @@ while run:
     elif game_state=='stats':
         screen.blit(grid_surface_copy,(0,100))
         stats_surface.draw()
-        current_time=pygame.time.get_ticks()
+        current_time=pygame.time.get_ticks()+saved_time
         current_time =current_time//1000
         total_m =current_time//60
         total_h =current_time//3600
