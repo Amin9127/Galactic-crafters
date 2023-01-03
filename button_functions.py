@@ -19,7 +19,7 @@ def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,pr
             print(decimal_co,'in function')
             if selected_machine =='producer':
                 producer_info[decimal_co]=['n','copper',producer_upgrades[producer_lv][2],'none']
-                new_producer=Producer(x,y,'producer',producer_info)
+                new_producer=Producer(x,y,producer_img,producer_info)
                 producer_group.add(new_producer)
                 factory_layout[co[1]][co[0]]=1
                 have_producer=True
@@ -224,8 +224,10 @@ def move(direction,selected_producers,producer_info,producer_group,selected_craf
         new_arrow = Arrow(int(co[0]),int(co[1]),producer_info,crafter_info,conveyor_info,seller_info)
         arrows_group.add(new_arrow)
 
-def draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24):
+def draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24,stats_button):
     screen.blit(money_panel_img,(200,0))
+    stats_button.draw()
+
     counter=0
     money1=money
     abbreviation={0:'',1:'K',2:'M',3:'B',4:'T',5:'q',6:'Q'}
