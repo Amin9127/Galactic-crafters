@@ -199,6 +199,7 @@ def move(direction,selected_producers,producer_info,producer_group,selected_craf
 
         for pos in selected_machines:
             factory_layout[pos[1]//40][pos[0]//40]=0
+        for pos in selected_machines:
             factory_layout[(pos[1]+movements[direction][1])//40][(pos[0]+movements[direction][0])//40]=1
 
         for i in range(len(selected_machines)):

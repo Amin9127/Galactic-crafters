@@ -51,6 +51,7 @@ if file_exists == True:
     data_dict = pickle.load(data_file)
     data_file.close()
 
+    #load variable data
     producer_info = data_dict.get('producer_info')
     crafter_info = data_dict.get('crafter_info')
     conveyor_info = data_dict.get('conveyor_info')
@@ -66,6 +67,7 @@ if file_exists == True:
     money_per_min = data_dict.get('money_per_min')
     materials_supply = data_dict.get('materials_supply')
     saved_time=data_dict.get('saved_time')
+
     #recreate machine sprites
     for decimal_co in list(producer_info.keys()):
         co = decimal_co.split('.')
@@ -126,6 +128,7 @@ while run:
 
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
+            save_data()
             pygame.quit()
             exit()          
         if event.type ==seconds_event:
@@ -267,6 +270,15 @@ while run:
                     arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
 
                 elif event.key ==pygame.K_RETURN:
+                    game_state='play'
+                    selected_producers=[]
+                    selected_crafters=[]
+                    selected_conveyors=[] 
+                    selected_machines=[]
+                    selected_sellers=[]
+                    arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)  
+
+                elif event.key ==pygame.K_ESCAPE:
                     game_state='play'
                     selected_producers=[]
                     selected_crafters=[]
@@ -491,7 +503,11 @@ while run:
                                 factory_layout[paste_start[1]+cos[1]][paste_start[0]+cos[0]]=1
                         paste_possible=False
                         money-=copy_price
-                            
+                        producer_group.update(producer_info)
+                        crafter_group.update(crafter_info,blueprints,crafter_upgrades,crafter_lv)
+                        conveyor_group.update(conveyor_info)
+                        arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
+                        seller_group.update(seller_info)        
             elif game_state=='map':
                 if event.key==pygame.K_ESCAPE:
                     game_state='play'
@@ -692,7 +708,7 @@ while run:
                     game_state='temp shop'
                     slider_button.rect.top=150
 
-
+                    print('choose bp')
                     choose_bp = True     
 
             elif game_state=='ingame_settings':
@@ -800,6 +816,10 @@ while run:
                         if money>=10000:
                             money-=10000                        
                             materials_supply[selected_material]=materials_supply[selected_material]+1000
+                    elif material_buy10000.rect.collidepoint(co):
+                        if money>=100000:
+                            money-=100000                        
+                            materials_supply[selected_material]=materials_supply[selected_material]+10000
 
             elif game_state=='blueprints':
                 if transparent_popup_button.rect.collidepoint(co) == False:
@@ -812,15 +832,16 @@ while run:
                         mouse_y=co[1]
                         offset_y=slider_button.rect.y-mouse_y
   
-
+                print(choose_bp)
                 if choose_bp == True:
+                    
                     for bp in blueprints_group:
                         if bp.rect.collidepoint(co):
                             selected_bp =bp.bp_title
                             crafter_info[last_selected_crafter][1]=selected_bp
                             game_state='play'
                             print(crafter_info,'new bp selected')
-                    choose_bp=False
+                            choose_bp=False
                                  
             elif game_state=='shop confirm':
                 if event.button==3:
@@ -900,6 +921,10 @@ while run:
                                 seller_group.add(new_seller)
                                 factory_layout[paste_start[1]+cos[1]][paste_start[0]+cos[0]]=1
                         paste_possible=False
+                        producer_group.update(producer_info)
+                        crafter_group.update(crafter_info,blueprints,crafter_upgrades,crafter_lv)
+                        conveyor_group.update(conveyor_info)
+                        seller_group.update(seller_info)
 
                 elif event.button==2:
                     game_state='play'
@@ -947,6 +972,15 @@ while run:
                     selected_sellers=[]
                     selected_machines=[]
                     arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)         
+
+                elif event.button==2:
+                    game_state='play'
+                    selected_producers=[]
+                    selected_crafters=[]
+                    selected_conveyors=[] 
+                    selected_machines=[]
+                    selected_sellers=[]
+                    arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)  
 
                 elif transparent_grid_button.rect.collidepoint(co):
                     if event.button==1:
@@ -1554,6 +1588,7 @@ while run:
         material_buy10.draw()
         material_buy100.draw()
         material_buy1000.draw()
+        material_buy10000.draw()
 
         #left side text
         copper_lable1=font_32.render(('Copper remaining:'),False,(0,0,0))
@@ -1603,7 +1638,7 @@ while run:
         buy1_lable1=font_32.render(('Buy 1 '+str(material_text)+' Costs:'),False,(0,0,0))
         buy1_lable2=font_50.render('10',False,(0,0,0)) 
         screen.blit(buy1_lable1,(540,305))
-        screen.blit(buy1_lable2,(615,330)) 
+        screen.blit(buy1_lable2,(615,340)) 
 
         buy10_lable1=font_32.render(('Buy 10 '+str(material_text)+' Costs:'),False,(0,0,0))
         buy10_lable2=font_50.render('100',False,(0,0,0)) 
@@ -1619,6 +1654,14 @@ while run:
         buy1000_lable2=font_50.render('10000',False,(0,0,0)) 
         screen.blit(buy1000_lable1,(540,575))
         screen.blit(buy1000_lable2,(595,620))  
+
+        buy1000_lable1=font_32.render(('Buy 1k '+str(material_text)+' Costs:'),False,(0,0,0))
+        buy1000_lable2=font_50.render('10000',False,(0,0,0)) 
+        screen.blit(buy1000_lable1,(540,575))
+        screen.blit(buy1000_lable2,(595,620))  
+
+        draw_text('Buy 10k '+str(material_text)+' Costs:',font_32,(0,0,0),540,665,screen)
+        draw_text('100k',font_50,(0,0,0),600,710,screen)
 
 
 

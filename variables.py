@@ -414,7 +414,9 @@ material_buy1=Buttons(530,297,gui_flat_img,1,0.9)
 material_buy10=Buttons(530,387,gui_flat_img,1,0.9)
 material_buy100=Buttons(530,477,gui_flat_img,1,0.9)
 material_buy1000=Buttons(530,567,gui_flat_img,1,0.9)
-selected_material='none'
+material_buy10000=Buttons(530,657,gui_flat_img,1,0.9)
+
+selected_material='copper'
 
 ##shop confirm button images:
 confirm_img=pygame.image.load('images/confirm.png').convert_alpha()
