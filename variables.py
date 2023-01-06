@@ -93,6 +93,13 @@ font_40 = pygame.font.Font('Pixeltype.ttf',40)
 font_42 = pygame.font.Font('Pixeltype.ttf',38)
 font_50 = pygame.font.Font('Pixeltype.ttf',50)
 font_60 = pygame.font.Font('Pixeltype.ttf',60)
+font_70 = pygame.font.Font('Pixeltype.ttf',70)
+font_80 = pygame.font.Font('Pixeltype.ttf',80)
+font_90 = pygame.font.Font('Pixeltype.ttf',90)
+font_100 = pygame.font.Font('Pixeltype.ttf',100)
+
+
+
 
 
 prices={
@@ -434,3 +441,6 @@ selected_sellers=[]
 selected_machines=[]
 selected_pos=[]
 selection=''
+
+
+credits_button= Buttons(350,500,blank_button_img,0.5,0.5)

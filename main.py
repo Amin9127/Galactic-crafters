@@ -87,6 +87,7 @@ if file_exists == True:
         co[1]=int(co[1])
         new_conveyor=Conveyor(co[0],co[1],conveyor_img)
         conveyor_group.add(new_conveyor)
+    conveyor_group.update(conveyor_info)
     for decimal_co in list(seller_info.keys()):
         co = decimal_co.split('.')
         co[0]=int(co[0])
@@ -508,7 +509,11 @@ while run:
                         conveyor_group.update(conveyor_info)
                         arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
                         seller_group.update(seller_info)        
+            
             elif game_state=='map':
+                if event.key==pygame.K_ESCAPE:
+                    game_state='play'
+            elif game_state=='credits':
                 if event.key==pygame.K_ESCAPE:
                     game_state='play'
 
@@ -1144,10 +1149,12 @@ while run:
                     selected_machines=[]
                     arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
 
-
             elif game_state=='stats':
                 if stats_surface.rect.collidepoint(co) == False:
                     game_state='play'
+                elif credits_button.rect.collidepoint(co):
+                    game_state='credits'
+            
             save_data()
         elif event.type==pygame.MOUSEBUTTONUP:
             if event.button == 1: 
@@ -1751,6 +1758,56 @@ while run:
     elif game_state =='controls':
         back_button.draw()
 
+        draw_text('Guide',font_60,(255,255,255),150,120,screen)
+        draw_text('Keybinds',font_60,(255,255,255),600,120,screen)
+
+
+        screen.blit(producer_img,(50,200))
+        draw_text('Producer:outputs materials towards ',font_32,(255,255,255),100,200,screen)
+        draw_text('arrow. choose its output by clicking it',font_32,(255,255,255),100,220,screen)
+
+        screen.blit(crafter_img,(50,250))
+        draw_text('Crafter: choose blueprint by clicking it',font_32,(255,255,255),100,250,screen)
+        draw_text('-> click bottom right image -> choose bp ',font_32,(255,255,255),100,270,screen)
+
+        screen.blit(conveyor_img,(50,300))
+        draw_text('Conveyor:moves anything on it',font_32,(255,255,255),100,300,screen)
+        draw_text('in the direction of the arrows.',font_32,(255,255,255),100,320,screen)
+
+        screen.blit(seller_img,(50,350))
+        draw_text('Seller: sells anything inputted into it',font_32,(255,255,255),100,350,screen)
+        draw_text('takes input from all directions',font_32,(255,255,255),100,370,screen)        
+
+        draw_text('Goal: craft the rocket',font_32,(255,255,255),100,800,screen)
+        draw_text('Goal: get gud lol',font_32,(57,83,96),100,820,screen)
+
+        draw_text('Esc : goes to previous page',font_32,(255,255,255),500,200,screen)
+        draw_text('Enter : confirm changes',font_32,(255,255,255),500,220,screen)
+
+        draw_text('S : goes to shop page',font_32,(255,255,255),500,250,screen)
+        draw_text('1 : select producer',font_32,(255,255,255),500,270,screen)
+        draw_text('2 : select crafter',font_32,(255,255,255),500,290,screen)
+        draw_text('3 : select conveyor',font_32,(255,255,255),500,310,screen)
+        draw_text('4 : select seller',font_32,(255,255,255),500,330,screen)
+        draw_text('M : goes to machine tab',font_32,(255,255,255),500,350,screen)
+        draw_text('U : goes to upgrade tab',font_32,(255,255,255),500,370,screen)
+        draw_text('S : goes to supply tab',font_32,(255,255,255),500,390,screen)
+
+        draw_text('E : goes to edit mode',font_32,(255,255,255),500,420,screen)
+        draw_text('W : move selected machines up',font_32,(255,255,255),500,440,screen)
+        draw_text('A : move selected machines left',font_32,(255,255,255),500,460,screen)
+        draw_text('S : move selected machines right',font_32,(255,255,255),500,480,screen)
+        draw_text('D : move selected machines down',font_32,(255,255,255),500,500,screen)
+        draw_text('X : Delete selected machines',font_32,(255,255,255),500,520,screen)
+        draw_text('C : copy selected machines',font_32,(255,255,255),500,540,screen)
+        draw_text('V : paste mode and click where to place',font_32,(255,255,255),500,560,screen)
+
+        draw_text('B : goes to blueprint mode',font_32,(255,255,255),500,590,screen)
+        draw_text('m : goes to map mode',font_32,(255,255,255),500,610,screen)
+
+        draw_text('right click : confirm changes',font_32,(255,255,255),500,640,screen)
+        draw_text('middle click : goes to previous page',font_32,(255,255,255),500,660,screen)
+
     elif game_state =='settings':
         back_button.draw()
  
@@ -1797,5 +1854,24 @@ while run:
         draw_text('Total play time: '+str(current_d)+'d '+str(current_h)+'h '+str(current_m)+'m '+str(current_s)+'s',font_40,(255,255,255),210,350,screen)
         draw_text('Skill level: Trash ',font_40,(255,255,255),210,400,screen)
         
+        credits_button.draw()
+        draw_text('Credits',font_24,(255,255,255),370,520,screen)
+
+    elif game_state=='credits':
+        draw_text('Credits',font_100,(255,255,255),340,100,screen)
+
+        draw_text('Amin, The Almighty Overlord',font_70,(255,255,255),175,200,screen)
+        draw_text('Krish, The Legendary Gamer',font_70,(255,255,255),170,250,screen)
+        draw_text('Destroyer Of Worlds, Ben',font_70,(255,255,255),200,300,screen)
+        draw_text('Marwan, The Undead',font_70,(255,255,255),250,350,screen)
+        draw_text('Noah, The Scary Pikachu',font_70,(255,255,255),200,400,screen)
+
+
+
+
+        draw_text('siblings, the oxygen wasters',font_40,(255,255,255),300,750,screen)
+        draw_text('',font_60,(255,255,255),390,100,screen)
+        
+
     pygame.display.update()
     clock.tick(60)
