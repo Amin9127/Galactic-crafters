@@ -1865,13 +1865,15 @@ while run:
         draw_text('Destroyer Of Worlds, Ben',font_70,(255,255,255),200,300,screen)
         draw_text('Marwan, The Undead',font_70,(255,255,255),250,350,screen)
         draw_text('Noah, The Scary Pikachu',font_70,(255,255,255),200,400,screen)
-
+        draw_text('',font_70,(255,255,255),150,400,screen)
 
 
 
         draw_text('siblings, the oxygen wasters',font_40,(255,255,255),300,750,screen)
-        draw_text('',font_60,(255,255,255),390,100,screen)
         
+        draw_text(' ',font_60,(255,255,255),390,100,screen)
+        
+
 
     pygame.display.update()
     clock.tick(60)
