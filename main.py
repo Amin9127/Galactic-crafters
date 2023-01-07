@@ -513,6 +513,7 @@ while run:
             elif game_state=='map':
                 if event.key==pygame.K_ESCAPE:
                     game_state='play'
+
             elif game_state=='credits':
                 if event.key==pygame.K_ESCAPE:
                     game_state='play'
@@ -1392,10 +1393,10 @@ while run:
 
         screen.blit(producer_popup_surface,selected_co)
         transparent_producer_popup.draw()
-        draw_text('Current Output: ',font_24,(0,0,0),selected_co[0]+10,selected_co[1]+10,screen)
-        draw_text(str(producer_info[decimal_co][2]),font_24,(0,0,0),selected_co[0]+135,selected_co[1]+50,screen)
+        draw_text('Current Output: ',font_24,(0,0,0),selected_co[0]+10,selected_co[1]+10,screen,False)
+        draw_text(str(producer_info[decimal_co][2]),font_24,(0,0,0),selected_co[0]+135,selected_co[1]+50,screen,False)
 
-        draw_text('Select New Output: ',font_24,(0,0,0),selected_co[0]+10,selected_co[1]+80,screen)
+        draw_text('Select New Output: ',font_24,(0,0,0),selected_co[0]+10,selected_co[1]+80,screen,False)
 
 
 
@@ -1414,17 +1415,17 @@ while run:
         screen.blit(producer_popup_surface,selected_co)
         transparent_crafter_popup.draw()
 
-        draw_text('Inventory: ',font_24,(0,0,0),selected_co[0]+10,selected_co[1]+10,screen)
-        draw_text('Selected Blueprint: ',font_24,(0,0,0),selected_co[0]+10,selected_co[1]+110,screen)
-        draw_text(crafter_info[decimal_co][1],font_24,(0,0,0),selected_co[0]+10,selected_co[1]+125,screen)
+        draw_text('Inventory: ',font_24,(0,0,0),selected_co[0]+10,selected_co[1]+10,screen,False)
+        draw_text('Selected Blueprint: ',font_24,(0,0,0),selected_co[0]+10,selected_co[1]+110,screen,False)
+        draw_text(crafter_info[decimal_co][1],font_24,(0,0,0),selected_co[0]+10,selected_co[1]+125,screen,False)
 
 
-        draw_text(crafter_inv_quantities[0],font,(0,0,0),selected_co[0]+40,selected_co[1]+50,screen)
-        draw_text(crafter_inv_quantities[1],font,(0,0,0),selected_co[0]+80,selected_co[1]+50,screen)
-        draw_text(crafter_inv_quantities[2],font,(0,0,0),selected_co[0]+120,selected_co[1]+50,screen)
-        draw_text(crafter_inv_quantities[3],font,(0,0,0),selected_co[0]+40,selected_co[1]+90,screen)
-        draw_text(crafter_inv_quantities[4],font,(0,0,0),selected_co[0]+80,selected_co[1]+90,screen)
-        draw_text(crafter_inv_quantities[5],font,(0,0,0),selected_co[0]+120,selected_co[1]+90,screen)
+        draw_text(crafter_inv_quantities[0],font,(0,0,0),selected_co[0]+40,selected_co[1]+50,screen,False)
+        draw_text(crafter_inv_quantities[1],font,(0,0,0),selected_co[0]+80,selected_co[1]+50,screen,False)
+        draw_text(crafter_inv_quantities[2],font,(0,0,0),selected_co[0]+120,selected_co[1]+50,screen,False)
+        draw_text(crafter_inv_quantities[3],font,(0,0,0),selected_co[0]+40,selected_co[1]+90,screen,False)
+        draw_text(crafter_inv_quantities[4],font,(0,0,0),selected_co[0]+80,selected_co[1]+90,screen,False)
+        draw_text(crafter_inv_quantities[5],font,(0,0,0),selected_co[0]+120,selected_co[1]+90,screen,False)
 
         inv_button1.draw()
         inv_button2.draw()
@@ -1444,12 +1445,12 @@ while run:
 
         item_button.draw()
 
-        draw_text(bp_item_quantities[0],font,(0,0,0),selected_co[0]+40,selected_co[1]+160,screen)
-        draw_text(bp_item_quantities[1],font,(0,0,0),selected_co[0]+80,selected_co[1]+160,screen)
-        draw_text(bp_item_quantities[2],font,(0,0,0),selected_co[0]+120,selected_co[1]+160,screen)
-        draw_text(bp_item_quantities[3],font,(0,0,0),selected_co[0]+40,selected_co[1]+200,screen)
-        draw_text(bp_item_quantities[4],font,(0,0,0),selected_co[0]+80,selected_co[1]+200,screen)
-        draw_text(bp_item_quantities[5],font,(0,0,0),selected_co[0]+120,selected_co[1]+200,screen)
+        draw_text(bp_item_quantities[0],font,(0,0,0),selected_co[0]+40,selected_co[1]+160,screen,False)
+        draw_text(bp_item_quantities[1],font,(0,0,0),selected_co[0]+80,selected_co[1]+160,screen,False)
+        draw_text(bp_item_quantities[2],font,(0,0,0),selected_co[0]+120,selected_co[1]+160,screen,False)
+        draw_text(bp_item_quantities[3],font,(0,0,0),selected_co[0]+40,selected_co[1]+200,screen,False)
+        draw_text(bp_item_quantities[4],font,(0,0,0),selected_co[0]+80,selected_co[1]+200,screen,False)
+        draw_text(bp_item_quantities[5],font,(0,0,0),selected_co[0]+120,selected_co[1]+200,screen,False)
 
     elif game_state=='shop machines':
         screen.blit(play_bg,(0,0))
@@ -1481,21 +1482,21 @@ while run:
         conveyor_button.draw()
         seller_button.draw()
 
-        draw_text('Buy Producer',font_32,(0,0,0),245,320,screen)
-        draw_text('Outputs Materials',font_32,(0,0,0),245,350,screen)
-        draw_text('Price: 100 each',font_32,(0,0,0),245,380,screen)
+        draw_text('Buy Producer',font_32,(0,0,0),245,320,screen,False)
+        draw_text('Outputs Materials',font_32,(0,0,0),245,350,screen,False)
+        draw_text('Price: 100 each',font_32,(0,0,0),245,380,screen,False)
 
-        draw_text('Buy Crafter',font_32,(0,0,0),550,320,screen)
-        draw_text('Crafts Items',font_32,(0,0,0),550,350,screen)
-        draw_text('Price: 100 each',font_32,(0,0,0),550,380,screen)
+        draw_text('Buy Crafter',font_32,(0,0,0),550,320,screen,False)
+        draw_text('Crafts Items',font_32,(0,0,0),550,350,screen,False)
+        draw_text('Price: 100 each',font_32,(0,0,0),550,380,screen,False)
 
-        draw_text('Buy Conveyor',font_32,(0,0,0),245,450,screen)
-        draw_text('Moves Items',font_32,(0,0,0),245,480,screen)
-        draw_text('Price: 50 each',font_32,(0,0,0),245,510,screen)
+        draw_text('Buy Conveyor',font_32,(0,0,0),245,450,screen,False)
+        draw_text('Moves Items',font_32,(0,0,0),245,480,screen,False)
+        draw_text('Price: 50 each',font_32,(0,0,0),245,510,screen,False)
 
-        draw_text('Buy Seller',font_32,(0,0,0),550,450,screen)
-        draw_text('Sells Items',font_32,(0,0,0),550,480,screen)
-        draw_text('Price: 100 each',font_32,(0,0,0),550,510,screen)                
+        draw_text('Buy Seller',font_32,(0,0,0),550,450,screen,False)
+        draw_text('Sells Items',font_32,(0,0,0),550,480,screen,False)
+        draw_text('Price: 100 each',font_32,(0,0,0),550,510,screen,False)                
 
     elif game_state=='shop upgrades':
         screen.blit(play_bg,(0,0))
@@ -1526,25 +1527,25 @@ while run:
         seller_button.draw()
 
 
-        draw_text('Producer',font_32,(0,0,0),245,320,screen)
-        draw_text(('Output '+str(producer_upgrades[producer_lv+1][2])+' Materials'),font_32,(0,0,0),245,350,screen)
-        draw_text(('Price: '+str(producer_upgrades[producer_lv+1][0])+producer_upgrades[producer_lv+1][1]),font_32,(0,0,0),245,380,screen)
-        draw_text('Buy Upgrade',font_36,(0,0,0),245,405,screen)
+        draw_text('Producer',font_32,(0,0,0),245,320,screen,False)
+        draw_text(('Output '+str(producer_upgrades[producer_lv+1][2])+' Materials'),font_32,(0,0,0),245,350,screen,False)
+        draw_text(('Price: '+str(producer_upgrades[producer_lv+1][0])+producer_upgrades[producer_lv+1][1]),font_32,(0,0,0),245,380,screen,False)
+        draw_text('Buy Upgrade',font_36,(0,0,0),245,405,screen,False)
 
-        draw_text('Crafter',font_32,(0,0,0),550,320,screen)
-        draw_text(('Craft '+str(crafter_upgrades[crafter_lv+1][2])+' at once'),font_32,(0,0,0),550,350,screen)
-        draw_text(('Price: '+str(crafter_upgrades[crafter_lv+1][0])+crafter_upgrades[crafter_lv+1][1]),font_32,(0,0,0),550,380,screen)
-        draw_text('Buy Upgrade',font_36,(0,0,0),550,405,screen)
+        draw_text('Crafter',font_32,(0,0,0),550,320,screen,False)
+        draw_text(('Craft '+str(crafter_upgrades[crafter_lv+1][2])+' at once'),font_32,(0,0,0),550,350,screen,False)
+        draw_text(('Price: '+str(crafter_upgrades[crafter_lv+1][0])+crafter_upgrades[crafter_lv+1][1]),font_32,(0,0,0),550,380,screen,False)
+        draw_text('Buy Upgrade',font_36,(0,0,0),550,405,screen,False)
 
-        draw_text('Conveyor',font_32,(0,0,0),245,450,screen)
-        draw_text(('Move Items +'+str(round((conveyor_upgrades[conveyor_lv+1][2]-1)*100))+'%'),font_32,(0,0,0),245,480,screen)
-        draw_text(('Price: '+str(conveyor_upgrades[conveyor_lv+1][0])+conveyor_upgrades[conveyor_lv+1][1]),font_32,(0,0,0),245,510,screen)
-        draw_text('Buy Upgrade',font_36,(0,0,0),245,535,screen)
+        draw_text('Conveyor',font_32,(0,0,0),245,450,screen,False)
+        draw_text(('Move Items +'+str(round((conveyor_upgrades[conveyor_lv+1][2]-1)*100))+'%'),font_32,(0,0,0),245,480,screen,False)
+        draw_text(('Price: '+str(conveyor_upgrades[conveyor_lv+1][0])+conveyor_upgrades[conveyor_lv+1][1]),font_32,(0,0,0),245,510,screen,False)
+        draw_text('Buy Upgrade',font_36,(0,0,0),245,535,screen,False)
 
-        draw_text('Seller',font_32,(0,0,0),550,450,screen)
-        draw_text(('Sell Items for +'+str(round(((seller_upgrades[seller_lv+1][2])-1)*100))+'%'),font_32,(0,0,0),550,480,screen)
-        draw_text(('Price: '+str(seller_upgrades[seller_lv+1][0])+seller_upgrades[seller_lv+1][1]),font_32,(0,0,0),550,510,screen) 
-        draw_text('Buy Upgrade',font_36,(0,0,0),550,535,screen)  
+        draw_text('Seller',font_32,(0,0,0),550,450,screen,False)
+        draw_text(('Sell Items for +'+str(round(((seller_upgrades[seller_lv+1][2])-1)*100))+'%'),font_32,(0,0,0),550,480,screen,False)
+        draw_text(('Price: '+str(seller_upgrades[seller_lv+1][0])+seller_upgrades[seller_lv+1][1]),font_32,(0,0,0),550,510,screen,False) 
+        draw_text('Buy Upgrade',font_36,(0,0,0),550,535,screen,False)  
 
         scrollbar_button.draw()
         slider_button.draw()
@@ -1667,8 +1668,8 @@ while run:
         screen.blit(buy1000_lable1,(540,575))
         screen.blit(buy1000_lable2,(595,620))  
 
-        draw_text('Buy 10k '+str(material_text)+' Costs:',font_32,(0,0,0),540,665,screen)
-        draw_text('100k',font_50,(0,0,0),600,710,screen)
+        draw_text('Buy 10k '+str(material_text)+' Costs:',font_32,(0,0,0),540,665,screen,False)
+        draw_text('100k',font_50,(0,0,0),600,710,screen,False)
 
 
 
@@ -1758,56 +1759,56 @@ while run:
     elif game_state =='controls':
         back_button.draw()
 
-        draw_text('Guide',font_60,(255,255,255),150,120,screen)
-        draw_text('Keybinds',font_60,(255,255,255),600,120,screen)
+        draw_text('Guide',font_60,(255,255,255),150,120,screen,False)
+        draw_text('Keybinds',font_60,(255,255,255),600,120,screen,False)
 
 
         screen.blit(producer_img,(50,200))
-        draw_text('Producer:outputs materials towards ',font_32,(255,255,255),100,200,screen)
-        draw_text('arrow. choose its output by clicking it',font_32,(255,255,255),100,220,screen)
+        draw_text('Producer:outputs materials towards ',font_32,(255,255,255),100,200,screen,False)
+        draw_text('arrow. choose its output by clicking it',font_32,(255,255,255),100,220,screen,False)
 
         screen.blit(crafter_img,(50,250))
-        draw_text('Crafter: choose blueprint by clicking it',font_32,(255,255,255),100,250,screen)
-        draw_text('-> click bottom right image -> choose bp ',font_32,(255,255,255),100,270,screen)
+        draw_text('Crafter: choose blueprint by clicking it',font_32,(255,255,255),100,250,screen,False)
+        draw_text('-> click bottom right image -> choose bp ',font_32,(255,255,255),100,270,screen,False)
 
         screen.blit(conveyor_img,(50,300))
-        draw_text('Conveyor:moves anything on it',font_32,(255,255,255),100,300,screen)
-        draw_text('in the direction of the arrows.',font_32,(255,255,255),100,320,screen)
+        draw_text('Conveyor:moves anything on it',font_32,(255,255,255),100,300,screen,False)
+        draw_text('in the direction of the arrows.',font_32,(255,255,255),100,320,screen,False)
 
         screen.blit(seller_img,(50,350))
-        draw_text('Seller: sells anything inputted into it',font_32,(255,255,255),100,350,screen)
-        draw_text('takes input from all directions',font_32,(255,255,255),100,370,screen)        
+        draw_text('Seller: sells anything inputted into it',font_32,(255,255,255),100,350,screen,False)
+        draw_text('takes input from all directions',font_32,(255,255,255),100,370,screen,False)        
 
-        draw_text('Goal: craft the rocket',font_32,(255,255,255),100,800,screen)
-        draw_text('Goal: get gud lol',font_32,(57,83,96),100,820,screen)
+        draw_text('Goal: craft the rocket',font_32,(255,255,255),100,800,screen,False)
+        draw_text('Goal: get gud lol',font_32,(57,83,96),100,820,screen,False)
 
-        draw_text('Esc : goes to previous page',font_32,(255,255,255),500,200,screen)
-        draw_text('Enter : confirm changes',font_32,(255,255,255),500,220,screen)
+        draw_text('Esc : goes to previous page',font_32,(255,255,255),500,200,screen,False)
+        draw_text('Enter : confirm changes',font_32,(255,255,255),500,220,screen,False)
 
-        draw_text('S : goes to shop page',font_32,(255,255,255),500,250,screen)
-        draw_text('1 : select producer',font_32,(255,255,255),500,270,screen)
-        draw_text('2 : select crafter',font_32,(255,255,255),500,290,screen)
-        draw_text('3 : select conveyor',font_32,(255,255,255),500,310,screen)
-        draw_text('4 : select seller',font_32,(255,255,255),500,330,screen)
-        draw_text('M : goes to machine tab',font_32,(255,255,255),500,350,screen)
-        draw_text('U : goes to upgrade tab',font_32,(255,255,255),500,370,screen)
-        draw_text('S : goes to supply tab',font_32,(255,255,255),500,390,screen)
+        draw_text('S : goes to shop page',font_32,(255,255,255),500,250,screen,False)
+        draw_text('1 : select producer',font_32,(255,255,255),500,270,screen,False)
+        draw_text('2 : select crafter',font_32,(255,255,255),500,290,screen,False)
+        draw_text('3 : select conveyor',font_32,(255,255,255),500,310,screen,False)
+        draw_text('4 : select seller',font_32,(255,255,255),500,330,screen,False)
+        draw_text('M : goes to machine tab',font_32,(255,255,255),500,350,screen,False)
+        draw_text('U : goes to upgrade tab',font_32,(255,255,255),500,370,screen,False)
+        draw_text('S : goes to supply tab',font_32,(255,255,255),500,390,screen,False)
 
-        draw_text('E : goes to edit mode',font_32,(255,255,255),500,420,screen)
-        draw_text('W : move selected machines up',font_32,(255,255,255),500,440,screen)
-        draw_text('A : move selected machines left',font_32,(255,255,255),500,460,screen)
-        draw_text('S : move selected machines right',font_32,(255,255,255),500,480,screen)
-        draw_text('D : move selected machines down',font_32,(255,255,255),500,500,screen)
-        draw_text('X : Delete selected machines',font_32,(255,255,255),500,520,screen)
-        draw_text('C : copy selected machines',font_32,(255,255,255),500,540,screen)
-        draw_text('V : paste mode and click where to place',font_32,(255,255,255),500,560,screen)
+        draw_text('E : goes to edit mode',font_32,(255,255,255),500,420,screen,False)
+        draw_text('W : move selected machines up',font_32,(255,255,255),500,440,screen,False)
+        draw_text('A : move selected machines left',font_32,(255,255,255),500,460,screen,False)
+        draw_text('S : move selected machines right',font_32,(255,255,255),500,480,screen,False)
+        draw_text('D : move selected machines down',font_32,(255,255,255),500,500,screen,False)
+        draw_text('X : Delete selected machines',font_32,(255,255,255),500,520,screen,False)
+        draw_text('C : copy selected machines',font_32,(255,255,255),500,540,screen,False)
+        draw_text('V : paste mode and click where to place',font_32,(255,255,255),500,560,screen,False)
 
-        draw_text('B : goes to blueprint mode',font_32,(255,255,255),500,590,screen)
-        draw_text('m : goes to map mode',font_32,(255,255,255),500,610,screen)
+        draw_text('B : goes to blueprint mode',font_32,(255,255,255),500,590,screen,False)
+        draw_text('m : goes to map mode',font_32,(255,255,255),500,610,screen,False)
 
-        draw_text('right click : confirm changes',font_32,(255,255,255),500,640,screen)
-        draw_text('middle click : goes to previous page',font_32,(255,255,255),500,660,screen)
-
+        draw_text('right click : confirm changes',font_32,(255,255,255),500,640,screen,False)
+        draw_text('middle click : goes to previous page',font_32,(255,255,255),500,660,screen,False)
+               
     elif game_state =='settings':
         back_button.draw()
  
@@ -1849,31 +1850,32 @@ while run:
             else:
                 allowed=False
 
-        draw_text('Statistics',font_60,(0,0,0),310,230,screen)
-        draw_text('Revenue: '+ str(round(revenue/(1000**(counter)),1))+str(abbreviation[counter]),font_40,(255,255,255),210,300,screen)
-        draw_text('Total play time: '+str(current_d)+'d '+str(current_h)+'h '+str(current_m)+'m '+str(current_s)+'s',font_40,(255,255,255),210,350,screen)
-        draw_text('Skill level: Trash ',font_40,(255,255,255),210,400,screen)
+        draw_text('Statistics',font_60,(0,0,0),310,230,screen,False)
+        draw_text('Revenue: '+ str(round(revenue/(1000**(counter)),1))+str(abbreviation[counter]),font_40,(255,255,255),210,300,screen,False)
+        draw_text('Total play time: '+str(current_d)+'d '+str(current_h)+'h '+str(current_m)+'m '+str(current_s)+'s',font_40,(255,255,255),210,350,screen,False)
+        draw_text('Skill level: Trash ',font_40,(255,255,255),210,400,screen,False)
         
         credits_button.draw()
-        draw_text('Credits',font_24,(255,255,255),370,520,screen)
+        draw_text('Credits',font_24,(255,255,255),370,520,screen,False)
 
     elif game_state=='credits':
-        draw_text('Credits',font_100,(255,255,255),340,100,screen)
+        draw_text('Credits',font_100,(255,255,255),340,100,screen,False)
 
-        draw_text('Amin, The Almighty Overlord',font_70,(255,255,255),175,200,screen)
-        draw_text('Krish, The Legendary Gamer',font_70,(255,255,255),170,250,screen)
-        draw_text('Destroyer Of Worlds, Ben',font_70,(255,255,255),200,300,screen)
-        draw_text('Marwan, The Undead',font_70,(255,255,255),250,350,screen)
-        draw_text('Noah, The Scary Pikachu',font_70,(255,255,255),200,400,screen)
-        draw_text('',font_70,(255,255,255),150,400,screen)
+        draw_text('Amin, The Almighty Overlord',font_90,(255,255,255),450,200,screen,True)
+        #draw_text('Krish, The Legendary Gamer',font_70,(255,255,255),450,250,screen,True)
+
+        draw_text('Krish, The Legendary Gamer',font_70,(255,255,255),450,300,screen,True)
+        draw_text('Destroyer Of Worlds, Ben',font_70,(255,255,255),450,350,screen,True)
+        draw_text('Marwan, The Undead',font_70,(255,255,255),450,400,screen,True)
+        draw_text('Noah, The Scary Pikachu',font_70,(255,255,255),450,450,screen,True)
+        draw_text('Abdul Muhaymin, The Cool Guy',font_70,(255,255,255),450,500,screen,True)
+        draw_text('Sofian G, Greatest Morrocan Of All Time',font_70,(255,255,255),450,550,screen,True)
 
 
 
-        draw_text('siblings, the oxygen wasters',font_40,(255,255,255),300,750,screen)
+        draw_text('Siblings, The Feature Delaying Time Wasting Testers',font_50,(255,255,255),450,700,screen,True)
         
-        draw_text(' ',font_60,(255,255,255),390,100,screen)
+        draw_text(' ',font_60,(255,255,255),390,100,screen,True)
         
-
-
     pygame.display.update()
     clock.tick(60)

@@ -1,3 +1,5 @@
+
+
 def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_lv,producer_upgrades,crafter_lv,crafter_upgrades,conveyor_lv,conveyor_upgrades,seller_lv,seller_upgrades,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,crafter_img,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout,money):
     game_state='play'
     prices={
@@ -256,9 +258,13 @@ def draw_money(money,screen,money_panel_img,font_50,money_per_min,font_24,stats_
         else:
             allowed=False
 
-    draw_text('Money/min:',font_24,(0,0,0),800,10,screen)
-    draw_text((str(round(money_per_min/(1000**(counter)),1))+str(abbreviation[counter])),font_24,(0,0,0),800,25,screen)
+    draw_text('Money/min:',font_24,(0,0,0),800,10,screen,False)
+    draw_text((str(round(money_per_min/(1000**(counter)),1))+str(abbreviation[counter])),font_24,(0,0,0),800,25,screen,False)
 
-def draw_text(text,font,text_colour,x,y,screen):
-    img=font.render(text,True,text_colour)
-    screen.blit(img,(x,y))
+def draw_text(text,font,text_colour,x,y,screen,center):
+    text=font.render(text,True,text_colour)
+    if center:
+        text_rect=text.get_rect(center=(x,y))
+        screen.blit(text,text_rect)
+    else:
+        screen.blit(text,(x,y))
