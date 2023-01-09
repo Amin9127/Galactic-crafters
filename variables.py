@@ -84,6 +84,7 @@ surface.fill(white)
 game_state='main menu' 
 
 font = pygame.font.Font('Pixeltype.ttf',16)
+font_20 = pygame.font.Font('Pixeltype.ttf',20)
 font_24 = pygame.font.Font('Pixeltype.ttf',24)
 font_32 = pygame.font.Font('Pixeltype.ttf',32)
 font_34 = pygame.font.Font('Pixeltype.ttf',34)
@@ -443,4 +444,22 @@ selected_pos=[]
 selection=''
 
 
-credits_button= Buttons(350,500,blank_button_img,0.5,0.5)
+credits_button= Buttons(250,500,blank_button_img,0.5,0.5)
+reset_button= Buttons(450,500,blank_button_img,0.5,0.5)
+reset_counter=0
+
+#menu_dict={
+#    1:'start',
+#    2:'two player',
+#    3:'login',
+#}
+#menu_dict_co={
+#    1:[co of start arrow,],
+#    2:[co of twoplayer arrow],
+#    3:[co of login arrow],
+#}
+#
+##will give you the current selected subsection
+#menu_dict[menu_selection]
+##will give you the co of where you should draw your little arrow thing
+#menu_dict_co[menu_selection]

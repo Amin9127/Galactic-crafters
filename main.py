@@ -13,6 +13,7 @@ global money
 #usual start 1000 money
 money=1000
 
+#saves data
 def save_data():
     data_file = open("Galactic_Crafters.txt", "wb")
     saved_time=pygame.time.get_ticks()
@@ -43,9 +44,10 @@ def save_data():
     pickle.dump(data_dict,data_file,pickle.HIGHEST_PROTOCOL)
     data_file.close()
 
-
+#check if file called this exists
 file_exists = os.path.exists("Galactic_Crafters.txt")
 
+#if so make a file and load all changeable variables to as it would at the start
 if file_exists == True:
     data_file = open("Galactic_Crafters.txt", "rb")
     data_dict = pickle.load(data_file)
@@ -95,12 +97,6 @@ if file_exists == True:
         new_seller=Seller(co[0],co[1],seller_img)
         seller_group.add(new_seller)
 
-
-    #item_group = data_dict.get('item_group')
-    #material_group=data_dict.get('material_group')
-
-    
-
 else:
     save_data()
 
@@ -133,9 +129,11 @@ while run:
             pygame.quit()
             exit()          
         if event.type ==seconds_event:
+            #code below ran every second
             if game_state in ('play','shop supply'):
                 screen.blit(grid_surface,(0,100))
                 producer_cos=list(producer_info.keys())
+                #creates new material every second and reduces it from supply
                 for x in producer_cos:
                     co = x.split('.')
                     co[0]=int(co[0])
@@ -146,11 +144,13 @@ while run:
                         materials_supply[created_material]=materials_supply[created_material]-material_quantity
                         material_group.add(Producer.create_material('self',co,producer_info))
 
+                #creates the new item every second if possible
                 for crafter in crafter_group:
                     amount_maybe=crafter.update(crafter_info,blueprints,crafter_upgrades,crafter_lv)
                     if amount_maybe!=False:
                         item_group.add(crafter.create_item(blueprints_value,item_imgs,amount_maybe))
 
+        #updates the money per min variable every minute
         if event.type==minute_event:
             money_per_min=revenue-previous_revenue
             previous_revenue=revenue
@@ -271,6 +271,7 @@ while run:
                     arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
 
                 elif event.key ==pygame.K_RETURN:
+                    #sends the user back to play and empties related variables
                     game_state='play'
                     selected_producers=[]
                     selected_crafters=[]
@@ -292,14 +293,12 @@ while run:
                     rotate(crafter_upgrades,crafter_lv,blueprints,selected_producers,selected_machines,arrows_group,material_group,item_group,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,selected_sellers,seller_info,seller_group,grid_surface_copy)
                 elif event.key ==pygame.K_x:
                     #delete(factory_layout,selected_producers,producer_info,producer_group,crafter_info,selected_crafters,crafter_group,selected_conveyors,conveyor_info,conveyor_group,arrows_group,material_group,grid_surface)
-                    print(selected_producers,'to delete')
-                    print(producer_info)
+                    #deletes selected machines
                     for pos in selected_producers:
                         print(pos[0]/40)
                         factory_layout[int(pos[1]/40)][int(pos[0]/40)]=0
                         decimal_co=str(pos[0])+'.'+str(pos[1])
                         producer_info.pop(decimal_co)
-                    print(producer_info)
                     for pos in selected_crafters:
                         factory_layout[int(pos[1]/40)][int(pos[0]/40)]=0
                         decimal_co=str(pos[0])+'.'+str(pos[1])
@@ -1152,9 +1151,51 @@ while run:
 
             elif game_state=='stats':
                 if stats_surface.rect.collidepoint(co) == False:
+                    reset_counter=0
                     game_state='play'
                 elif credits_button.rect.collidepoint(co):
                     game_state='credits'
+                elif reset_button.rect.collidepoint(co):
+                    reset_counter+=1
+                    print(reset_counter)
+                    if reset_counter==3:
+                        
+                        producer_info={}
+                        crafter_info={}
+                        conveyor_info={}
+                        seller_info={}
+                        temp_info={}
+                        factory_layout=[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+                        producer_lv =1
+                        crafter_lv =1
+                        conveyor_lv =1
+                        seller_lv =1
+                        money=1000
+                        revenue =0
+                        previous_revenue=0
+                        money_per_min=0
+                        saved_time=0
+                        materials_supply={'copper':0,'iron':0,'gold':0,'aluminium':0,'lead':0,'coal':0}
+
+                        data_dict={'producer_info':producer_info,
+                                'crafter_info':crafter_info,
+                                'conveyor_info':conveyor_info,
+                                'seller_info':seller_info,
+                                'factory_layout':factory_layout,
+                                'producer_lv':producer_lv,
+                                'crafter_lv':crafter_lv,
+                                'conveyor_lv':conveyor_lv,
+                                'seller_lv':seller_lv,
+                                'money':money,
+                                'revenue':revenue,
+                                'previous_revenue':previous_revenue,
+                                'money_per_min':money_per_min,
+                                'materials_supply':materials_supply,
+                                'saved_time':saved_time,
+                        }     
+
+                        save_data()
+                        reset_counter=0                                                       
             
             save_data()
         elif event.type==pygame.MOUSEBUTTONUP:
@@ -1828,6 +1869,7 @@ while run:
     elif game_state=='stats':
         screen.blit(grid_surface_copy,(0,100))
         stats_surface.draw()
+        #gets current play time and transorms it into days hours minutes and seconds.
         current_time=pygame.time.get_ticks()+saved_time
         current_time =current_time//1000
         total_m =current_time//60
@@ -1839,6 +1881,7 @@ while run:
         current_s=(current_time-((current_time//(60))*60))
 
 
+        #gets revenue and transorms it into abbreviated version
         counter=0
         revenue1=revenue
         abbreviation={0:'',1:'K',2:'M',3:'B',4:'T',5:'q',6:'Q'}
@@ -1856,13 +1899,18 @@ while run:
         draw_text('Skill level: Trash ',font_40,(255,255,255),210,400,screen,False)
         
         credits_button.draw()
-        draw_text('Credits',font_24,(255,255,255),370,520,screen,False)
+        reset_button.draw()
+
+        draw_text('Credits',font_24,(255,255,255),270,520,screen,False)
+        draw_text('Reset Data',font_20,(255,255,255),470,510,screen,False)
+        draw_text('Clicks Left: '+str(3-reset_counter),font_20,(255,255,255),465,525,screen,False)
+
+        
 
     elif game_state=='credits':
         draw_text('Credits',font_100,(255,255,255),340,100,screen,False)
 
         draw_text('Amin, The Almighty Overlord',font_90,(255,255,255),450,200,screen,True)
-        #draw_text('Krish, The Legendary Gamer',font_70,(255,255,255),450,250,screen,True)
 
         draw_text('Krish, The Legendary Gamer',font_70,(255,255,255),450,300,screen,True)
         draw_text('Destroyer Of Worlds, Ben',font_70,(255,255,255),450,350,screen,True)
@@ -1877,5 +1925,6 @@ while run:
         
         draw_text(' ',font_60,(255,255,255),390,100,screen,True)
         
+
     pygame.display.update()
     clock.tick(60)
