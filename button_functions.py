@@ -15,10 +15,8 @@ def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,pr
         for co in selected_pos:
             x= co[0]*40
             y= co[1]*40
-            print(co)
             
             decimal_co=str(x)+'.'+str(y)
-            print(decimal_co,'in function')
             if selected_machine =='producer':
                 producer_info[decimal_co]=['n','copper',producer_upgrades[producer_lv][2],'none']
                 new_producer=Producer(x,y,producer_img,producer_info)
@@ -135,9 +133,15 @@ def move(direction,selected_producers,producer_info,producer_group,selected_craf
         decimal_co=str(pos[0])+'.'+str(pos[1])
         seller_info[decimal_co][3] =direction
 
+  
+
     #check if move is possible
     for pos in selected_machines:
         decimal_co=str(pos[0]+movements[direction][0])+'.'+str(pos[1]+movements[direction][1])
+        if pos[0]+movements[direction][0]<0 or pos[0]+movements[direction][0]>760:
+            cancel_move=True
+        if pos[1]+movements[direction][1]<0 or pos[1]+movements[direction][1]>760:
+            cancel_move=True              
         if decimal_co in producer_info:
             if producer_info[decimal_co][3] != direction:
                 cancel_move =True

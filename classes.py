@@ -157,6 +157,22 @@ class Material(pygame.sprite.Sprite):
         else:
             self.producer_thrust=False
 
+        self.conveyor_collision=pygame.sprite.spritecollideany(self,conveyor_group,pygame.sprite.collide_rect_ratio(1))
+
+        #if self.conveyor_collision and self.conveyor_thrust==True:
+        #    if self.conveyor_direction=='n':
+        #        self.rect.y-=5#*conveyor_upgrades[conveyor_lv][2]
+        #    elif self.conveyor_direction=='e':
+        #        self.rect.x+=5#*conveyor_upgrades[conveyor_lv][2]
+        #    elif self.conveyor_direction=='s':
+        #        self.rect.y+=5#*conveyor_upgrades[conveyor_lv][2]
+        #    elif self.conveyor_direction=='w':
+        #        self.rect.x-=5#*conveyor_upgrades[conveyor_lv][2]
+        #    self.count+=1
+        #else:
+        #    self.conveyor_thrust=False
+
+
         if self.count<16 and self.conveyor_thrust==True:
             if self.conveyor_direction=='n':
                 self.rect.y-=5*conveyor_upgrades[conveyor_lv][2]
@@ -182,13 +198,13 @@ class Material(pygame.sprite.Sprite):
                 crafter_info[self.decimal_co][2].update({self.type:self.amount})
 
 
-        if self.rect.x>1000:
+        if self.rect.x>800:
             self.kill()
         elif self.rect.x<0:
             self.kill()
-        elif self.rect.y>1000:
+        elif self.rect.y>900:
             self.kill()
-        elif self.rect.y<0:
+        elif self.rect.y<100:
             self.kill()
 
         material_to_liquid={'copper':'liquid copper','iron':'liquid iron','gold':'liquid gold','aluminium':'liquid aluminium','lead':'liquid lead','coal':'liquid coal'}

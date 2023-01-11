@@ -11,7 +11,7 @@ pygame.font.init()
 
 global money
 #usual start 1000 money
-money=1000
+money=1000000
 
 #saves data
 def save_data():
@@ -48,7 +48,7 @@ def save_data():
 file_exists = os.path.exists("Galactic_Crafters.txt")
 
 #if so make a file and load all changeable variables to as it would at the start
-if file_exists == True:
+if file_exists:
     data_file = open("Galactic_Crafters.txt", "rb")
     data_dict = pickle.load(data_file)
     data_file.close()
@@ -249,7 +249,6 @@ while run:
                 if event.key == pygame.K_ESCAPE:
                     game_state = 'shop'
                 elif event.key == pygame.K_RETURN:
-                    print('enter')
                     money = confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_lv,producer_upgrades,crafter_lv,crafter_upgrades,conveyor_lv,conveyor_upgrades,seller_lv,seller_upgrades,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,crafter_img,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout,money)
                     selected_pos=[]
                     game_state='play' 
@@ -295,7 +294,6 @@ while run:
                     #delete(factory_layout,selected_producers,producer_info,producer_group,crafter_info,selected_crafters,crafter_group,selected_conveyors,conveyor_info,conveyor_group,arrows_group,material_group,grid_surface)
                     #deletes selected machines
                     for pos in selected_producers:
-                        print(pos[0]/40)
                         factory_layout[int(pos[1]/40)][int(pos[0]/40)]=0
                         decimal_co=str(pos[0])+'.'+str(pos[1])
                         producer_info.pop(decimal_co)
@@ -399,10 +397,10 @@ while run:
                     arrows_group.draw(grid_surface_copy)        
 
                 elif event.key==pygame.K_c:
-                    minimum_co_x =400
+                    minimum_co_x =800
                     maximum_co_x =0
-                    minimum_co_y =400
-                    maximum_co_y =0
+                    minimum_co_y =900
+                    maximum_co_y =100
                     copied_machines=selected_machines
                     consise_copied_machines=[]
                     copied_producers=len(selected_producers)
@@ -466,10 +464,8 @@ while run:
                     arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info) 
 
                 elif event.key==pygame.K_RETURN:
-                    print('return pressed')
                     copy_price = copied_producers*prices['producer']+copied_crafters*prices['crafter']+copied_conveyors*prices['conveyor']+copied_sellers*prices['seller']
                     if paste_possible==True and money>=copy_price:
-                        print('this',producer_info)
                         for cos in consise_copied_machines:
                             pos=[cos[0]*40,cos[1]*40]
 
@@ -852,7 +848,6 @@ while run:
                 if event.button==3:
                     money = confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_lv,producer_upgrades,crafter_lv,crafter_upgrades,conveyor_lv,conveyor_upgrades,seller_lv,seller_upgrades,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,crafter_img,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout,money)
                     selected_pos=[]
-                    print(crafter_info)
                     game_state = 'play'
 
                 elif transparent_grid_button.rect.collidepoint(co):
@@ -876,14 +871,12 @@ while run:
 
                         grid_surface_copy= grid_surface.copy()
                         green_square_group.draw(grid_surface_copy)
-                        print('selected pos',selected_pos)
 
 
 
                 elif confirm_button.rect.collidepoint(co):
                     money = confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,producer_lv,producer_upgrades,crafter_lv,crafter_upgrades,conveyor_lv,conveyor_upgrades,seller_lv,seller_upgrades,producer_info,Producer,producer_group,producer_img,crafter_info,Crafter,crafter_group,crafter_img,conveyor_info,Conveyor,conveyor_group,conveyor_img,seller_info,Seller,seller_group,seller_img,factory_layout,money)
                     selected_pos=[]
-                    print(crafter_info)
                     game_state = 'play'
                 elif cancel_button.rect.collidepoint(co):
                     game_state='play'
@@ -893,7 +886,6 @@ while run:
                 if event.button==3:
                     copy_price = copied_producers*prices['producer']+copied_crafters*prices['crafter']+copied_conveyors*prices['conveyor']+copied_sellers*prices['seller']
                     if paste_possible==True and money>=copy_price:
-                        print('this',producer_info)
                         for cos in consise_copied_machines:
                             pos=[cos[0]*40,cos[1]*40]
 
@@ -909,7 +901,8 @@ while run:
                                 factory_layout[paste_start[1]+cos[1]][paste_start[0]+cos[0]]=1
                             elif copied_machine=='crafter':
                                 decimal_co=str(paste_start[0]*40+pos[0])+'.'+str(paste_start[1]*40+pos[1])
-                                crafter_info[decimal_co]=copied_info[copied_keys[0]].copy()
+                                copied_info[copied_keys[0]][2]={}
+                                crafter_info[decimal_co]=copied_info[copied_keys[0]]
                                 new_crafter=Crafter(paste_start[0]*40+pos[0],paste_start[1]*40+pos[1],crafter_img)
                                 crafter_group.add(new_crafter)
                                 factory_layout[paste_start[1]+cos[1]][paste_start[0]+cos[0]]=1
@@ -1012,16 +1005,13 @@ while run:
                                     selected_producers.remove(co)
                                     selected_machines.remove(co)
                                     arrows_group.update(selected_machines,producer_info,crafter_info,conveyor_info,seller_info)
-                                    print(selected_machines)
                                     selection='remove'
-                                    print(selected_producers,'selected producers')
                                 else:
                                     selected_producers.append(co)
                                     selected_machines.append(co)
                                     new_arrow = Arrow(int(co[0]),int(co[1]),producer_info,crafter_info,conveyor_info,seller_info)
                                     arrows_group.add(new_arrow)
                                     selection='select'
-                                    print(selected_producers,'selected producers')
 
                             elif decimal_co in crafter_cos:
                                 if co in selected_crafters:
@@ -1035,7 +1025,6 @@ while run:
                                     new_arrow = Arrow(int(co[0]),int(co[1]),producer_info,crafter_info,conveyor_info,seller_info)
                                     arrows_group.add(new_arrow)
                                     selection='select'
-                                    print(selected_crafters,'selected crafters')
 
                             elif decimal_co in conveyor_cos:
                                 if co in selected_conveyors:
@@ -1049,7 +1038,6 @@ while run:
                                     new_arrow = Arrow(int(co[0]),int(co[1]),producer_info,crafter_info,conveyor_info,seller_info)
                                     arrows_group.add(new_arrow)
                                     selection='select'
-                                    print(selected_conveyors,'selected connveyors')
 
                             elif decimal_co in seller_cos:
                                 if co in selected_sellers:
@@ -1063,7 +1051,6 @@ while run:
                                     new_arrow = Arrow(int(co[0]),int(co[1]),producer_info,crafter_info,conveyor_info,seller_info)
                                     arrows_group.add(new_arrow)
                                     selection='select'
-                                    print(selected_sellers,'selected sellers')
                             
                             grid_surface_copy= grid_surface.copy()
                             screen.blit(grid_surface_copy,(0,100))
@@ -1084,13 +1071,10 @@ while run:
       
                 elif delete_button.rect.collidepoint(co):
                     #delete(factory_layout,selected_producers,producer_info,producer_group,selected_crafters,crafter_info,crafter_group,selected_conveyors,conveyor_info,conveyor_group,arrows_group,material_group,grid_surface)
-                    print(selected_producers,'to delete')
-                    print(producer_info)
                     for pos in selected_producers:
                         factory_layout[int(pos[1]/40)][int(pos[0]/40)]=0
                         decimal_co=str(pos[0])+'.'+str(pos[1])
                         producer_info.pop(decimal_co)
-                    print(producer_info)
                     for pos in selected_crafters:
                         factory_layout[int(pos[1]/40)][int(pos[0]/40)]=0
                         decimal_co=str(pos[0])+'.'+str(pos[1])
@@ -1177,6 +1161,15 @@ while run:
                         saved_time=0
                         materials_supply={'copper':0,'iron':0,'gold':0,'aluminium':0,'lead':0,'coal':0}
 
+                        for producer in producer_group:
+                            producer.kill()
+                        for crafter in crafter_group:
+                            crafter.kill()
+                        for conveyor in conveyor_group:
+                            conveyor.kill()
+                        for seller in seller_group:
+                            seller.kill()                                                                                    
+
                         data_dict={'producer_info':producer_info,
                                 'crafter_info':crafter_info,
                                 'conveyor_info':conveyor_info,
@@ -1195,7 +1188,8 @@ while run:
                         }     
 
                         save_data()
-                        reset_counter=0                                                       
+                        reset_counter=0
+                        game_state='play'                                               
             
             save_data()
         elif event.type==pygame.MOUSEBUTTONUP:
@@ -1249,14 +1243,12 @@ while run:
                                     bptitles2[7]='nothing'
                                     new_bp= Blueprints(-1,7,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font)
                                     blueprints_group.add(new_bp)
-                                    print('six')
                                 
                                 else:
                                     for y in range(0,8):
                                         bptitles2[y]=bp_ordered_list[y+bp_position]
                                         new_bp= Blueprints((y+bp_position),y,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font)
                                         blueprints_group.add(new_bp)
-                                    print('eights')
                                 titles_done_rotation = x
                                 print('done')
                         
@@ -1271,7 +1263,6 @@ while run:
                     bp_title8=font.render(str(bptitles2[7]),False,(0,0,0))
 
                 elif game_state=='shop confirm':
-                    print(selected_pos)
                     if transparent_grid_button.rect.collidepoint(co):
                         x=(co[0]//40)
                         y=(co[1]-100)//40
@@ -1286,7 +1277,6 @@ while run:
                                 if selection=='delete':
                                     selected_pos.remove([x,y])  
                                     green_square_group.update(selected_pos)
-                        print(selected_pos)            
                         #green_square_group.update(selected_pos)
                         grid_surface_copy= grid_surface.copy()
                         screen.blit(grid_surface_copy,(0,100))
@@ -1905,8 +1895,6 @@ while run:
         draw_text('Reset Data',font_20,(255,255,255),470,510,screen,False)
         draw_text('Clicks Left: '+str(3-reset_counter),font_20,(255,255,255),465,525,screen,False)
 
-        
-
     elif game_state=='credits':
         draw_text('Credits',font_100,(255,255,255),340,100,screen,False)
 
@@ -1925,6 +1913,5 @@ while run:
         
         draw_text(' ',font_60,(255,255,255),390,100,screen,True)
         
-
     pygame.display.update()
     clock.tick(60)

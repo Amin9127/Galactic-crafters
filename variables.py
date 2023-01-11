@@ -113,7 +113,7 @@ prices={
 
 producer_upgrades={
     1:[0,'',1],
-    2:[100,'K',3],
+    2:[500,'K',3],
     3:[1,'M',5],
     4:[5000000,'',10],
 }
@@ -131,7 +131,7 @@ conveyor_upgrades={
 }
 seller_upgrades={
     1:[0,'',1],
-    2:[50,'K',1.1],
+    2:[100,'K',1.1],
     3:[500000,'',1.2],
     4:[5000000,'',1.3],
 }
@@ -447,6 +447,7 @@ selection=''
 credits_button= Buttons(250,500,blank_button_img,0.5,0.5)
 reset_button= Buttons(450,500,blank_button_img,0.5,0.5)
 reset_counter=0
+current_time=pygame.time.get_ticks()
 
 #menu_dict={
 #    1:'start',
