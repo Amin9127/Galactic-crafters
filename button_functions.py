@@ -22,25 +22,21 @@ def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,pr
                 new_producer=Producer(x,y,producer_img,producer_info)
                 producer_group.add(new_producer)
                 factory_layout[co[1]][co[0]]=1
-                have_producer=True
             elif selected_machine=='crafter':
                 crafter_info[decimal_co]=['n','circuit',{},'none']
                 new_crafter=Crafter(x,y,crafter_img)
                 crafter_group.add(new_crafter)
                 factory_layout[co[1]][co[0]]=1
-                have_crafter=True
             elif selected_machine=='conveyor':
                 conveyor_info[decimal_co]=['n','','','none']
                 new_conveyor=Conveyor(x,y,conveyor_img)
                 conveyor_group.add(new_conveyor)
                 factory_layout[co[1]][co[0]]=1
-                have_conveyor=True
             elif selected_machine=='seller':
                 seller_info[decimal_co]=['n','','','none']
                 new_seller=Seller(x,y,seller_img)
                 seller_group.add(new_seller)
                 factory_layout[co[1]][co[0]]=1
-                have_seller=True
 
     selected_pos=[]
     return money

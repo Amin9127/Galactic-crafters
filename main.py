@@ -33,12 +33,6 @@ def save_data():
                 'money_per_min':money_per_min,
                 'materials_supply':materials_supply,
                 'saved_time':saved_time,
-                #'producer_group':producer_group,
-                #'crafter_group':crafter_group,
-                #'conveyor_group':conveyor_group,
-                #'seller_group':seller_group,
-                #'material_group':material_group,
-                #'item_group':item_group,
 }
 
     pickle.dump(data_dict,data_file,pickle.HIGHEST_PROTOCOL)

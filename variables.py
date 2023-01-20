@@ -26,13 +26,7 @@ class Buttons():
 #            'revenue':revenue,
 #            'previous_revenue':previous_revenue,
 #            'money_per_min':money_per_min
-#            'materials_supply':materials_supply,
-#            'producer_group':producer_group,
-#            'crafter_group':crafter_group
-#            'conveyor_group':conveyor_group,
-#            'material_group':material_group,
-#            'item_group':item_group,
-#            'seller_group':seller_group}
+#            'materials_supply':materials_supply,}
 
 
 #producer_info={'0.0':['n','copper',1,'right'],}
@@ -171,7 +165,7 @@ jet_thruster_img=pygame.image.load('images/cross.png').convert_alpha()
 mega_engine_img=pygame.image.load('images/cross.png').convert_alpha()
 compressed_coal_img=pygame.image.load('images/cross.png').convert_alpha()
 fuel_tank_img=pygame.image.load('images/cross.png').convert_alpha()
-rocket_img=pygame.image.load('images/cross.png').convert_alpha()
+rocket_img=pygame.image.load('images/rocket.png').convert_alpha()
 
 
 
@@ -448,19 +442,3 @@ credits_button= Buttons(250,500,blank_button_img,0.5,0.5)
 reset_button= Buttons(450,500,blank_button_img,0.5,0.5)
 reset_counter=0
 current_time=pygame.time.get_ticks()
-
-#menu_dict={
-#    1:'start',
-#    2:'two player',
-#    3:'login',
-#}
-#menu_dict_co={
-#    1:[co of start arrow,],
-#    2:[co of twoplayer arrow],
-#    3:[co of login arrow],
-#}
-#
-##will give you the current selected subsection
-#menu_dict[menu_selection]
-##will give you the co of where you should draw your little arrow thing
-#menu_dict_co[menu_selection]
