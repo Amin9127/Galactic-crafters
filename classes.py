@@ -387,13 +387,13 @@ class Smelter(Machine):
         return Items(co,item,blueprints_value)
 
 class Blueprints(pygame.sprite.Sprite):
-    def  __init__(self,title_position,y,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font):
+    def  __init__(self,title_position,y,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font_20,font):
         super().__init__()
         blueprint_position={0:[20,145],1:[330,145],2:[20,280],3:[330,280],4:[20,415],5:[330,415],6:[20,550 ],7:[330,550]}
         blueprint_title_position={0:[140,310],1:[450,310],2:[140,445],3:[450,445],4:[140,580],5:[450,580],6:[140,715 ],7:[450,715]}
 
         self.bp_item_images={0:empty_slot_img,1:empty_slot_img,2:empty_slot_img,3:empty_slot_img,4:empty_slot_img,5:empty_slot_img}
-        self.bp_component_quantities=[0,0,0,0,0,0]
+        self.bp_component_quantities=['','','','','','']
         self.position=y
 
         self.image=pygame.image.load('images/gui_flat.png').convert_alpha()
@@ -422,8 +422,8 @@ class Blueprints(pygame.sprite.Sprite):
         self.amount5=font.render(str(self.bp_component_quantities[4]),False,(0,0,0))
         self.amount6=font.render(str(self.bp_component_quantities[5]),False,(0,0,0))
 
-        self.price_lable1=font.render('Sell Price:',False,(0,0,0))
-        self.price_lable2=font.render(str(blueprints_value[self.bp_title]),False,(0,0,0))
+        self.price_lable1=font_20.render('Sell Price:',False,(0,0,0))
+        self.price_lable2=font_20.render(str(blueprints_value[self.bp_title]),False,(0,0,0))
 
        
     def update(self,screen,item_imgs):

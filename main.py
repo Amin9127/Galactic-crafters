@@ -177,7 +177,7 @@ while run:
 
                     for y in range(0,8):
                         bptitles2[y]=bp_ordered_list[y]
-                        new_bp= Blueprints((y),y,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font)
+                        new_bp= Blueprints((y),y,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font_20,font)
                         blueprints_group.add(new_bp)
 
                         
@@ -546,7 +546,7 @@ while run:
 
                     for y in range(0,8):
                         bptitles2[y]=bp_ordered_list[y]
-                        new_bp= Blueprints((y),y,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font)
+                        new_bp= Blueprints((y),y,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font_20,font)
                         blueprints_group.add(new_bp)
 
                 elif map_button.rect.collidepoint(co):
@@ -626,7 +626,7 @@ while run:
                         
 
                             crafter_inv_items=['empty','empty','empty','empty','empty','empty']
-                            crafter_inv_quantities=['0','0','0','0','0','0']
+                            crafter_inv_quantities=['','','','','','']
 
                             for i in range(item_types):
                                 crafter_inv_items[i]=item_types_list[i]
@@ -644,7 +644,7 @@ while run:
                             bp_items_list=list(blueprints[crafter_info[decimal_co][1]].keys())
 
                             bp_items=['empty','empty','empty','empty','empty','empty']
-                            bp_item_quantities=['0','0','0','0','0','0']
+                            bp_item_quantities=['','','','','','']
 
                             for i in range (bp_item_types):
                                 bp_items[i]=bp_items_list[i]
@@ -1227,21 +1227,21 @@ while run:
                                 if x == bp_rotations and len(bp_ordered_list)%2 ==1:
                                     for y in range(0,6):
                                         bptitles2[y]=bp_ordered_list[y+bp_position]
-                                        new_bp= Blueprints(y+bp_position,y,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font)
+                                        new_bp= Blueprints(y+bp_position,y,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font_20,font)
                                         blueprints_group.add(new_bp)
                                     
                                         
                                     bptitles2[6]=bp_ordered_list[len(bp_ordered_list)-1]
-                                    new_bp= Blueprints(len(bp_ordered_list)-1,6,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font)
+                                    new_bp= Blueprints(len(bp_ordered_list)-1,6,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font_20,font)
                                     blueprints_group.add(new_bp)
                                     bptitles2[7]='nothing'
-                                    new_bp= Blueprints(-1,7,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font)
+                                    new_bp= Blueprints(-1,7,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font_20,font)
                                     blueprints_group.add(new_bp)
                                 
                                 else:
                                     for y in range(0,8):
                                         bptitles2[y]=bp_ordered_list[y+bp_position]
-                                        new_bp= Blueprints((y+bp_position),y,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font)
+                                        new_bp= Blueprints((y+bp_position),y,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font_20,font)
                                         blueprints_group.add(new_bp)
                                 titles_done_rotation = x
                                 print('done')
@@ -1715,7 +1715,7 @@ while run:
 
         
         screen.blit(shop_bg_copy,(0,0))
-        transparent_popup_button.draw()
+        #transparent_popup_button.draw()
         scrollbar_button.draw()
         slider_button.draw()
         blueprints_group.update(screen,item_imgs)
@@ -1846,7 +1846,7 @@ while run:
 
         for y in range(0,8):
             bptitles2[y]=bp_ordered_list[y]
-            new_bp= Blueprints((y),y,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font)
+            new_bp= Blueprints((y),y,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font_20,font)
             blueprints_group.add(new_bp)
         game_state='blueprints'
 
