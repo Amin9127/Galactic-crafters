@@ -958,6 +958,7 @@ while run:
                     conveyor_group.draw(grid_surface_copy)
                     seller_group.draw(grid_surface_copy)
                     material_group.draw(grid_surface_copy)
+                    item_group.draw(grid_surface_copy)
                     selected_producers=[]
                     selected_crafters=[]
                     selected_conveyors=[]

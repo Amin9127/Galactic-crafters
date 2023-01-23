@@ -115,13 +115,15 @@ class Material(pygame.sprite.Sprite):
         self.image=pygame.transform.scale(self.image,(20,20))
 
         self.amount= producer_info[self.decimal_co][2]
-        self.rect=self.image.get_rect(center=(self.spawn_co[0]+20,self.spawn_co[1]+20))
+        self.rect=self.image.get_rect(midtop=(self.spawn_co[0]+20,self.spawn_co[1]+20))
         self.count=0
         self.producer_thrust=True
         self.conveyor_thrust=False
         self.previous_conveyor_pos=''  
         self.post_conveyor_thrust=False
         self.worth=20
+        print(self.rect.y,'start')
+
    
     def update(self,seller_lv,seller_upgrades,conveyor_lv,conveyor_upgrades,producer_info,conveyor_info,conveyor_group,crafter_info,crafter_group,seller_group,smelter_group,blueprints_value,money):
         self.this_producer_info=producer_info.get(self.decimal_co)
@@ -132,6 +134,9 @@ class Material(pygame.sprite.Sprite):
         self.conveyor_speed=5*conveyor_upgrades[conveyor_lv][2]
         self.ticks_per_conveyor=40//self.conveyor_speed
         self.r_ticks_per_conveyor=40%self.conveyor_speed
+        self.extra_tick =0
+        if self.r_ticks_per_conveyor>0:
+            self.extra_tick=1
 
 
 
@@ -149,7 +154,9 @@ class Material(pygame.sprite.Sprite):
                     self.previous_conveyor_pos=self.decimal_co
 
         #conveyor movement.
-        if self.count<self.ticks_per_conveyor+(self.r_ticks_per_conveyor//self.conveyor_speed)+1 and self.conveyor_thrust==True:
+        if self.count<(self.ticks_per_conveyor+self.extra_tick-1) and self.conveyor_thrust==True:
+            print(self.rect.y,self.count,'conveyor s1')
+            
             if self.conveyor_direction=='n':
                 self.rect.y-=self.conveyor_speed
             elif self.conveyor_direction=='e':
@@ -158,9 +165,12 @@ class Material(pygame.sprite.Sprite):
                 self.rect.y+=self.conveyor_speed
             elif self.conveyor_direction=='w':
                 self.rect.x-=self.conveyor_speed
+            print(self.rect.y,self.count,'conveyor s2')
             self.count+=1
 
-        elif self.count==self.ticks_per_conveyor+1 and self.conveyor_thrust:
+        elif self.count==(self.ticks_per_conveyor+self.extra_tick-1) and self.conveyor_thrust:
+            print(self.rect.y,'conveyor e1')
+
             if self.conveyor_direction=='n':
                 self.rect.y-=self.r_ticks_per_conveyor
             elif self.conveyor_direction=='e':
@@ -171,10 +181,11 @@ class Material(pygame.sprite.Sprite):
                 self.rect.x-=self.r_ticks_per_conveyor
             self.conveyor_thrust=False
             self.count=0
+            print(self.rect.y,'conveyor e2')
 
         #initial producer thrust
-        if self.count<7 and self.producer_thrust:
-            print(self.rect.y)
+        if self.count<8 and self.producer_thrust:
+
             if self.this_producer_info is None:
                 pass
             elif self.this_producer_info[0]=='n':
@@ -192,42 +203,6 @@ class Material(pygame.sprite.Sprite):
         
         self.conveyor_collision=pygame.sprite.spritecollideany(self,conveyor_group,pygame.sprite.collide_rect_ratio(1))
 
-        #if self.conveyor_thrust==True:
-        #    if self.conveyor_direction=='n':
-        #        self.rect.y-=5*conveyor_upgrades[conveyor_lv][2]
-        #    elif self.conveyor_direction=='e':
-        #        self.rect.x+=5*conveyor_upgrades[conveyor_lv][2]
-        #    elif self.conveyor_direction=='s':
-        #        self.rect.y+=5*conveyor_upgrades[conveyor_lv][2]
-        #    elif self.conveyor_direction=='w':
-        #        self.rect.x-=5*conveyor_upgrades[conveyor_lv][2]
-        #    if pygame.sprite.spritecollideany(self,conveyor_group,pygame.sprite.collide_rect_ratio(1))==False:
-        #        self.conveyor_thrust=False
-        #        self.post_conveyor_thrust=True
-        ##
-        #if self.post_conveyor_thrust==True:
-        #    if self.conveyor_direction=='n':
-        #        self.rect.y-=20
-        #    elif self.conveyor_direction=='e':
-        #        self.rect.x+=20
-        #    elif self.conveyor_direction=='s':
-        #        self.rect.y+=20
-        #    elif self.conveyor_direction=='w':
-        #        self.rect.x-=20
-        #    self.post_conveyor_thrust=False
-
-        #if self.count<16 and self.conveyor_thrust==True:
-        #    if self.conveyor_direction=='n':
-        #        self.rect.y-=5*conveyor_upgrades[conveyor_lv][2]
-        #    elif self.conveyor_direction=='e':
-        #        self.rect.x+=5*conveyor_upgrades[conveyor_lv][2]
-        #    elif self.conveyor_direction=='s':
-        #        self.rect.y+=5*conveyor_upgrades[conveyor_lv][2]
-        #    elif self.conveyor_direction=='w':
-        #        self.rect.x-=5*conveyor_upgrades[conveyor_lv][2]
-        #    self.count+=1
-        #else:
-        #    self.conveyor_thrust=False
 
         if pygame.sprite.spritecollideany(self,crafter_group,pygame.sprite.collide_rect_ratio(1)) and self.producer_thrust==False and self.conveyor_thrust==False:
             self.x= ((self.rect.x)//40)*40
@@ -274,7 +249,7 @@ class Items(pygame.sprite.Sprite):
         self.image=item_imgs[self.type]        
         self.spawn_co=co
         self.image=pygame.transform.scale(self.image,(20,20))
-        self.rect=self.image.get_rect(center=(self.spawn_co[0]+20,self.spawn_co[1]+20))
+        self.rect=self.image.get_rect(midtop=(self.spawn_co[0]+20,self.spawn_co[1]+20))
         self.amount= amount
         self.count=0
         self.crafter_thrust=True
@@ -285,6 +260,15 @@ class Items(pygame.sprite.Sprite):
 
     def update(self,seller_lv,seller_upgrades,conveyor_lv,conveyor_upgrades,crafter_info,conveyor_group,conveyor_info,crafter_group,seller_group,money):
         self.this_crafter_info=crafter_info.get(self.decimal_co)
+        self.conveyor_speed=5*conveyor_upgrades[conveyor_lv][2]
+        self.ticks_per_conveyor=40//self.conveyor_speed
+        self.r_ticks_per_conveyor=40%self.conveyor_speed
+        self.extra_tick =0
+        if self.r_ticks_per_conveyor>0:
+            self.extra_tick=1
+
+
+
         if self.conveyor_thrust==False and self.crafter_thrust==False:
             if pygame.sprite.spritecollideany(self,conveyor_group,pygame.sprite.collide_rect_ratio(1)):
                 self.x= ((self.rect.x)//40)*40
@@ -296,10 +280,10 @@ class Items(pygame.sprite.Sprite):
                     self.crafter_thrust=False
                     self.count=0
                     self.previous_conveyor_pos=self.decimal_co
-        self.count+=1
         
 
-        if self.count<8 and self.crafter_thrust==True:
+        #initial crafter thrust
+        if self.count<8 and self.crafter_thrust:
             if self.this_crafter_info is None:
                 pass
             elif self.this_crafter_info[0]=='n':
@@ -310,21 +294,40 @@ class Items(pygame.sprite.Sprite):
                 self.rect.y+=5#*dt
             elif self.this_crafter_info[0]=='w':
                 self.rect.x-=5#*dt
+            self.count+=1
         else:
             self.crafter_thrust=False
 
-        if self.count<16 and self.conveyor_thrust==True:
+
+        #conveyor movement.
+        if self.count<(self.ticks_per_conveyor+self.extra_tick-1) and self.conveyor_thrust==True:
             if self.conveyor_direction=='n':
-                self.rect.y-=5*conveyor_upgrades[conveyor_lv][2]
+                self.rect.y-=self.conveyor_speed
             elif self.conveyor_direction=='e':
-                self.rect.x+=5*conveyor_upgrades[conveyor_lv][2]
+                self.rect.x+=self.conveyor_speed
             elif self.conveyor_direction=='s':
-                self.rect.y+=5*conveyor_upgrades[conveyor_lv][2]
+                self.rect.y+=self.conveyor_speed
             elif self.conveyor_direction=='w':
-                self.rect.x-=5*conveyor_upgrades[conveyor_lv][2]
+                self.rect.x-=self.conveyor_speed
             self.count+=1
-        else:
+
+        elif self.count==(self.ticks_per_conveyor+self.extra_tick-1) and self.conveyor_thrust:
+            if self.conveyor_direction=='n':
+                self.rect.y-=self.r_ticks_per_conveyor
+            elif self.conveyor_direction=='e':
+                self.rect.x+=self.r_ticks_per_conveyor
+            elif self.conveyor_direction=='s':
+                self.rect.y+=self.r_ticks_per_conveyor
+            elif self.conveyor_direction=='w':
+                self.rect.x-=self.r_ticks_per_conveyor
             self.conveyor_thrust=False
+            self.count=0
+    
+
+
+
+
+
 
         if pygame.sprite.spritecollideany(self,crafter_group,pygame.sprite.collide_rect_ratio(1)) and self.crafter_thrust==False and self.conveyor_thrust==False:
             self.x= ((self.rect.x)//40)*40
