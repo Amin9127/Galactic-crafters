@@ -11,7 +11,7 @@ pygame.font.init()
 
 global money
 #usual start 1000 money
-money=1000000
+money=1000
 
 #saves data
 def save_data():
@@ -1148,6 +1148,7 @@ while run:
                         crafter_lv =1
                         conveyor_lv =1
                         seller_lv =1
+                        #usual start 1000
                         money=1000
                         revenue =0
                         previous_revenue=0
@@ -1163,6 +1164,11 @@ while run:
                             conveyor.kill()
                         for seller in seller_group:
                             seller.kill()                                                                                    
+
+                        for material in material_group:
+                            material.kill()
+                        for item in item_group:
+                            item.kill()
 
                         data_dict={'producer_info':producer_info,
                                 'crafter_info':crafter_info,

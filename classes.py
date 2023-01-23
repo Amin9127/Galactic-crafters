@@ -120,6 +120,7 @@ class Material(pygame.sprite.Sprite):
         self.producer_thrust=True
         self.conveyor_thrust=False
         self.previous_conveyor_pos=''  
+        self.post_conveyor_thrust=False
         self.worth=20
    
     def update(self,seller_lv,seller_upgrades,conveyor_lv,conveyor_upgrades,producer_info,conveyor_info,conveyor_group,crafter_info,crafter_group,seller_group,smelter_group,blueprints_value,money):
@@ -127,6 +128,12 @@ class Material(pygame.sprite.Sprite):
         self.co=self.decimal_co.split('.')
         self.co[0]=int(self.co[0])
         self.co[1]=int(self.co[1])
+
+        self.conveyor_speed=5*conveyor_upgrades[conveyor_lv][2]
+        self.ticks_per_conveyor=40//self.conveyor_speed
+        self.r_ticks_per_conveyor=40%self.conveyor_speed
+
+
 
         if self.conveyor_thrust==False and self.producer_thrust==False:
 
@@ -140,10 +147,34 @@ class Material(pygame.sprite.Sprite):
                     self.producer_thrust=False
                     self.count=0
                     self.previous_conveyor_pos=self.decimal_co
-        self.count+=1
 
+        #conveyor movement.
+        if self.count<self.ticks_per_conveyor+(self.r_ticks_per_conveyor//self.conveyor_speed)+1 and self.conveyor_thrust==True:
+            if self.conveyor_direction=='n':
+                self.rect.y-=self.conveyor_speed
+            elif self.conveyor_direction=='e':
+                self.rect.x+=self.conveyor_speed
+            elif self.conveyor_direction=='s':
+                self.rect.y+=self.conveyor_speed
+            elif self.conveyor_direction=='w':
+                self.rect.x-=self.conveyor_speed
+            self.count+=1
 
-        if self.count<8 and self.producer_thrust==True:
+        elif self.count==self.ticks_per_conveyor+1 and self.conveyor_thrust:
+            if self.conveyor_direction=='n':
+                self.rect.y-=self.r_ticks_per_conveyor
+            elif self.conveyor_direction=='e':
+                self.rect.x+=self.r_ticks_per_conveyor
+            elif self.conveyor_direction=='s':
+                self.rect.y+=self.r_ticks_per_conveyor
+            elif self.conveyor_direction=='w':
+                self.rect.x-=self.r_ticks_per_conveyor
+            self.conveyor_thrust=False
+            self.count=0
+
+        #initial producer thrust
+        if self.count<7 and self.producer_thrust:
+            print(self.rect.y)
             if self.this_producer_info is None:
                 pass
             elif self.this_producer_info[0]=='n':
@@ -154,37 +185,49 @@ class Material(pygame.sprite.Sprite):
                 self.rect.y+=5#*dt
             elif self.this_producer_info[0]=='w':
                 self.rect.x-=5#*dt
+            self.count+=1
         else:
             self.producer_thrust=False
 
+        
         self.conveyor_collision=pygame.sprite.spritecollideany(self,conveyor_group,pygame.sprite.collide_rect_ratio(1))
 
-        #if self.conveyor_collision and self.conveyor_thrust==True:
+        #if self.conveyor_thrust==True:
         #    if self.conveyor_direction=='n':
-        #        self.rect.y-=5#*conveyor_upgrades[conveyor_lv][2]
+        #        self.rect.y-=5*conveyor_upgrades[conveyor_lv][2]
         #    elif self.conveyor_direction=='e':
-        #        self.rect.x+=5#*conveyor_upgrades[conveyor_lv][2]
+        #        self.rect.x+=5*conveyor_upgrades[conveyor_lv][2]
         #    elif self.conveyor_direction=='s':
-        #        self.rect.y+=5#*conveyor_upgrades[conveyor_lv][2]
+        #        self.rect.y+=5*conveyor_upgrades[conveyor_lv][2]
         #    elif self.conveyor_direction=='w':
-        #        self.rect.x-=5#*conveyor_upgrades[conveyor_lv][2]
+        #        self.rect.x-=5*conveyor_upgrades[conveyor_lv][2]
+        #    if pygame.sprite.spritecollideany(self,conveyor_group,pygame.sprite.collide_rect_ratio(1))==False:
+        #        self.conveyor_thrust=False
+        #        self.post_conveyor_thrust=True
+        ##
+        #if self.post_conveyor_thrust==True:
+        #    if self.conveyor_direction=='n':
+        #        self.rect.y-=20
+        #    elif self.conveyor_direction=='e':
+        #        self.rect.x+=20
+        #    elif self.conveyor_direction=='s':
+        #        self.rect.y+=20
+        #    elif self.conveyor_direction=='w':
+        #        self.rect.x-=20
+        #    self.post_conveyor_thrust=False
+
+        #if self.count<16 and self.conveyor_thrust==True:
+        #    if self.conveyor_direction=='n':
+        #        self.rect.y-=5*conveyor_upgrades[conveyor_lv][2]
+        #    elif self.conveyor_direction=='e':
+        #        self.rect.x+=5*conveyor_upgrades[conveyor_lv][2]
+        #    elif self.conveyor_direction=='s':
+        #        self.rect.y+=5*conveyor_upgrades[conveyor_lv][2]
+        #    elif self.conveyor_direction=='w':
+        #        self.rect.x-=5*conveyor_upgrades[conveyor_lv][2]
         #    self.count+=1
         #else:
         #    self.conveyor_thrust=False
-
-
-        if self.count<16 and self.conveyor_thrust==True:
-            if self.conveyor_direction=='n':
-                self.rect.y-=5*conveyor_upgrades[conveyor_lv][2]
-            elif self.conveyor_direction=='e':
-                self.rect.x+=5*conveyor_upgrades[conveyor_lv][2]
-            elif self.conveyor_direction=='s':
-                self.rect.y+=5*conveyor_upgrades[conveyor_lv][2]
-            elif self.conveyor_direction=='w':
-                self.rect.x-=5*conveyor_upgrades[conveyor_lv][2]
-            self.count+=1
-        else:
-            self.conveyor_thrust=False
 
         if pygame.sprite.spritecollideany(self,crafter_group,pygame.sprite.collide_rect_ratio(1)) and self.producer_thrust==False and self.conveyor_thrust==False:
             self.x= ((self.rect.x)//40)*40
@@ -202,9 +245,9 @@ class Material(pygame.sprite.Sprite):
             self.kill()
         elif self.rect.x<0:
             self.kill()
-        elif self.rect.y>900:
+        elif self.rect.y>800:
             self.kill()
-        elif self.rect.y<100:
+        elif self.rect.y<0:
             self.kill()
 
         material_to_liquid={'copper':'liquid copper','iron':'liquid iron','gold':'liquid gold','aluminium':'liquid aluminium','lead':'liquid lead','coal':'liquid coal'}
