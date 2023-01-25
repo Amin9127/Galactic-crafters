@@ -256,6 +256,7 @@ edit_img=pygame.image.load('images/edit.png').convert_alpha()
 blueprints_img=pygame.image.load('images/blueprints.png').convert_alpha()
 map_img=pygame.image.load('images/button4.png').convert_alpha()
 gui_flat_img=pygame.image.load('images/gui_flat.png').convert_alpha()
+play_bg_img=pygame.image.load('images/play_bg2.png').convert_alpha()
 #play screen button instantiation
 settings_mini_button=Buttons(0,0,settings_mini_img,0.5,0.5)
 shop_button = Buttons(800,250,shop_img,0.5,0.5)

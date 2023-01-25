@@ -116,12 +116,14 @@ while run:
     last_time=time.time()
 
     screen.fill((52,78,91))
+    screen.blit(play_bg_img,(0,0))
+    
 
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
             save_data()
             pygame.quit()
-            exit()          
+            sys.exit()          
         if event.type ==seconds_event:
             #code below ran every second
             if game_state in ('play','shop supply'):
@@ -526,7 +528,7 @@ while run:
                     game_state='settings'
                 elif exit_button.rect.collidepoint(co):
                     pygame.quit()
-                    exit()
+                    sys.exit()
 
             elif game_state=='play':
                 if settings_mini_button.rect.collidepoint(co):
@@ -1392,6 +1394,8 @@ while run:
 
        
         screen.fill((52,78,91))
+        screen.blit(play_bg_img,(0,0))
+
         #buttons
         settings_mini_button.draw()
         shop_button.draw()
