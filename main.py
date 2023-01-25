@@ -166,29 +166,29 @@ while run:
             money_per_min=revenue-previous_revenue
             previous_revenue=revenue
 
-                data = yf.download("GBP=X", period="1d", interval="1d",progress=False)
-                gbp_usd= data.Close
-                print(round(float(gbp_usd),2),'gbp/usd')                 
+            data = yf.download("GBP=X", period="1d", interval="1d",progress=False)
+            gbp_usd= data.Close
+            print(round(float(gbp_usd),2),'gbp/usd')                 
 
-                data = yf.download("HG=F", period="1d", interval="1d",progress=False)
-                copper_value = data.Close
-                print(round(float(copper_value),2),'copper')  
-                
-                data = yf.download("IRON", period="1d", interval="1d",progress=False)
-                iron_value = data.Close
-                print(round(float(iron_value),2),'iron')  
+            data = yf.download("HG=F", period="1d", interval="1d",progress=False)
+            copper_value = data.Close
+            print(round(float(copper_value),2),'copper')  
+            
+            data = yf.download("IRON", period="1d", interval="1d",progress=False)
+            iron_value = data.Close
+            print(round(float(iron_value),2),'iron')  
 
-                data = yf.download("GC=F", period="1d", interval="1d",progress=False)
-                gold_value = data.Close
-                print(round(float(gold_value),2),'gold per ounce usd')
+            data = yf.download("GC=F", period="1d", interval="1d",progress=False)
+            gold_value = data.Close
+            print(round(float(gold_value),2),'gold per ounce usd')
 
-                data = yf.download("ALI=F", period="1d", interval="1d",progress=False)
-                aluminium_value = data.Close
-                print(round(float(aluminium_value),2),'aluminium per tonne usd')
+            data = yf.download("ALI=F", period="1d", interval="1d",progress=False)
+            aluminium_value = data.Close
+            print(round(float(aluminium_value),2),'aluminium per tonne usd')
 
-                data = yf.download("PL=F", period="1d", interval="1d",progress=False)
-                lead_value = data.Close
-                print(round(float(lead_value),2),'lead per tonne usd')             
+            data = yf.download("PL=F", period="1d", interval="1d",progress=False)
+            lead_value = data.Close
+            print(round(float(lead_value),2),'lead per tonne usd')             
 
         #all keybinds check and what it does in this if elif ladder
         if event.type == pygame.KEYDOWN:
