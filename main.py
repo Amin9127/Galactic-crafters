@@ -1,8 +1,10 @@
 import pygame 
 import os
 import pickle
-from sys import exit
+import sys
 import time
+import yfinance as yf
+
 from button_functions import *
 from classes import *
 from variables import *
@@ -94,7 +96,9 @@ if file_exists:
 else:
     save_data()
 
-
+data = yf.download("GC=F", period="1d", interval="1d",progress=False)
+gold_value = data.Close
+print(float(gold_value),'value')
 
 #timers
 #creates a event every second
@@ -117,14 +121,25 @@ while run:
 
     screen.fill((52,78,91))
     screen.blit(play_bg_img,(0,0))
+
+
     
 
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
             save_data()
             pygame.quit()
-            sys.exit()          
+            sys.exit()  
+
         if event.type ==seconds_event:
+
+
+
+
+
+
+       
+
             #code below ran every second
             if game_state in ('play','shop supply'):
                 screen.blit(grid_surface,(0,100))
@@ -150,6 +165,30 @@ while run:
         if event.type==minute_event:
             money_per_min=revenue-previous_revenue
             previous_revenue=revenue
+
+                data = yf.download("GBP=X", period="1d", interval="1d",progress=False)
+                gbp_usd= data.Close
+                print(round(float(gbp_usd),2),'gbp/usd')                 
+
+                data = yf.download("HG=F", period="1d", interval="1d",progress=False)
+                copper_value = data.Close
+                print(round(float(copper_value),2),'copper')  
+                
+                data = yf.download("IRON", period="1d", interval="1d",progress=False)
+                iron_value = data.Close
+                print(round(float(iron_value),2),'iron')  
+
+                data = yf.download("GC=F", period="1d", interval="1d",progress=False)
+                gold_value = data.Close
+                print(round(float(gold_value),2),'gold per ounce usd')
+
+                data = yf.download("ALI=F", period="1d", interval="1d",progress=False)
+                aluminium_value = data.Close
+                print(round(float(aluminium_value),2),'aluminium per tonne usd')
+
+                data = yf.download("PL=F", period="1d", interval="1d",progress=False)
+                lead_value = data.Close
+                print(round(float(lead_value),2),'lead per tonne usd')             
 
         #all keybinds check and what it does in this if elif ladder
         if event.type == pygame.KEYDOWN:
@@ -1137,9 +1176,11 @@ while run:
                 elif credits_button.rect.collidepoint(co):
                     game_state='credits'
                 elif reset_button.rect.collidepoint(co):
+
                     reset_counter+=1
                     print(reset_counter)
                     if reset_counter==3:
+                        
                         
                         producer_info={}
                         crafter_info={}
