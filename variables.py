@@ -10,6 +10,51 @@ class Buttons():
     def draw(self):
         screen.blit(self.image,(self.rect.x,self.rect.y))
 
+
+class Area():
+    def __init__(self):
+        #producer_info={'0.0':['n','copper',1,'right'],}
+        self.producer_info={}
+        #crafter_info={'0.0':['n','circuit',{'input':0},'right']}
+        self.crafter_info={}
+        #conveyor_info={'0.0':['n','','','right]}
+        self.conveyor_info={}
+        #seller_info={'0.0':['n','','','right']}
+        self.seller_info={}
+
+        self.temp_info={}
+        self.factory_layout=[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+
+        self.producer_lv =1
+        self.crafter_lv =1
+        self.conveyor_lv =1
+        self.seller_lv =1
+
+        self.materials_supply={'copper':0,'iron':0,'gold':0,'aluminium':0,'lead':0,'coal':0}
+
+        #sprite groups
+        self.producer_group=pygame.sprite.Group()
+        self.crafter_group=pygame.sprite.Group()
+        self.conveyor_group=pygame.sprite.Group()
+        self.material_group=pygame.sprite.Group()
+        self.item_group=pygame.sprite.Group()
+        self.seller_group=pygame.sprite.Group()
+        self.smelter_group=pygame.sprite.Group()
+
+        self.green_square_group=pygame.sprite.Group()
+        self.arrows_group=pygame.sprite.Group()
+        self.blueprints_group=pygame.sprite.Group()
+        
+earth=Area()
+mars=Area()
+
+map_locations={'earth':earth,
+    'mars':mars,}
+
+current_location='earth'
+
+area_object=map_locations[current_location]
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #machine info dictionaries
 #changeable variables
@@ -29,42 +74,42 @@ class Buttons():
 #            'materials_supply':materials_supply,}
 
 
-#producer_info={'0.0':['n','copper',1,'right'],}
-producer_info={}
-#crafter_info={'0.0':['n','circuit',{'input':0},'right']}
-crafter_info={}
-#conveyor_info={'0.0':['n','','','right]}
-conveyor_info={}
-#seller_info={'0.0':['n','','','right']}
-seller_info={}
-
-temp_info={}
-factory_layout=[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
-
-producer_lv =1
-crafter_lv =1
-conveyor_lv =1
-seller_lv =1
-
+##producer_info={'0.0':['n','copper',1,'right'],}
+#producer_info={}
+##crafter_info={'0.0':['n','circuit',{'input':0},'right']}
+#crafter_info={}
+##conveyor_info={'0.0':['n','','','right]}
+#conveyor_info={}
+##seller_info={'0.0':['n','','','right']}
+#seller_info={}
+#
+#temp_info={}
+#factory_layout=[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+#
+#producer_lv =1
+#crafter_lv =1
+#conveyor_lv =1
+#seller_lv =1
+#
 revenue =0
 previous_revenue=0
 money_per_min=0
 saved_time=0
-
-materials_supply={'copper':0,'iron':0,'gold':0,'aluminium':0,'lead':0,'coal':0}
-
-#sprite groups
-producer_group=pygame.sprite.Group()
-crafter_group=pygame.sprite.Group()
-conveyor_group=pygame.sprite.Group()
-material_group=pygame.sprite.Group()
-item_group=pygame.sprite.Group()
-seller_group=pygame.sprite.Group()
-smelter_group=pygame.sprite.Group()
-
-green_square_group=pygame.sprite.Group()
-arrows_group=pygame.sprite.Group()
-blueprints_group=pygame.sprite.Group()
+#
+#materials_supply={'copper':0,'iron':0,'gold':0,'aluminium':0,'lead':0,'coal':0}
+#
+##sprite groups
+#producer_group=pygame.sprite.Group()
+#crafter_group=pygame.sprite.Group()
+#conveyor_group=pygame.sprite.Group()
+#material_group=pygame.sprite.Group()
+#item_group=pygame.sprite.Group()
+#seller_group=pygame.sprite.Group()
+#smelter_group=pygame.sprite.Group()
+#
+#green_square_group=pygame.sprite.Group()
+#arrows_group=pygame.sprite.Group()
+#blueprints_group=pygame.sprite.Group()
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #screen set up
@@ -443,7 +488,16 @@ selected_pos=[]
 selection=''
 
 
+#map 
+earth_button=Buttons(20,20,gui_flat_img,1,1)
+mars_button=Buttons(20,120,gui_flat_img,1,1)
+
+
+
+
 credits_button= Buttons(250,500,blank_button_img,0.5,0.5)
 reset_button= Buttons(450,500,blank_button_img,0.5,0.5)
 reset_counter=0
 current_time=pygame.time.get_ticks()
+
+
