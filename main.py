@@ -10,6 +10,7 @@ from classes import *
 from variables import *
 pygame.init()
 pygame.font.init()
+pygame.mixer.init()
 
 #usual start 1000 money
 global money
@@ -39,6 +40,32 @@ def save_data():
 
     pickle.dump(data_dict,data_file,pickle.HIGHEST_PROTOCOL)
     data_file.close()
+
+#def save_data():
+#    data_file = open("Galactic_Crafters.txt", "wb")
+#    saved_time=pygame.time.get_ticks()
+#    for area in list(map_locations.keys()):
+#    area_data_array=[]
+#    #data_dict={'earth':area}    
+#    data_dict={'producer_info':area_object.producer_info,
+#                'crafter_info':area_object.crafter_info,
+#                'conveyor_info':area_object.conveyor_info,
+#                'seller_info':area_object.seller_info,
+#                'factory_layout':area_object.factory_layout,
+#                'producer_lv':area_object.producer_lv,
+#                'crafter_lv':area_object.crafter_lv,
+#                'conveyor_lv':area_object.conveyor_lv,
+#                'seller_lv':area_object.seller_lv,
+#                'money':money,
+#                'revenue':revenue,
+#                'previous_revenue':previous_revenue,
+#                'money_per_min':money_per_min,
+#                'materials_supply':area_object.materials_supply,
+#                'saved_time':saved_time,
+#}
+#
+#    pickle.dump(data_dict,data_file,pickle.HIGHEST_PROTOCOL)
+#    data_file.close()
 
 #check if file called this exists
 file_exists = os.path.exists("Galactic_Crafters.txt")
@@ -85,7 +112,7 @@ if file_exists:
         co[1]=int(co[1])
         new_conveyor=Conveyor(co[0],co[1],conveyor_img)
         area_object.conveyor_group.add(new_conveyor)
-        area_object.conveyor_group.update(conveyor_info)
+        area_object.conveyor_group.update(area_object.conveyor_info)
     for decimal_co in list(area_object.seller_info.keys()):
         co = decimal_co.split('.')
         co[0]=int(co[0])
@@ -118,8 +145,7 @@ while run:
 
     screen.fill((52,78,91))
     screen.blit(play_bg_img,(0,0))
-
-
+    pygame.mixer.music.load('audio/bg3.mp3')
     
 
     for event in pygame.event.get():
@@ -130,13 +156,6 @@ while run:
             sys.exit()  
 
         if event.type ==seconds_event:
-
-
-
-
-
-
-       
 
             #code below ran every second
             if game_state in ('play','shop supply'):
@@ -157,7 +176,7 @@ while run:
                 for crafter in area_object.crafter_group:
                     amount_maybe=crafter.update(area_object.crafter_info,blueprints,crafter_upgrades,area_object.crafter_lv)
                     if amount_maybe!=False:
-                        item_group.add(crafter.create_item(blueprints_value,item_imgs,amount_maybe))
+                        area_object.item_group.add(crafter.create_item(blueprints_value,item_imgs,amount_maybe))
 
         #updates the money per min variable every minute
         if event.type==minute_event:
@@ -193,6 +212,7 @@ while run:
             if game_state=='main menu':
                 if event.key == pygame.K_p:
                     game_state='play'
+                    pygame.mixer.music.play()
                 elif event.key==pygame.K_c:
                     game_state='controls'
                 elif event.key==pygame.K_s:
@@ -225,6 +245,7 @@ while run:
 
             elif game_state=='ingame settings':
                 if event.key == pygame.K_ESCAPE:
+                    pygame.mixer.music.pause()
                     game_state='main menu'
                 elif event.key == pygame.K_SPACE:
                     game_state='play'
@@ -300,7 +321,7 @@ while run:
                     selected_conveyors=[]
                     selected_sellers=[]
                     selected_machines=[]
-                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
 
                 elif event.key ==pygame.K_RETURN:
                     #sends the user back to play and empties related variables
@@ -310,7 +331,7 @@ while run:
                     selected_conveyors=[] 
                     selected_machines=[]
                     selected_sellers=[]
-                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)  
+                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)  
 
                 elif event.key ==pygame.K_ESCAPE:
                     game_state='play'
@@ -319,12 +340,12 @@ while run:
                     selected_conveyors=[] 
                     selected_machines=[]
                     selected_sellers=[]
-                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)  
+                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)  
                 
                 elif event.key ==pygame.K_r:
-                    rotate(crafter_upgrades,blueprints,selected_producers,selected_machines,selected_crafters,selected_conveyors,selected_sellers,grid_surface_copy,area_object)
+                    rotate(blueprints,selected_producers,selected_machines,selected_crafters,selected_conveyors,selected_sellers,grid_surface_copy,area_object)
                 elif event.key ==pygame.K_x:
-                    #delete(area_object.factory_layout,selected_producers,area_object.producer_info,area_object.producer_group,area_object.crafter_info,selected_crafters,area_object.crafter_group,selected_conveyors,conveyor_info,area_object.conveyor_group,area_object.arrows_group,area_object.material_group,grid_surface)
+                    #delete(area_object.factory_layout,selected_producers,area_object.producer_info,area_object.producer_group,area_object.crafter_info,selected_crafters,area_object.crafter_group,selected_conveyors,area_object.conveyor_info,area_object.conveyor_group,area_object.arrows_group,area_object.material_group,grid_surface)
                     #deletes selected machines
                     for pos in selected_producers:
                         area_object.factory_layout[int(pos[1]/40)][int(pos[0]/40)]=0
@@ -353,9 +374,9 @@ while run:
                     grid_surface_copy= grid_surface.copy()
                     area_object.producer_group.update(area_object.producer_info)
                     area_object.crafter_group.update(area_object.crafter_info,blueprints,crafter_upgrades,area_object.crafter_lv)
-                    area_object.conveyor_group.update(conveyor_info)
+                    area_object.conveyor_group.update(area_object.conveyor_info)
                     area_object.seller_group.update(area_object.seller_info)
-                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
                     area_object.producer_group.draw(grid_surface_copy)
                     area_object.crafter_group.draw(grid_surface_copy)
                     area_object.conveyor_group.draw(grid_surface_copy)
@@ -368,9 +389,9 @@ while run:
                     grid_surface_copy= grid_surface.copy()
                     area_object.producer_group.update(area_object.producer_info)
                     area_object.crafter_group.update(area_object.crafter_info,blueprints,crafter_upgrades,area_object.crafter_lv)
-                    area_object.conveyor_group.update(conveyor_info)
+                    area_object.conveyor_group.update(area_object.conveyor_info)
                     area_object.seller_group.update(area_object.seller_info)
-                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
                     area_object.producer_group.draw(grid_surface_copy)
                     area_object.crafter_group.draw(grid_surface_copy)
                     area_object.conveyor_group.draw(grid_surface_copy)
@@ -385,9 +406,9 @@ while run:
                     grid_surface_copy= grid_surface.copy()
                     area_object.producer_group.update(area_object.producer_info)
                     area_object.crafter_group.update(area_object.crafter_info,blueprints,crafter_upgrades,area_object.crafter_lv)
-                    area_object.conveyor_group.update(conveyor_info)
+                    area_object.conveyor_group.update(area_object.conveyor_info)
                     area_object.seller_group.update(area_object.seller_info)
-                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
                     area_object.producer_group.draw(grid_surface_copy)
                     area_object.crafter_group.draw(grid_surface_copy)
                     area_object.conveyor_group.draw(grid_surface_copy)
@@ -402,9 +423,9 @@ while run:
                     grid_surface_copy= grid_surface.copy()
                     area_object.producer_group.update(area_object.producer_info)
                     area_object.crafter_group.update(area_object.crafter_info,blueprints,crafter_upgrades,area_object.crafter_lv)
-                    area_object.conveyor_group.update(conveyor_info)
+                    area_object.conveyor_group.update(area_object.conveyor_info)
                     area_object.seller_group.update(area_object.seller_info)
-                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
                     area_object.producer_group.draw(grid_surface_copy)
                     area_object.crafter_group.draw(grid_surface_copy)
                     area_object.conveyor_group.draw(grid_surface_copy)
@@ -419,9 +440,9 @@ while run:
                     grid_surface_copy= grid_surface.copy()
                     area_object.producer_group.update(area_object.producer_info)
                     area_object.crafter_group.update(area_object.crafter_info,blueprints,crafter_upgrades,area_object.crafter_lv)
-                    area_object.conveyor_group.update(conveyor_info)
+                    area_object.conveyor_group.update(area_object.conveyor_info)
                     area_object.seller_group.update(area_object.seller_info)
-                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
                     area_object.producer_group.draw(grid_surface_copy)
                     area_object.crafter_group.draw(grid_surface_copy)
                     area_object.conveyor_group.draw(grid_surface_copy)
@@ -494,7 +515,7 @@ while run:
                     selected_conveyors=[] 
                     selected_sellers=[]
                     selected_machines=[]
-                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info) 
+                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info) 
 
                 elif event.key==pygame.K_RETURN:
                     copy_price = copied_producers*prices['producer']+copied_crafters*prices['crafter']+copied_conveyors*prices['conveyor']+copied_sellers*prices['seller']
@@ -534,8 +555,8 @@ while run:
                         money-=copy_price
                         area_object.producer_group.update(area_object.producer_info)
                         area_object.crafter_group.update(area_object.crafter_info,blueprints,crafter_upgrades,area_object.crafter_lv)
-                        area_object.conveyor_group.update(conveyor_info)
-                        area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                        area_object.conveyor_group.update(area_object.conveyor_info)
+                        area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
                         area_object.seller_group.update(area_object.seller_info)        
             
             elif game_state=='map':
@@ -561,6 +582,7 @@ while run:
             if game_state=='main menu':
                 if play_button.rect.collidepoint(co): 
                     game_state='play'
+                    pygame.mixer.music.play()
                 elif controls_button.rect.collidepoint(co):
                     game_state='controls'
                 elif settings_button.rect.collidepoint(co):
@@ -600,7 +622,7 @@ while run:
                     if area_object.factory_layout[y][x]==1:
                         producer_cos=list(area_object.producer_info.keys())
                         crafter_cos=list(area_object.crafter_info.keys())
-                        conveyor_cos=list(conveyor_info.keys())
+                        conveyor_cos=list(area_object.conveyor_info.keys())
                         x*=40
                         y*=40
                         decimal_co=str(x)+'.'+str(y)
@@ -750,6 +772,7 @@ while run:
             elif game_state=='ingame_settings':
                 if menu_button.rect.collidepoint(co):
                     game_state= 'main menu'
+                    pygame.mixer.music.pause()
                 elif resume_button.rect.collidepoint(co):
                     game_state='play'
                 elif transparent_settings.rect.collidepoint(co) == False:
@@ -956,7 +979,7 @@ while run:
                         paste_possible=False
                         area_object.producer_group.update(area_object.producer_info)
                         area_object.crafter_group.update(area_object.crafter_info,blueprints,crafter_upgrades,area_object.crafter_lv)
-                        area_object.conveyor_group.update(conveyor_info)
+                        area_object.conveyor_group.update(area_object.conveyor_info)
                         area_object.seller_group.update(area_object.seller_info)
 
                 elif event.button==2:
@@ -966,7 +989,7 @@ while run:
                     selected_conveyors=[] 
                     selected_sellers=[]
                     selected_machines=[]
-                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
 
                 elif transparent_grid_button.rect.collidepoint(co):
                     if event.button==1:
@@ -999,13 +1022,13 @@ while run:
                     area_object.conveyor_group.draw(grid_surface_copy)
                     area_object.seller_group.draw(grid_surface_copy)
                     area_object.material_group.draw(grid_surface_copy)
-                    item_group.draw(grid_surface_copy)
+                    area_object.item_group.draw(grid_surface_copy)
                     selected_producers=[]
                     selected_crafters=[]
                     selected_conveyors=[]
                     selected_sellers=[]
                     selected_machines=[]
-                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)         
+                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)         
 
                 elif event.button==2:
                     game_state='play'
@@ -1014,7 +1037,7 @@ while run:
                     selected_conveyors=[] 
                     selected_machines=[]
                     selected_sellers=[]
-                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)  
+                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)  
 
                 elif transparent_grid_button.rect.collidepoint(co):
                     if event.button==1:
@@ -1032,7 +1055,7 @@ while run:
                         print(decimal_co,'selected')
                         producer_cos=list(area_object.producer_info.keys())
                         crafter_cos=list(area_object.crafter_info.keys())
-                        conveyor_cos=list(conveyor_info.keys())
+                        conveyor_cos=list(area_object.conveyor_info.keys())
                         seller_cos=list(area_object.seller_info.keys())
 
                         if area_object.factory_layout[layout_y][layout_x]==1:
@@ -1040,12 +1063,12 @@ while run:
                                 if co in selected_producers:
                                     selected_producers.remove(co)
                                     selected_machines.remove(co)
-                                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
                                     selection='remove'
                                 else:
                                     selected_producers.append(co)
                                     selected_machines.append(co)
-                                    new_arrow = Arrow(int(co[0]),int(co[1]),area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                                    new_arrow = Arrow(int(co[0]),int(co[1]),area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
                                     area_object.arrows_group.add(new_arrow)
                                     selection='select'
 
@@ -1053,12 +1076,12 @@ while run:
                                 if co in selected_crafters:
                                     selected_crafters.remove(co)
                                     selected_machines.remove(co)
-                                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
                                     selection='remove'
                                 else:
                                     selected_crafters.append(co)
                                     selected_machines.append(co)
-                                    new_arrow = Arrow(int(co[0]),int(co[1]),area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                                    new_arrow = Arrow(int(co[0]),int(co[1]),area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
                                     area_object.arrows_group.add(new_arrow)
                                     selection='select'
 
@@ -1066,12 +1089,12 @@ while run:
                                 if co in selected_conveyors:
                                     selected_conveyors.remove(co) 
                                     selected_machines.remove(co)
-                                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
                                     selection='remove'
                                 else:
                                     selected_conveyors.append(co)
                                     selected_machines.append(co)
-                                    new_arrow = Arrow(int(co[0]),int(co[1]),area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                                    new_arrow = Arrow(int(co[0]),int(co[1]),area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
                                     area_object.arrows_group.add(new_arrow)
                                     selection='select'
 
@@ -1079,12 +1102,12 @@ while run:
                                 if co in selected_sellers:
                                     selected_sellers.remove(co) 
                                     selected_machines.remove(co)
-                                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
                                     selection='remove'
                                 else:
                                     selected_sellers.append(co)
                                     selected_machines.append(co)
-                                    new_arrow = Arrow(int(co[0]),int(co[1]),area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                                    new_arrow = Arrow(int(co[0]),int(co[1]),area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
                                     area_object.arrows_group.add(new_arrow)
                                     selection='select'
                             
@@ -1098,7 +1121,7 @@ while run:
                             area_object.crafter_group.draw(grid_surface_copy)
                             area_object.conveyor_group.draw(grid_surface_copy)
                             area_object.seller_group.draw(grid_surface_copy)
-                            item_group.draw(grid_surface_copy)
+                            area_object.item_group.draw(grid_surface_copy)
                             area_object.material_group.draw(grid_surface_copy) 
                             area_object.arrows_group.draw(grid_surface_copy)
                         
@@ -1106,7 +1129,7 @@ while run:
                     rotate(crafter_upgrades,blueprints,selected_producers,selected_machines,selected_crafters,selected_conveyors,selected_sellers,grid_surface_copy,area_object)
       
                 elif delete_button.rect.collidepoint(co):
-                    #delete(area_object.factory_layout,selected_producers,area_object.producer_info,area_object.producer_group,selected_crafters,area_object.crafter_info,area_object.crafter_group,selected_conveyors,conveyor_info,area_object.conveyor_group,area_object.arrows_group,area_object.material_group,grid_surface)
+                    #delete(area_object.factory_layout,selected_producers,area_object.producer_info,area_object.producer_group,selected_crafters,area_object.crafter_info,area_object.crafter_group,selected_conveyors,area_object.conveyor_info,area_object.conveyor_group,area_object.arrows_group,area_object.material_group,grid_surface)
                     for pos in selected_producers:
                         area_object.factory_layout[int(pos[1]/40)][int(pos[0]/40)]=0
                         decimal_co=str(pos[0])+'.'+str(pos[1])
@@ -1134,14 +1157,14 @@ while run:
                     grid_surface_copy= grid_surface.copy()
                     area_object.producer_group.update(area_object.producer_info)
                     area_object.crafter_group.update(area_object.crafter_info,blueprints,crafter_upgrades,area_object.crafter_lv)
-                    area_object.conveyor_group.update(conveyor_info)
+                    area_object.conveyor_group.update(area_object.conveyor_info)
                     area_object.seller_group.update(area_object.seller_info)
-                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
                     area_object.producer_group.draw(grid_surface_copy)
                     area_object.crafter_group.draw(grid_surface_copy)
                     area_object.conveyor_group.draw(grid_surface_copy)
                     area_object.material_group.draw(grid_surface_copy)
-                    item_group.draw(grid_surface_copy)
+                    area_object.item_group.draw(grid_surface_copy)
                     area_object.seller_group.draw(grid_surface_copy)
 
                 elif confirm_button.rect.collidepoint(co):
@@ -1151,7 +1174,7 @@ while run:
                     selected_conveyors=[] 
                     selected_sellers=[]
                     selected_machines=[]
-                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info) 
+                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info) 
 
                 elif cancel_button.rect.collidepoint(co):
 
@@ -1161,13 +1184,13 @@ while run:
                     area_object.conveyor_group.draw(grid_surface_copy)
                     area_object.seller_group.draw(grid_surface_copy)
                     area_object.material_group.draw(grid_surface_copy)
-                    item_group.draw(grid_surface_copy)
+                    area_object.item_group.draw(grid_surface_copy)
                     selected_producers=[]
                     selected_crafters=[]
                     selected_conveyors=[]
                     selected_sellers=[]
                     selected_machines=[]
-                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                    area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
 
             elif game_state=='stats':
                 if stats_surface.rect.collidepoint(co) == False:
@@ -1347,28 +1370,28 @@ while run:
                                         if co not in selected_producers:
                                             selected_producers.append(co)
                                             selected_machines.append(co)
-                                            new_arrow = Arrow(int(co[0]),int(co[1]),area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                                            new_arrow = Arrow(int(co[0]),int(co[1]),area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
                                             area_object.arrows_group.add(new_arrow)
 
                                     elif decimal_co in crafter_cos:
                                         if co not in selected_crafters:
                                             selected_crafters.append(co)
                                             selected_machines.append(co)
-                                            new_arrow = Arrow(int(co[0]),int(co[1]),area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                                            new_arrow = Arrow(int(co[0]),int(co[1]),area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
                                             area_object.arrows_group.add(new_arrow)
 
                                     elif decimal_co in conveyor_cos:
                                         if co not in selected_conveyors:
                                             selected_conveyors.append(co)
                                             selected_machines.append(co)
-                                            new_arrow = Arrow(int(co[0]),int(co[1]),area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                                            new_arrow = Arrow(int(co[0]),int(co[1]),area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
                                             area_object.arrows_group.add(new_arrow)
 
                                     elif decimal_co in seller_cos:
                                         if co not in selected_sellers:
                                             selected_sellers.append(co)
                                             selected_machines.append(co)
-                                            new_arrow = Arrow(int(co[0]),int(co[1]),area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                                            new_arrow = Arrow(int(co[0]),int(co[1]),area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
                                             area_object.arrows_group.add(new_arrow)
 
 
@@ -1378,26 +1401,26 @@ while run:
                                             if co in selected_producers:
                                                 selected_producers.remove(co)
                                                 selected_machines.remove(co)
-                                                area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                                                area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
 
                                         elif decimal_co in crafter_cos:
                                             if co in selected_producers:
                                                 selected_crafters.remove(co)
                                                 selected_machines.remove(co)
-                                                area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                                                area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
 
 
                                         elif decimal_co in conveyor_cos:
                                             if co in selected_producers:
                                                 selected_conveyors.remove(co)   
                                                 selected_machines.remove(co)  
-                                                area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                                                area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
 
                                         elif decimal_co in seller_cos:
                                             if co in selected_sellers:
                                                 selected_sellers.remove(co)   
                                                 selected_machines.remove(co)  
-                                                area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+                                                area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
 
 
                                         grid_surface_copy= grid_surface.copy()
@@ -1426,14 +1449,14 @@ while run:
 
     elif game_state=='play':
         for material in area_object.material_group:
-            maybe_money = material.update(area_object.seller_lv,seller_upgrades,area_object.conveyor_lv,conveyor_upgrades,area_object.producer_info,conveyor_info,area_object.conveyor_group,area_object.crafter_info,area_object.crafter_group,area_object.seller_group,smelter_group,blueprints_value,money)
+            maybe_money = material.update(area_object.seller_lv,seller_upgrades,area_object.conveyor_lv,conveyor_upgrades,area_object.producer_info,area_object.conveyor_info,area_object.conveyor_group,area_object.crafter_info,area_object.crafter_group,area_object.seller_group,area_object.smelter_group,blueprints_value,money)
             maybe_money=float(maybe_money)
             if maybe_money.is_integer():
                 revenue+=(maybe_money-money)
                 money=maybe_money
         
         for item in area_object.item_group:
-            maybe_money=item.update(area_object.seller_lv,seller_upgrades,area_object.conveyor_lv,conveyor_upgrades,area_object.crafter_info,area_object.conveyor_group,conveyor_info,area_object.crafter_group,area_object.seller_group,money)
+            maybe_money=item.update(area_object.seller_lv,seller_upgrades,area_object.conveyor_lv,conveyor_upgrades,area_object.crafter_info,area_object.conveyor_group,area_object.conveyor_info,area_object.crafter_group,area_object.seller_group,money)
             if maybe_money.is_integer():
                 revenue+=(maybe_money-money)
                 money=maybe_money
@@ -1637,13 +1660,13 @@ while run:
     elif game_state=='shop supply':
         area_object.producer_group.update(area_object.producer_info)
         for material in area_object.material_group:
-            maybe_money = material.update(area_object.seller_lv,seller_upgrades,area_object.conveyor_lv,conveyor_upgrades,area_object.producer_info,conveyor_info,area_object.conveyor_group,area_object.crafter_info,area_object.crafter_group,area_object.seller_group,smelter_group,blueprints_value,money)
+            maybe_money = material.update(area_object.seller_lv,seller_upgrades,area_object.conveyor_lv,conveyor_upgrades,area_object.producer_info,area_object.conveyor_info,area_object.conveyor_group,area_object.crafter_info,area_object.crafter_group,area_object.seller_group,area_object.smelter_group,blueprints_value,money)
             maybe_money=float(maybe_money)
             if maybe_money.is_integer():
                 money=maybe_money
         
-        for item in item_group:
-            maybe_money=item.update(area_object.seller_lv,seller_upgrades,area_object.conveyor_lv,conveyor_upgrades,area_object.crafter_info,area_object.conveyor_group,conveyor_info,area_object.crafter_group,area_object.seller_group,money)
+        for item in area_object.item_group:
+            maybe_money=item.update(area_object.seller_lv,seller_upgrades,area_object.conveyor_lv,conveyor_upgrades,area_object.crafter_info,area_object.conveyor_group,area_object.conveyor_info,area_object.crafter_group,area_object.seller_group,money)
             if maybe_money.is_integer():
                 money=maybe_money
 
@@ -1814,7 +1837,7 @@ while run:
         delete_button.draw()
         confirm_button.draw()
         cancel_button.draw()
-        area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,conveyor_info,area_object.seller_info)
+        area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
         area_object.arrows_group.draw(grid_surface_copy)
         if have_producer: 
             area_object.producer_group.update(area_object.producer_info)
@@ -1835,7 +1858,6 @@ while run:
         draw_text('Earth',font,(0,0,0),110,55,screen,False)
         draw_text('Mars',font,(0,0,0),110,130,screen,False)
         
-
     elif game_state=='ingame_settings':
         screen.blit(money_panel_img,(200,0))
         money_text=font_50.render(str(money),None,100)

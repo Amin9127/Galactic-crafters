@@ -42,7 +42,7 @@ def confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,Pr
     selected_pos=[]
     return money
 
-def rotate(blueprints,selected_producers,selected_machines,selected_crafters,selected_conveyors,selected_sellers,seller_info,grid_surface_copy,area):
+def rotate(blueprints,selected_producers,selected_machines,selected_crafters,selected_conveyors,selected_sellers,grid_surface_copy,area):
     for pos in selected_producers:
         decimal_co=str(pos[0])+'.'+str(pos[1])
         

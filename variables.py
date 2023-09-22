@@ -187,6 +187,17 @@ abreviations={
     'q':15,
     'Q':18,
 }
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#audio stuff
+bg1=pygame.mixer.Sound("audio/bg1.mp3")
+bg2=pygame.mixer.Sound("audio/bg2.mp3")
+bg3=pygame.mixer.Sound("audio/bg3.mp3")
+
+intro=pygame.mixer.Sound("audio/intro.mp3")
+malfunction=pygame.mixer.Sound("audio/malfunction.wav")
+activation=pygame.mixer.Sound("audio/activation.wav")
+hum=pygame.mixer.Sound("audio/hum.wav")
+
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
