@@ -209,6 +209,7 @@ while run:
 
         #all keybinds check and what it does in this if elif ladder
         if event.type == pygame.KEYDOWN:
+            button_clicked=True
             if game_state=='main menu':
                 if event.key == pygame.K_p:
                     game_state='play'
@@ -218,8 +219,9 @@ while run:
                 elif event.key==pygame.K_s:
                     game_state='settings'
                 elif event.key==pygame.K_q:
-                    pygame.quit()
-                    exit()
+                    run=False
+                else:
+                    button_clicked=False
 
             elif game_state == 'play':
                 if event.key == pygame.K_ESCAPE:
@@ -237,11 +239,11 @@ while run:
                     for y in range(0,8):
                         bptitles2[y]=bp_ordered_list[y]
                         new_bp= Blueprints((y),y,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font_20,font)
-                        area_object.blueprints_group.add(new_bp)
-
-                        
+                        area_object.blueprints_group.add(new_bp)       
                 elif event.key == pygame.K_m:
                     game_state='map'
+                else:
+                    button_clicked=False
 
             elif game_state=='ingame settings':
                 if event.key == pygame.K_ESCAPE:
@@ -249,14 +251,20 @@ while run:
                     game_state='main menu'
                 elif event.key == pygame.K_SPACE:
                     game_state='play'
+                else:
+                    button_clicked=False                    
              
             elif game_state=='controls':
                 if event.key == pygame.K_ESCAPE:
                     game_state='main menu'
+                else:
+                    button_clicked=False
 
             elif game_state == 'settings':
                 if event.key == pygame.K_ESCAPE:
                     game_state='main menu'
+                else:
+                    button_clicked=False
 
             elif game_state=='shop machines':
                 if event.key == pygame.K_ESCAPE:
@@ -277,6 +285,8 @@ while run:
                 elif event.key == pygame.K_4:
                     game_state='shop confirm'
                     selected_machine='seller'
+                else:
+                    button_clicked=False
 
             elif game_state=='shop upgrades':
                 if event.key == pygame.K_ESCAPE:
@@ -285,7 +295,9 @@ while run:
                     game_state='shop machines'
                 elif event.key == pygame.K_s:
                     game_state='shop supply'  
-
+                else:
+                    button_clicked=False
+                    
             elif game_state=='shop supply':
                 if event.key == pygame.K_ESCAPE:
                     game_state = 'play'
@@ -293,12 +305,16 @@ while run:
                     game_state='shop upgrades'
                 elif event.key == pygame.K_m:
                     game_state='shop machines'        
-
+                else:
+                    button_clicked=False
+                    
             elif game_state == 'blueprints':
                 if event.key == pygame.K_ESCAPE:    
                     game_state= 'play'
                     slider_button.rect.top=150
-     
+                else:
+                    button_clicked=False
+
             elif game_state == 'shop confirm':
                 if event.key == pygame.K_ESCAPE:
                     game_state = 'shop'
@@ -306,6 +322,8 @@ while run:
                     money = confirm_place_machinery(screen,grid_surface,selected_pos,selected_machine,Producer,Crafter,Conveyor,Seller,money,area_object)
                     selected_pos=[]
                     game_state='play' 
+                else:
+                    button_clicked=False
 
             elif game_state == 'edit':
                 if event.key==pygame.K_BACKSPACE:
@@ -498,14 +516,11 @@ while run:
                             consise_layout[layout_co[1]][layout_co[0]]={'conveyor':conveyor_info[decimal_co]}
                         elif cos in selected_sellers:
                             consise_layout[layout_co[1]][layout_co[0]]={'seller':area_object.seller_info[decimal_co]}
-                
-                    #for x in consise_layout:
-                    #    for y in x:
-                    #        print(y,end = " ")
-                    #    print()
                     
                 elif event.key==pygame.K_v:
                     game_state='edit paste'
+                else:
+                    button_clicked=False
 
             elif game_state=='edit paste':
                 if event.key==pygame.K_ESCAPE:
@@ -558,19 +573,29 @@ while run:
                         area_object.conveyor_group.update(area_object.conveyor_info)
                         area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
                         area_object.seller_group.update(area_object.seller_info)        
-            
+                else:
+                    button_clicked=False            
+
             elif game_state=='map':
                 if event.key==pygame.K_ESCAPE:
                     game_state='play'
+                else:
+                    button_clicked=False
 
             elif game_state=='credits':
                 if event.key==pygame.K_ESCAPE:
                     game_state='play'
+                else:
+                    button_clicked=False
 
             elif game_state=='stats':
                 if event.key==pygame.K_ESCAPE:
                     game_state='play'
- 
+                else:
+                    button_clicked=False
+
+            if button_clicked==True:
+                click1.play()
             save_data()
 #---------------------------------------------------------------------------------------
         #all button check and what the button does in this if elif ladder
@@ -579,6 +604,7 @@ while run:
             print(earth.producer_info)
             x,y=pygame.mouse.get_pos()
             co=pygame.mouse.get_pos()
+            button_clicked=True
             if game_state=='main menu':
                 if play_button.rect.collidepoint(co): 
                     game_state='play'
@@ -588,16 +614,19 @@ while run:
                 elif settings_button.rect.collidepoint(co):
                     game_state='settings'
                 elif exit_button.rect.collidepoint(co):
-                    pygame.quit()
-                    sys.exit()
+                    run=False
+                else:
+                    button_clicked=False
 
             elif game_state=='play':
                 if settings_mini_button.rect.collidepoint(co):
                     game_state='ingame_settings'
+                    click1.play()
                 
                 elif shop_button.rect.collidepoint(co):
                     game_state='shop machines'
-                
+                    click1.play()
+
                 elif edit_button.rect.collidepoint(co):
                     game_state='edit'
                 
@@ -735,7 +764,7 @@ while run:
                     game_state='stats'
                 
                 else:
-                    pass 
+                    button_clicked=False 
             
             elif game_state=='producer_popup':
                 if transparent_producer_popup.rect.collidepoint(co) == False:
@@ -758,7 +787,9 @@ while run:
                 elif lead_button.rect.collidepoint(co):
                     area_object.producer_info[decimal_co][1]='lead'
                     game_state='play'
-            
+                else:
+                    button_clicked=False            
+
             elif game_state=='crafter_popup':
                 if transparent_crafter_popup.rect.collidepoint(co) == False:
                     game_state='play'   
@@ -768,6 +799,8 @@ while run:
 
                     print('choose bp')
                     choose_bp = True     
+                else:
+                    button_clicked=False
 
             elif game_state=='ingame_settings':
                 if menu_button.rect.collidepoint(co):
@@ -777,14 +810,20 @@ while run:
                     game_state='play'
                 elif transparent_settings.rect.collidepoint(co) == False:
                     game_state='play'
-                    
+                else:
+                    button_clicked=False
+
             elif game_state =='controls':
                 if back_button.rect.collidepoint(co):
                     game_state='main menu'
+                else:
+                    button_clicked=False
 
             elif game_state=='settings':
                 if back_button.rect.collidepoint(co):
                     game_state='main menu'
+                else:
+                    button_clicked=False
 
             elif game_state=='shop machines':
                 if upgrades_button.rect.collidepoint(co):
@@ -810,7 +849,9 @@ while run:
                         slider_drag=True
                         mouse_y=co[1]
                         offset_y=slider_button.rect.y-mouse_y
-                        
+                else:
+                    button_clicked=False                        
+
             elif game_state=='shop upgrades':
                 if machines_button.rect.collidepoint(co):
                     game_state = 'shop machines'
@@ -837,6 +878,8 @@ while run:
                         area_object.seller_lv+=1
                 elif transparent_popup_button.rect.collidepoint(co) == False:
                     game_state ='play'
+                else:
+                    button_clicked=False
 
             elif game_state=='shop supply':
                 if machines_button.rect.collidepoint(co):
@@ -857,6 +900,8 @@ while run:
                     selected_material='lead'
                 elif coal_shop_button.rect.collidepoint(co):
                     selected_material='coal' 
+                else:
+                    button_clicked=False                    
                 if selected_material!='none':
 
                     if material_buy1.rect.collidepoint(co):
@@ -890,7 +935,9 @@ while run:
                         slider_drag=True
                         mouse_y=co[1]
                         offset_y=slider_button.rect.y-mouse_y
-  
+                else:
+                    button_clicked=False
+
                 print(choose_bp)
                 if choose_bp == True:
                     
@@ -939,6 +986,8 @@ while run:
                 elif cancel_button.rect.collidepoint(co):
                     game_state='play'
                     selected_pos=[]
+                else:
+                    button_clicked=False
 
             elif game_state=='edit paste':
                 if event.button==3:
@@ -1013,6 +1062,8 @@ while run:
                             elif area_object.factory_layout[cos[1]+layout_y][cos[0]+layout_x]==1:
                                 paste_possible =False
                         print(paste_possible)
+                else:
+                    button_clicked=False
 
             elif game_state=='edit': 
                 if event.button==3:
@@ -1191,6 +1242,8 @@ while run:
                     selected_sellers=[]
                     selected_machines=[]
                     area_object.arrows_group.update(selected_machines,area_object.producer_info,area_object.crafter_info,area_object.conveyor_info,area_object.seller_info)
+                else:
+                    button_clicked=False
 
             elif game_state=='stats':
                 if stats_surface.rect.collidepoint(co) == False:
@@ -1257,7 +1310,9 @@ while run:
                         save_data()
                         reset_counter=0
                         game_state='play'                                               
-            
+                else:
+                    button_clicked=False
+
             elif game_state=='map':
                 if earth_button.rect.collidepoint(co):
                     current_location='earth'
@@ -1265,8 +1320,11 @@ while run:
                     current_location='mars'
                 print(current_location)
                 area_object=map_locations[current_location]
-
+            if button_clicked==True:
+                click1.play()
             save_data()
+
+
         elif event.type==pygame.MOUSEBUTTONUP:
             if event.button == 1: 
                 slider_drag=False
@@ -1997,3 +2055,6 @@ while run:
         
     pygame.display.update()
     clock.tick(60)
+
+pygame.quit()
+exit()    

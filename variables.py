@@ -198,6 +198,9 @@ malfunction=pygame.mixer.Sound("audio/malfunction.wav")
 activation=pygame.mixer.Sound("audio/activation.wav")
 hum=pygame.mixer.Sound("audio/hum.wav")
 
+click1=pygame.mixer.Sound("audio/click1.wav")
+click2=pygame.mixer.Sound("audio/click2.wav")
+
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

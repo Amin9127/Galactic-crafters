@@ -269,3 +269,4 @@ def draw_text(text,font,text_colour,x,y,screen,center):
         screen.blit(text,text_rect)
     else:
         screen.blit(text,(x,y))
+
