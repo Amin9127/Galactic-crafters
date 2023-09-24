@@ -760,6 +760,7 @@ while run:
                         elif decimal_co in conveyor_cos:
                             pass
                     button_clicked=False 
+                    #hi
                 
                 elif stats_button.rect.collidepoint(co):
                     game_state='stats'
@@ -1178,7 +1179,7 @@ while run:
                             area_object.arrows_group.draw(grid_surface_copy)
                         
                 elif rotate_button.rect.collidepoint(co):
-                    rotate(crafter_upgrades,blueprints,selected_producers,selected_machines,selected_crafters,selected_conveyors,selected_sellers,grid_surface_copy,area_object)
+                    rotate(blueprints,selected_producers,selected_machines,selected_crafters,selected_conveyors,selected_sellers,grid_surface_copy,area_object)
       
                 elif delete_button.rect.collidepoint(co):
                     #delete(area_object.factory_layout,selected_producers,area_object.producer_info,area_object.producer_group,selected_crafters,area_object.crafter_info,area_object.crafter_group,selected_conveyors,area_object.conveyor_info,area_object.conveyor_group,area_object.arrows_group,area_object.material_group,grid_surface)
