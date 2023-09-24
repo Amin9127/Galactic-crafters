@@ -759,6 +759,7 @@ while run:
                             game_state='crafter_popup'
                         elif decimal_co in conveyor_cos:
                             pass
+                    button_clicked=False 
                 
                 elif stats_button.rect.collidepoint(co):
                     game_state='stats'

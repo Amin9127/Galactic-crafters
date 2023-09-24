@@ -1,4 +1,11 @@
 import pygame
+from variables import *
+
+machine_imgs={'producer':producer_img,
+              'conveyor':conveyor_img,
+              'crafter':crafter_img,
+              'seller':seller_img,
+              }
 class Machine(pygame.sprite.Sprite):
     def __init__(self,x,y,img):
         super().__init__()
