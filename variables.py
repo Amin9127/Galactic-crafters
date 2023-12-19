@@ -221,11 +221,16 @@ gpu_img=pygame.image.load('images/gpu.png').convert_alpha()
 hdd_img=pygame.image.load('images/hdd.png').convert_alpha()
 computer_img=pygame.image.load('images/pc.png').convert_alpha()
 power_supply_img=pygame.image.load('images/power supply.png').convert_alpha()
-motherboard_img=pygame.image.load('images/circuit.png').convert_alpha()
+motherboard_img=pygame.image.load('images/motherboard.png').convert_alpha()
 
-cabin_img=pygame.image.load('images/cross.png').convert_alpha()
-jet_thruster_img=pygame.image.load('images/cross.png').convert_alpha()
-mega_engine_img=pygame.image.load('images/cross.png').convert_alpha()
+
+battery_img=pygame.image.load('images/battery.png').convert_alpha()
+engine_img=pygame.image.load('images/engine.png').convert_alpha()
+
+super_computer_img=pygame.image.load('images/super computer.png').convert_alpha()
+cabin_img=pygame.image.load('images/cabin.png').convert_alpha()
+jet_thruster_img=pygame.image.load('images/jet thruster.png').convert_alpha()
+mega_engine_img=pygame.image.load('images/mega engine.png').convert_alpha()
 compressed_coal_img=pygame.image.load('images/cross.png').convert_alpha()
 fuel_tank_img=pygame.image.load('images/cross.png').convert_alpha()
 rocket_img=pygame.image.load('images/rocket.png').convert_alpha()
@@ -238,7 +243,7 @@ item_imgs={'empty':empty_slot_img,
     'aluminium':aluminium_img,'lead':lead_img,'coal':coal_img,
     'circuit':circuit_img,'motherboard':motherboard_img, 'cpu':cpu_img,
     'ram':ram_img,'power supply':power_supply_img,'hdd':hdd_img,
-    'battery':empty_slot_img,'engine':empty_slot_img,'super computer':empty_slot_img,
+    'battery':battery_img,'engine':engine_img,'super computer':super_computer_img,
     'gpu':gpu_img,'computer':computer_img,'cabin':cabin_img,'jet thruster':jet_thruster_img,
     'mega engine':mega_engine_img,'compressed coal':compressed_coal_img,'fuel tank':fuel_tank_img,
     'rocket':rocket_img,
@@ -257,7 +262,7 @@ blueprints={
     'engine':{'aluminium':15,'coal':5},
     'super computer':{'computer':5,'power supply':10,'gpu':10},
     'cabin':{'super computer':3,'copper':100,'iron':100,'aluminium':1000,'circuit':50,'power supply':50},
-    'jet thruster':{'aluminium':200,'iron':200,'circuit':50},
+    'jet thruster':{'aluminium':1000,'iron':1000,'circuit':50,'mega engine':1},
     'mega engine':{'engine':100,'aluminium':200},
     'compressed coal':{'coal':10,'lead':10},
     'fuel tank':{'compressed coal':100},
@@ -275,14 +280,14 @@ blueprints_value={
     'hdd':500,
     'computer':8000,
     'battery':150,
-    'engine':600,
+    'engine':80000,
     'super computer':80000,
-    'cabin':0,
-    'jet thruster':0,
-    'mega engine':0,
+    'cabin':180000,
+    'jet thruster':140000,
+    'mega engine':90000,
     'compressed coal':0,
     'fuel tank':0,
-    'rocket':0,
+    'rocket':1500000,
 }
 bp_ordered_list=list(blueprints.keys())
 #bp_ordered_list.sort()

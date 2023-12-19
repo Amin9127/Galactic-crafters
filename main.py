@@ -138,6 +138,7 @@ last_time=time.time()
 
 run=True
 while run:
+    print(area_object.conveyor_info)
     #framerate independence currently not in use
     dt=time.time() - last_time
     dt*=60
@@ -241,7 +242,9 @@ while run:
                         new_bp= Blueprints((y),y,blueprints_value,empty_slot_img,bp_ordered_list,blueprints,item_imgs,font_24,font_20,font)
                         area_object.blueprints_group.add(new_bp)       
                 elif event.key == pygame.K_m:
-                    game_state='map'
+                    pass
+                    #game_state='map'
+                
                 else:
                     button_clicked=False
 
@@ -642,7 +645,8 @@ while run:
                         area_object.blueprints_group.add(new_bp)
 
                 elif map_button.rect.collidepoint(co):
-                    game_state='map'
+                    pass
+                    #game_state='map'
                 
                 elif transparent_grid_button.rect.collidepoint(co):
                     x,y=co[0],co[1]
@@ -1532,7 +1536,7 @@ while run:
         shop_button.draw()
         edit_button.draw()
         blueprints_button.draw()
-        map_button.draw()
+        #map_button.draw()
 
         grid_surface_copy= grid_surface.copy()
 
