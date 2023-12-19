@@ -135,6 +135,7 @@ pygame.time.set_timer(minute_event,60000)
 
 last_time=time.time()
  
+pygame.mixer.music.load('audio/bg1.mp3')
 
 run=True
 while run:
@@ -146,7 +147,6 @@ while run:
 
     screen.fill((52,78,91))
     screen.blit(play_bg_img,(0,0))
-    pygame.mixer.music.load('audio/bg3.mp3')
     
 
     for event in pygame.event.get():
@@ -210,11 +210,14 @@ while run:
 
         #all keybinds check and what it does in this if elif ladder
         if event.type == pygame.KEYDOWN:
+
             button_clicked=True
             if game_state=='main menu':
+
+
                 if event.key == pygame.K_p:
                     game_state='play'
-                    pygame.mixer.music.play()
+                    pygame.mixer.music.play(-1)
                 elif event.key==pygame.K_c:
                     game_state='controls'
                 elif event.key==pygame.K_s:
@@ -611,7 +614,7 @@ while run:
             if game_state=='main menu':
                 if play_button.rect.collidepoint(co): 
                     game_state='play'
-                    pygame.mixer.music.play()
+                    pygame.mixer.music.play(-1)
                 elif controls_button.rect.collidepoint(co):
                     game_state='controls'
                 elif settings_button.rect.collidepoint(co):
@@ -1512,6 +1515,7 @@ while run:
         exit_button.draw()
 
     elif game_state=='play':
+
         for material in area_object.material_group:
             maybe_money = material.update(area_object.seller_lv,seller_upgrades,area_object.conveyor_lv,conveyor_upgrades,area_object.producer_info,area_object.conveyor_info,area_object.conveyor_group,area_object.crafter_info,area_object.crafter_group,area_object.seller_group,area_object.smelter_group,blueprints_value,money)
             maybe_money=float(maybe_money)
