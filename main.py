@@ -5,12 +5,21 @@ import sys
 import time
 #import yfinance as yf
 
-from button_functions import *
-from classes import *
-from variables import *
+from data.button_functions import *
+from data.classes import *
+from data.variables import *
 pygame.init()
 pygame.font.init()
 pygame.mixer.init()
+
+def resource_path(relative_path):
+    try:
+    # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 #usual start 1000 money
 global money
@@ -18,7 +27,7 @@ money=1000
 
 #saves data
 def save_data():
-    data_file = open("Galactic_Crafters.txt", "wb")
+    data_file = open("data/Galactic_Crafters.txt", "wb")
     saved_time=pygame.time.get_ticks()
 
     data_dict={'producer_info':area_object.producer_info,
@@ -68,11 +77,11 @@ def save_data():
 #    data_file.close()
 
 #check if file called this exists
-file_exists = os.path.exists("Galactic_Crafters.txt")
+file_exists = os.path.exists("data/Galactic_Crafters.txt")
 
 #if so make a file and load all changeable variables to as it would at the start
 if file_exists:
-    data_file = open("Galactic_Crafters.txt", "rb")
+    data_file = open("data/Galactic_Crafters.txt", "rb")
     data_dict = pickle.load(data_file)
     data_file.close()
 
@@ -135,7 +144,8 @@ pygame.time.set_timer(minute_event,60000)
 
 last_time=time.time()
  
-pygame.mixer.music.load('audio/bg1.mp3')
+pygame.mixer.music.load('data/audio/bg3.mp3')
+pygame.mixer.music.set_volume(0.1)
 
 run=True
 while run:
